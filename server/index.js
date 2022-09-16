@@ -22,5 +22,5 @@ app.use(
 // Listen
 
 app.listen(port, () => {
-  console.log(`🚀 Server running on port: ${port} `);
+  console.log(`> Server running on port: ${port} `);
 });
