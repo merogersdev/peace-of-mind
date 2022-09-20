@@ -4,7 +4,8 @@ const router = express.Router();
 const {
   getEntries,
   postEntry,
-  putEntry,
+  patchEntry,
+  deleteEntry,
 } = require("../controllers/entryController");
 
 // ROUTE - /
@@ -13,7 +14,8 @@ const {
 router.route("/").get(getEntries).post(postEntry);
 
 // ROUTE - /:id
-// POST - /entries/:id - param id
-router.route("/:id").put(putEntry);
+// POST - /:id - param id
+// DELETE - /:id - param id
+router.route("/:id").patch(patchEntry).delete(deleteEntry);
 
 module.exports = router;

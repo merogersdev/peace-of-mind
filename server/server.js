@@ -15,10 +15,15 @@ const app = express();
 const cors = require("cors");
 const helmet = require("helmet");
 
+// Passport
+
+const passport = require("passport");
+app.use(passport.initialize());
+require("./middleware/passport");
+
 // Middleware
 
 const { logRequests } = require("./middleware/logRequest");
-const { jwtAuth } = require("./middleware/jwtAuth");
 
 app.use(express.json());
 app.use(
@@ -32,14 +37,13 @@ app.use(logRequests);
 app.use(helmet());
 
 app.use("/users", userRoutes);
-app.use("/entries", entryRoutes);
-
-// app.get("/", jwtAuth, (_req, res) => {
-//   res.send("Authenticated");
-// });
+app.use(
+  "/entries",
+  passport.authenticate("jwt", { session: false }),
+  entryRoutes
+);
 
 // Listen
-
 app.listen(port, () => {
   console.log(`> Server running on port: ${port} `);
 });
