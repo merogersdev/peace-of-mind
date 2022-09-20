@@ -1,6 +1,5 @@
 // Bcrypt
 const bcrypt = require("bcrypt");
-const e = require("express");
 const saltRounds = 10;
 const salt = bcrypt.genSaltSync(saltRounds);
 const privateKey = process.env.JWT_SECRET
@@ -40,7 +39,7 @@ const postSignup = async (req,res) => {
 
   // Check for all necessary info before proceeding
   if(!firstName || !lastName || !email || !password) {
-    res.status(400).json({ error: "Invalid User Signup"})
+    return res.status(400).json({ error: "Invalid User Signup"})
   }
 
   try {

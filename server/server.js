@@ -5,19 +5,20 @@ const port = process.env.PORT || 5000;
 
 // Route Imports
 
-const userRoutes = require("./routes/userRoutes")
-const entryRoutes = require("./routes/entryRoutes")
+const userRoutes = require("./routes/userRoutes");
+const entryRoutes = require("./routes/entryRoutes");
 
 // Express
 
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const helmet = require("helmet")
+const helmet = require("helmet");
 
 // Middleware
 
-const { logRequests} = require("./middleware/logRequest")
+const { logRequests } = require("./middleware/logRequest");
+const { jwtAuth } = require("./middleware/jwtAuth");
 
 app.use(express.json());
 app.use(
@@ -27,11 +28,15 @@ app.use(
   })
 );
 
-app.use(logRequests)
-app.use(helmet())
+app.use(logRequests);
+app.use(helmet());
 
-app.use("/users", userRoutes)
-app.use("/entries", entryRoutes)
+app.use("/users", userRoutes);
+app.use("/entries", entryRoutes);
+
+// app.get("/", jwtAuth, (_req, res) => {
+//   res.send("Authenticated");
+// });
 
 // Listen
 
