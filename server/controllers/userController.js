@@ -11,13 +11,13 @@ const jwt = require("jsonwebtoken");
 
 // Knex
 const knex = require("knex");
-const knexConfig = require("../config/knexfile.js");
+const knexConfig = require("../knexfile.js");
 const db = knex(knexConfig);
 
 // POST - Log in user
 const postLogin = async (req, res) => {
   const { email, password } = req.body;
-  const user = await db("users").where("username", "=", email).first();
+  const user = await db("users").where("email", "=", email).first();
 
   // Check if user exists, if not return and error
   if (user === undefined) {
@@ -31,7 +31,7 @@ const postLogin = async (req, res) => {
   }
 
   // Generate Token to return to user
-  const token = jwt.sign({ email: user.username, id: user.id }, privateKey, {
+  const token = jwt.sign({ email: user.email, id: user.id }, privateKey, {
     expiresIn: "1d",
   });
   res.status(200).json({ success: true, token: `Bearer ${token}` });
@@ -52,7 +52,7 @@ const postSignup = async (req, res) => {
     const hashedPassword = bcrypt.hashSync(password, salt);
 
     // Check if user is already signed up
-    const user = await db("users").where("username", "=", email).first();
+    const user = await db("users").where("email", "=", email).first();
 
     // If user exists, exit and display error
     if (user !== undefined) {
@@ -65,7 +65,7 @@ const postSignup = async (req, res) => {
     await db("users").insert({
       first_name: firstName,
       last_name: lastName,
-      username: email,
+      email: email,
       password: hashedPassword,
     });
     return res

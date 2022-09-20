@@ -19,7 +19,7 @@ const helmet = require("helmet");
 
 const passport = require("passport");
 app.use(passport.initialize());
-require("./config/passport");
+require("./middleware/passport");
 
 // Middleware
 
@@ -37,14 +37,11 @@ app.use(logRequests);
 app.use(helmet());
 
 app.use("/users", userRoutes);
-app.use("/entries", entryRoutes);
-
-app.get("/", passport.authenticate("jwt", { session: false }), (req, res) => {
-  res.status(200).json({
-    success: true,
-    user: { id: req.user.id, email: req.user.username },
-  });
-});
+app.use(
+  "/entries",
+  passport.authenticate("jwt", { session: false }),
+  entryRoutes
+);
 
 // Listen
 app.listen(port, () => {
