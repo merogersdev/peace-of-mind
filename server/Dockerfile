@@ -1,6 +1,6 @@
 # Backend - Production
 FROM node:lts-alpine
-WORKDIR /backend
+WORKDIR /server
 COPY package*.json ./
 RUN npm i
 COPY . .
