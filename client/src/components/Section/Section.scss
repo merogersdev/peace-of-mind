@@ -46,4 +46,23 @@
       font-size: 3rem;
     }
   }
+  &--mini {
+    max-width: $breakpoint-mobile;
+  }
+
+  &__h1 {
+    @include h1;
+  }
+
+  &__h2 {
+    @include h2;
+  }
+
+  &__h3 {
+    @include h3;
+  }
+
+  &__p {
+    @include p;
+  }
 }

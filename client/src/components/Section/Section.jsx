@@ -1,7 +1,11 @@
 import "./Section.scss";
 
-const Section = ({ children }) => {
-  return <section className="section">{children}</section>;
+const Section = ({ children, mini }) => {
+  return (
+    <section className={`section${mini ? " section--mini" : ""}`}>
+      {children}
+    </section>
+  );
 };
 
 export default Section;

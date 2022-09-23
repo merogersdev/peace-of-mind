@@ -1,0 +1,37 @@
+/* --- Partials --- */
+
+@use "../../styles/partials/colors" as *;
+@use "../../styles/partials/mixins" as *;
+
+/* --- Form --- */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  &__label {
+    display: flex;
+    flex-direction: column;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    color: $grey;
+    font-weight: 500;
+    margin-top: 1rem;
+  }
+  &__input {
+    background-color: $light-bg;
+    border: none;
+    outline: 2px solid $grey;
+    padding: 1rem 0.5rem;
+    margin-top: 0.2rem;
+    border-radius: 0.25rem;
+    font-size: 1rem;
+    font-weight: 500;
+    &:focus {
+      outline: 2px solid $primary;
+    }
+    &--error {
+      outline: 2px solid $error;
+      background-color: $error-bg;
+    }
+  }
+}

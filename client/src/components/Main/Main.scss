@@ -6,12 +6,12 @@
 /* --- Main --- */
 
 .main {
-  padding-top: 3rem;
-  background-color: $background;
+  padding: 3rem 0;
+  background-color: $light-bg;
   width: 100%;
-  height: calc(100vh - 3rem);
+  min-height: calc(100vh - 3rem);
   @include tablet {
-    height: calc(100vh - 5rem);
+    min-height: calc(100vh - 5rem);
     padding-top: 5rem;
   }
 }
