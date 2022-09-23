@@ -1,4 +1,4 @@
-# Backend - Production
+# Backend - Production Run with Node.js LTS
 FROM node:lts-alpine
 WORKDIR /server
 COPY package*.json ./

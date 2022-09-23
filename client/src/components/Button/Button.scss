@@ -1,0 +1,50 @@
+/* --- Partials --- */
+
+@use "../../styles/partials/colors" as *;
+@use "../../styles/partials/mixins" as *;
+
+/* --- Button --- */
+
+.button {
+  @include flex-center;
+  line-height: 3rem;
+  text-decoration: none;
+  border-radius: 0.25rem;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  &--primary {
+    background-color: $primary;
+    color: $white;
+    &:hover {
+      background-color: $primary-hover;
+    }
+  }
+  &--primary-outline {
+    background-color: $white;
+    color: $primary;
+    border: 2px solid $primary;
+    &:hover {
+      color: $primary-hover;
+      border: 2px solid $primary-hover;
+    }
+  }
+  &--dark {
+    background-color: $dark;
+    color: $white;
+    &:hover {
+      background-color: $dark-hover;
+    }
+  }
+  &--dark-outline {
+    background-color: $white;
+    color: $dark;
+    border: 2px solid $dark;
+    &:hover {
+      color: $dark-hover;
+      border: 2px solid $dark-hover;
+      background-color: $background;
+    }
+  }
+}
