@@ -2,8 +2,12 @@ import "./Form.scss";
 
 import React from "react";
 
-const Form = ({ children }) => {
-  return <form className="form">{children}</form>;
+const Form = ({ children, handler }) => {
+  return (
+    <form className="form" onSubmit={handler}>
+      {children}
+    </form>
+  );
 };
 
 export default Form;

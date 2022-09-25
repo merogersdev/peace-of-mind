@@ -8,13 +8,16 @@
 .button {
   @include flex-center;
   line-height: 3rem;
+  height: 3rem;
   text-decoration: none;
   border-radius: 0.25rem;
   text-transform: uppercase;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
   transition: 0.25s;
+  border: none;
+  width: 100%;
   &--primary {
     background-color: $primary;
     color: $white;

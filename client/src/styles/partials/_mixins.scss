@@ -40,7 +40,8 @@
   position: relative;
   width: 100%;
   @include flex-center;
-  @include mp-zero;
+  padding: 0;
+  margin: 0 0 2rem 0;
   @include tablet {
     font-size: 2.5rem;
   }

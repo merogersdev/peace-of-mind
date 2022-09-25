@@ -78,4 +78,37 @@ const postSignup = async (req, res) => {
   res.json({ message: "post signup" });
 };
 
-module.exports = { postLogin, postSignup };
+const getUserDetails = (req, res) => {
+  // Get Bearer token from header
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+
+  // Return unauthorized if no token
+  if (token == null)
+    return res.status(401).json({ success: false, error: "401: Unauthorized" });
+
+  // Verify token and get user
+
+  jwt.verify(token, privateKey, async (error, verifiedJwt) => {
+    if (error)
+      return res.status(403).json({ success: false, message: "Invalid Token" });
+
+    const user = await db("users")
+      .where("email", "=", verifiedJwt.email)
+      .first();
+
+    const entries = await db("entries").where("id", "=", user.id);
+
+    const userDetails = {
+      id: user.id,
+      email: user.email,
+      firstName: user.first_name,
+      lastName: user.last_name,
+      entries: entries || [],
+    };
+
+    return res.status(200).json({ userDetails });
+  });
+};
+
+module.exports = { postLogin, postSignup, getUserDetails };
