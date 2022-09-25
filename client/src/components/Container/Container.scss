@@ -1,0 +1,10 @@
+/* --- Partials --- */
+
+@use "../../styles/partials/variables" as *;
+
+/* --- Container --- */
+
+.container {
+  margin: 0 auto;
+  max-width: $breakpoint-desktop;
+}

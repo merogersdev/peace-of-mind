@@ -1,0 +1,17 @@
+/* --- Partials --- */
+
+@use "../../styles/partials/colors" as *;
+@use "../../styles/partials/mixins" as *;
+
+/* --- Main --- */
+
+.main {
+  padding: 3rem 0;
+  background-color: $light-bg;
+  width: 100%;
+  min-height: calc(100vh - 3rem);
+  @include tablet {
+    min-height: calc(100vh - 5rem);
+    padding-top: 5rem;
+  }
+}

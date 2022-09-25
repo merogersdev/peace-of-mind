@@ -1,0 +1,59 @@
+/* --- Partials --- */
+
+@use "../../styles/partials/colors" as *;
+@use "../../styles/partials/mixins" as *;
+
+/* --- Form --- */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  &__label {
+    display: flex;
+    flex-direction: column;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    color: $grey;
+    font-weight: 500;
+    margin-top: 1rem;
+  }
+  &__input {
+    background-color: $light-bg;
+    border: none;
+    outline: 1px solid $grey;
+    padding: 1rem 0.5rem;
+    margin-top: 0.2rem;
+    border-radius: 0.25rem;
+    font-size: 1rem;
+    font-weight: 500;
+    &:focus {
+      outline: 1px solid $primary;
+    }
+    &--error {
+      outline: 1px solid $error;
+      background-color: $error-bg;
+    }
+  }
+  &__rule-container {
+    height: 2.2rem;
+    position: relative;
+    &::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 1px;
+      margin: 0 auto;
+      width: 25%; /* or 100px */
+      border-bottom: 2px solid $grey;
+    }
+  }
+  &__button-container {
+    width: 100%;
+    display: flex;
+  }
+  &__message-container {
+    margin: 0.5rem 0;
+  }
+}

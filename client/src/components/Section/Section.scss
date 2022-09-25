@@ -1,0 +1,68 @@
+/* --- Partials --- */
+
+@use "../../styles/partials/colors" as *;
+@use "../../styles/partials/mixins" as *;
+@use "../../styles/partials/variables" as *;
+
+/* --- Section --- */
+
+.section {
+  background-color: $white;
+  position: relative;
+
+  margin: 0 auto;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+  padding: 3rem 1rem 1rem 1rem;
+
+  @include tablet {
+    width: 80%;
+    border-radius: 0.25rem;
+    padding: 5rem 1rem 1rem 1rem;
+  }
+  @include desktop {
+    width: $breakpoint-desktop;
+  }
+  &__icon-container {
+    @include flex-center;
+    color: $white;
+    background-color: $dark;
+    height: 3rem;
+    width: 3rem;
+    border-radius: 50%;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    top: -1.5rem;
+    @include tablet {
+      height: 5rem;
+      width: 5rem;
+      top: -2.5rem;
+    }
+  }
+  &__icon {
+    font-size: 1.8rem;
+    @include tablet {
+      font-size: 3rem;
+    }
+  }
+  &--mini {
+    max-width: $breakpoint-mobile;
+  }
+
+  &__h1 {
+    @include h1;
+  }
+
+  &__h2 {
+    @include h2;
+  }
+
+  &__h3 {
+    @include h3;
+  }
+
+  &__p {
+    @include p;
+  }
+}
