@@ -21,12 +21,13 @@ import {
 // Pages
 import Home from "./pages/Home/Home";
 import Dashboard from "./pages/Dashboard/Dashboard";
+import Register from "./pages/Register/Register";
 
 // Components
 import Header from "./components/Header/Header";
 import Main from "./components/Main/Main";
 
-import { MdPerson } from "react-icons/md";
+import { MdPerson, MdPersonAdd, MdLogin, MdDashboard } from "react-icons/md";
 
 const App = () => {
   return (
@@ -37,12 +38,18 @@ const App = () => {
           <Routes>
             <Route
               path="/"
-              element={<Home icon={<MdPerson className="section__icon" />} />}
+              element={<Home icon={<MdLogin className="section__icon" />} />}
             />
             <Route
               path="/dashboard"
               element={
-                <Dashboard icon={<MdPerson className="section__icon" />} />
+                <Dashboard icon={<MdDashboard className="section__icon" />} />
+              }
+            />
+            <Route
+              path="/register"
+              element={
+                <Register icon={<MdPersonAdd className="section__icon" />} />
               }
             />
           </Routes>

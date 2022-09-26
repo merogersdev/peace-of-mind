@@ -3,7 +3,7 @@ import "../../components/Button/Button.scss";
 
 import { useState, useEffect, useContext } from "react";
 
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useNavigate, Link } from "react-router-dom";
 
 import Section from "../../components/Section/Section";
 import Form from "../../components/Form/Form";
@@ -134,6 +134,11 @@ const Home = ({ icon }) => {
         </div>
         <div className="form__button-container">
           <button className="button button--primary">Login</button>
+        </div>
+        <div className="form__button-container">
+          <Link to="/register" className="button button--dark">
+            Register
+          </Link>
         </div>
       </Form>
     </Section>

@@ -18,6 +18,10 @@
   transition: 0.25s;
   border: none;
   width: 100%;
+  font-family: "Open Sans", sans-serif;
+  @include tablet {
+    max-width: 15rem;
+  }
   &--primary {
     background-color: $primary;
     color: $white;

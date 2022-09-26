@@ -14,6 +14,9 @@ const knex = require("knex");
 const knexConfig = require("../knexfile.js");
 const db = knex(knexConfig);
 
+// Axios
+const axios = require("axios");
+
 // POST - Log in user
 const postLogin = async (req, res) => {
   const { email, password } = req.body;
@@ -37,15 +40,15 @@ const postLogin = async (req, res) => {
   res.status(200).json({ success: true, token: `Bearer ${token}` });
 };
 
-// POST - Sign up user
-const postSignup = async (req, res) => {
+// POST - Register user
+const postRegister = async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
 
   // Check for all necessary info before proceeding
   if (!firstName || !lastName || !email || !password) {
     return res
       .status(400)
-      .json({ success: false, message: "Invalid User Signup" });
+      .json({ success: false, message: "Invalid User Registration" });
   }
 
   try {
@@ -72,10 +75,13 @@ const postSignup = async (req, res) => {
       .status(201)
       .json({ success: true, message: "User created successfully" });
   } catch (error) {
-    res.status(400).json({ success: false, message: "User signup failed" });
     console.error(error.message);
+    return res.status(400).json({
+      success: false,
+      message: "User registration failed",
+      error: error.message,
+    });
   }
-  res.json({ message: "post signup" });
 };
 
 const getUserDetails = (req, res) => {
@@ -111,4 +117,28 @@ const getUserDetails = (req, res) => {
   });
 };
 
-module.exports = { postLogin, postSignup, getUserDetails };
+const getQuote = async (req, res) => {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+
+  // Return unauthorized if no token
+  if (token == null)
+    return res.status(401).json({ success: false, error: "401: Unauthorized" });
+
+  try {
+    const response = await axios.get(
+      "https://api.api-ninjas.com/v1/quotes?category=inspirational",
+      {
+        headers: {
+          "X-Api-Key": process.env.API_KEY,
+        },
+      }
+    );
+
+    return res.status(200).json({ quote: response.data[0] });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+module.exports = { postLogin, postRegister, getUserDetails, getQuote };
