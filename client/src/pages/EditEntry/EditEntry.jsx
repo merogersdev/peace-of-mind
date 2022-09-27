@@ -1,4 +1,3 @@
-import "./EditEntry.scss";
 import "../../components/Button/Button.scss";
 
 import { useState, useEffect, useContext } from "react";
@@ -16,7 +15,7 @@ import UserContext from "../../context/UserContext";
 const EditEntry = ({ icon }) => {
   const { id } = useParams();
 
-  const { user, getUser, setUser } = useContext(UserContext);
+  const { user, getUser } = useContext(UserContext);
   const navigate = useNavigate();
 
   const [title, setTitle] = useState("");
@@ -32,11 +31,13 @@ const EditEntry = ({ icon }) => {
 
   const token = sessionStorage.getItem("token");
 
+  // Check if token, get user details
   useEffect(() => {
     if (!token) return;
     getUser();
   }, []);
 
+  // Get entry details and populate form
   useEffect(() => {
     if (user && user.entries) {
       const entry = user.entries.filter((entry) => entry.id === Number(id));
@@ -51,6 +52,7 @@ const EditEntry = ({ icon }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Error Reset
     setEditEntryError(false);
     setTitleError(false);
     setGratitudeError(false);
@@ -61,7 +63,6 @@ const EditEntry = ({ icon }) => {
     }
 
     // Register User
-
     const editedEntry = {
       id: id,
       title: title,
@@ -87,6 +88,7 @@ const EditEntry = ({ icon }) => {
     }
   };
 
+  // Check fields for blanks
   const handleValidateForm = () => {
     let ready = true;
     setTitleError(false);
@@ -119,7 +121,6 @@ const EditEntry = ({ icon }) => {
   return (
     <Section mini={true}>
       <div className="section__icon-container">{icon}</div>
-
       <h1 className="section__h1">Edit Entry</h1>
       <Form handler={handleSubmit}>
         <label className="form__label">
@@ -178,10 +179,12 @@ const EditEntry = ({ icon }) => {
           )}
         </div>
         <div className="form__button-container">
-          <button className="button button--primary">Edit Entry</button>
+          <button className="button button--primary button--expand">
+            Edit Entry
+          </button>
         </div>
         <div className="form__button-container">
-          <Link to="/dashboard" className="button button--dark">
+          <Link to="/dashboard" className="button button--dark button--expand">
             Back
           </Link>
         </div>
