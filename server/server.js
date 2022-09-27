@@ -23,7 +23,7 @@ require("./middleware/passport");
 
 // Middleware
 
-const { logRequests } = require("./middleware/logRequest");
+// const { logRequests } = require("./middleware/logRequest");
 
 app.use(express.json());
 app.use(
@@ -33,7 +33,7 @@ app.use(
   })
 );
 
-app.use(logRequests);
+// app.use(logRequests);
 app.use(helmet());
 
 app.use("/users", userRoutes);
@@ -45,5 +45,5 @@ app.use(
 
 // Listen
 app.listen(port, () => {
-  console.log(`> Server running on port: ${port} `);
+  console.log(`> Server running at http://localhost:${port} `);
 });
