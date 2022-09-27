@@ -1,4 +1,3 @@
-import "./Home.scss";
 import "../../components/Button/Button.scss";
 
 import { useState, useEffect, useContext } from "react";
@@ -14,8 +13,8 @@ import axios from "axios";
 import UserContext from "../../context/UserContext";
 
 const Home = ({ icon }) => {
-  const { user, setUser, getUser } = useContext(UserContext);
-  const navigate = useNavigate();
+  const { user, getUser } = useContext(UserContext);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -24,13 +23,17 @@ const Home = ({ icon }) => {
   const [loginError, setLoginError] = useState(false);
   const [loginSuccess, setLoginSuccess] = useState(false);
 
-  useEffect(() => {
-    const token = sessionStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
 
+  const navigate = useNavigate();
+
+  // If token, get user details
+  useEffect(() => {
     if (!token) return;
     getUser();
   }, []);
 
+  // If user logs in, go to dashboard
   useEffect(() => {
     if (loginSuccess) {
       navigate("/dashboard");
@@ -47,16 +50,15 @@ const Home = ({ icon }) => {
     }
 
     // Login User
-
     try {
       const response = await axios.post("/users/login", {
         email: email,
         password: password,
       });
 
-      const token = response.data.token.split(" ")[1];
-
+      // If successful login, store JWT token in browser
       if (response.data.success === true) {
+        const token = response.data.token.split(" ")[1];
         sessionStorage.setItem("token", token);
         setLoginSuccess(true);
       }
@@ -65,6 +67,7 @@ const Home = ({ icon }) => {
     }
   };
 
+  // Check for blanks and proper email
   const handleValidateForm = () => {
     let ready = true;
     setEmailError(false);
@@ -91,7 +94,6 @@ const Home = ({ icon }) => {
   return (
     <Section mini={true}>
       <div className="section__icon-container">{icon}</div>
-
       <h1 className="section__h1">Login</h1>
       <Form handler={handleSubmit}>
         <label className="form__label">
@@ -130,10 +132,12 @@ const Home = ({ icon }) => {
           {loginError && <Message type="error" message="Invalid credentials" />}
         </div>
         <div className="form__button-container">
-          <button className="button button--primary">Login</button>
+          <button className="button button--primary button--expand">
+            Login
+          </button>
         </div>
         <div className="form__button-container">
-          <Link to="/register" className="button button--dark">
+          <Link to="/register" className="button button--dark button--expand">
             Register
           </Link>
         </div>

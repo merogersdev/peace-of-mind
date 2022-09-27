@@ -1,9 +1,8 @@
-import "./AddEntry.scss";
 import "../../components/Button/Button.scss";
 
 import { useState, useEffect, useContext } from "react";
 
-import { Navigate, useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 import Section from "../../components/Section/Section";
 import Form from "../../components/Form/Form";
@@ -15,7 +14,6 @@ import UserContext from "../../context/UserContext";
 
 const AddEntry = ({ icon }) => {
   const { user, getUser } = useContext(UserContext);
-  const navigate = useNavigate();
 
   const [title, setTitle] = useState("");
   const [gratitude, setGratitude] = useState("");
@@ -28,12 +26,17 @@ const AddEntry = ({ icon }) => {
   const [addEntrySuccess, setAddEntrySuccess] = useState(false);
   const [addEntryError, setAddEntryError] = useState(false);
 
+  const navigate = useNavigate();
+
+  const token = sessionStorage.getItem("token");
+
+  // Check if token, then get use details
   useEffect(() => {
-    const token = sessionStorage.getItem("token");
     if (!token) return;
     getUser();
   }, []);
 
+  // Navigate to dashboard if entry addition successs
   useEffect(() => {
     if (addEntrySuccess) {
       navigate("/dashboard");
@@ -49,29 +52,36 @@ const AddEntry = ({ icon }) => {
     setEntryError(false);
 
     if (handleValidateForm() === false) {
-      console.log("fail");
       return;
     }
 
     // Register User
-
     try {
-      const response = await axios.post("/entries/", {
-        user_id: user.id,
-        title: title,
-        gratitude: gratitude,
-        entry: entry,
-      });
+      const response = await axios.post(
+        "/entries/",
+        {
+          user_id: user.id,
+          title: title,
+          gratitude: gratitude,
+          entry: entry,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+        }
+      );
 
       if (response.data.success === true) {
         setAddEntrySuccess(true);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       setAddEntryError(true);
     }
   };
 
+  // Check for form blanks
   const handleValidateForm = () => {
     let ready = true;
     setTitleError(false);
@@ -96,15 +106,9 @@ const AddEntry = ({ icon }) => {
     return ready;
   };
 
-  //If user session exists, go straight to dashboard.
-  // if (!user) {
-  //   return <Navigate to="/dashboard" />;
-  // }
-
   return (
     <Section mini={true}>
       <div className="section__icon-container">{icon}</div>
-
       <h1 className="section__h1">Add Entry</h1>
       <Form handler={handleSubmit}>
         <label className="form__label">
@@ -156,10 +160,12 @@ const AddEntry = ({ icon }) => {
           {addEntrySuccess && <Message type="success" message="Added entry" />}
         </div>
         <div className="form__button-container">
-          <button className="button button--primary">Add Entry</button>
+          <button className="button button--primary button--expand">
+            Add Entry
+          </button>
         </div>
         <div className="form__button-container">
-          <Link to="/" className="button button--dark">
+          <Link to="/" className="button button--dark button--expand">
             Back
           </Link>
         </div>

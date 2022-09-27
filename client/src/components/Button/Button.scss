@@ -18,7 +18,6 @@
   transition: 0.25s;
   border: none;
   width: 100%;
-
   font-family: "Open Sans", sans-serif;
 
   @include desktop {
@@ -77,5 +76,10 @@
   }
   &--spacer {
     margin-right: 0.25rem;
+  }
+  &--expand {
+    @include desktop {
+      max-width: 100%;
+    }
   }
 }

@@ -11,7 +11,6 @@ export function UserProvider({ children }) {
     const response = await axios.get("/users/details", {
       headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
     });
-    console.log(response.data);
     setUser(response.data.userDetails);
   };
 

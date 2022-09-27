@@ -1,4 +1,3 @@
-import "./Dashboard.scss";
 import "../../components/Button/Button.scss";
 
 import { useState, useContext } from "react";
@@ -29,24 +28,32 @@ const Dashboard = ({ icon }) => {
     navigate("/");
   };
 
+  const getQuote = async () => {
+    try {
+      const response = await axios.get("/users/quote/", {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      });
+      setQuote(response.data.quote.quote);
+      setAuthor(response.data.quote.author);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
     getUser();
-
-    const getQuote = async () => {
-      try {
-        const response = await axios.get("/users/quote/");
-        setQuote(response.data.quote.quote);
-        setAuthor(response.data.quote.author);
-      } catch (error) {
-        console.error(error);
-      }
-    };
     getQuote();
   }, []);
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`/entries/${id}`);
+      await axios.delete(`/entries/${id}`, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      });
       const updatedEntries = user.entries.filter((entry) => entry.id !== id);
       setUser({ ...user, entries: updatedEntries });
     } catch (error) {
@@ -55,20 +62,14 @@ const Dashboard = ({ icon }) => {
   };
 
   // Format Timestamp
-
   const formatDate = (date) => {
-    const dateTime = date;
-
-    let splitDate = dateTime.split(/[- :]/); //
+    let splitDate = date.split(/[- :]/); //
     let dayOfWeek = splitDate[2].split(/[T]/);
-
     let formattedDate = `${splitDate[1]}/${dayOfWeek[0]}/${splitDate[0]}`;
-
     return formattedDate;
   };
 
   // If no token, return to home
-
   if (!token) {
     return <Navigate to="/" />;
   }

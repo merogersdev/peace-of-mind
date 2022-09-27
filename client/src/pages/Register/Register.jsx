@@ -1,4 +1,3 @@
-import "./Register.scss";
 import "../../components/Button/Button.scss";
 
 import { useState, useEffect, useContext } from "react";
@@ -15,7 +14,6 @@ import UserContext from "../../context/UserContext";
 
 const Register = ({ icon }) => {
   const { user, getUser } = useContext(UserContext);
-  const navigate = useNavigate();
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -31,12 +29,17 @@ const Register = ({ icon }) => {
   const [registerError, setRegisterError] = useState(false);
   const [registerSuccess, setRegisterSuccess] = useState(false);
 
+  const token = sessionStorage.getItem("token");
+
+  const navigate = useNavigate();
+
+  // If token, get user details.
   useEffect(() => {
-    const token = sessionStorage.getItem("token");
     if (!token) return;
     getUser();
   }, []);
 
+  // On register success, go to login page
   useEffect(() => {
     if (registerSuccess) {
       navigate("/");
@@ -58,7 +61,6 @@ const Register = ({ icon }) => {
     }
 
     // Register User
-
     try {
       const response = await axios.post("/users/register", {
         firstName: firstName,
@@ -76,6 +78,7 @@ const Register = ({ icon }) => {
     }
   };
 
+  // Check for blanks, proper email and password match
   const handleValidateForm = () => {
     let ready = true;
     setEmailError(false);
@@ -117,7 +120,6 @@ const Register = ({ icon }) => {
   return (
     <Section mini={true}>
       <div className="section__icon-container">{icon}</div>
-
       <h1 className="section__h1">Register</h1>
       <Form handler={handleSubmit}>
         <label className="form__label">
