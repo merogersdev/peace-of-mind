@@ -34,7 +34,11 @@ const Dashboard = ({ icon }) => {
 
     const getQuote = async () => {
       try {
-        const response = await axios.get("/users/quote/");
+        const response = await axios.get("/users/quote/", {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+        });
         setQuote(response.data.quote.quote);
         setAuthor(response.data.quote.author);
       } catch (error) {
@@ -46,7 +50,11 @@ const Dashboard = ({ icon }) => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`/entries/${id}`);
+      await axios.delete(`/entries/${id}`, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      });
       const updatedEntries = user.entries.filter((entry) => entry.id !== id);
       setUser({ ...user, entries: updatedEntries });
     } catch (error) {

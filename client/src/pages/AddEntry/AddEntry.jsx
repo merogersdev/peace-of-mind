@@ -49,25 +49,32 @@ const AddEntry = ({ icon }) => {
     setEntryError(false);
 
     if (handleValidateForm() === false) {
-      console.log("fail");
       return;
     }
 
     // Register User
 
     try {
-      const response = await axios.post("/entries/", {
-        user_id: user.id,
-        title: title,
-        gratitude: gratitude,
-        entry: entry,
-      });
+      const response = await axios.post(
+        "/entries/",
+        {
+          user_id: user.id,
+          title: title,
+          gratitude: gratitude,
+          entry: entry,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+        }
+      );
 
       if (response.data.success === true) {
         setAddEntrySuccess(true);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       setAddEntryError(true);
     }
   };

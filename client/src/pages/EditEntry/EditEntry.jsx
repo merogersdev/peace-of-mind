@@ -70,7 +70,11 @@ const EditEntry = ({ icon }) => {
     };
 
     try {
-      const response = await axios.patch(`/entries/${id}`, editedEntry);
+      const response = await axios.patch(`/entries/${id}`, editedEntry, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      });
 
       if (response.data.success === true) {
         setEditEntrySuccess(true);
