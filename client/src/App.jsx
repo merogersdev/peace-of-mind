@@ -4,20 +4,16 @@ import { UserProvider } from "./context/UserContext";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-// Pages
 import Home from "./pages/Home/Home";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import Register from "./pages/Register/Register";
 import AddEntry from "./pages/AddEntry/AddEntry";
 import EditEntry from "./pages/EditEntry/EditEntry";
 
-// Components
 import Header from "./components/Header/Header";
 import Main from "./components/Main/Main";
 
 import { MdEditNote, MdPersonAdd, MdLogin, MdDashboard } from "react-icons/md";
-
-console.log;
 
 const App = () => {
   return (
