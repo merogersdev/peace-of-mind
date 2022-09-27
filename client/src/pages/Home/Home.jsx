@@ -3,7 +3,7 @@ import "../../components/Button/Button.scss";
 
 import { useState, useEffect, useContext } from "react";
 
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useNavigate, Link } from "react-router-dom";
 
 import Section from "../../components/Section/Section";
 import Form from "../../components/Form/Form";
@@ -43,7 +43,6 @@ const Home = ({ icon }) => {
     setLoginError(false);
 
     if (handleValidateForm() === false) {
-      console.log("fail");
       return;
     }
 
@@ -58,12 +57,10 @@ const Home = ({ icon }) => {
       const token = response.data.token.split(" ")[1];
 
       if (response.data.success === true) {
-        console.log("alright");
         sessionStorage.setItem("token", token);
         setLoginSuccess(true);
       }
     } catch (error) {
-      console.log(error);
       setLoginError(true);
     }
   };
@@ -134,6 +131,11 @@ const Home = ({ icon }) => {
         </div>
         <div className="form__button-container">
           <button className="button button--primary">Login</button>
+        </div>
+        <div className="form__button-container">
+          <Link to="/register" className="button button--dark">
+            Register
+          </Link>
         </div>
       </Form>
     </Section>

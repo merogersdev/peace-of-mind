@@ -9,15 +9,13 @@
 .section {
   background-color: $white;
   position: relative;
-
-  margin: 0 auto;
+  padding: 1rem;
+  margin: 0 auto 2rem auto;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
-  padding: 3rem 1rem 1rem 1rem;
 
   @include tablet {
     width: 80%;
     border-radius: 0.25rem;
-    padding: 5rem 1rem 1rem 1rem;
   }
   @include desktop {
     width: $breakpoint-desktop;
@@ -34,16 +32,29 @@
     right: 0;
     margin: 0 auto;
     top: -1.5rem;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1), 0 3px 3px rgba(0, 0, 0, 0.23);
     @include tablet {
       height: 5rem;
       width: 5rem;
       top: -2.5rem;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1), 0 6px 6px rgba(0, 0, 0, 0.23);
+    }
+  }
+  &__button-container {
+    @include flex-center;
+    margin-top: 4rem;
+    flex-direction: column;
+    @include tablet {
+      flex-direction: row;
     }
   }
   &__icon {
     font-size: 1.8rem;
     @include tablet {
       font-size: 3rem;
+    }
+    &--space {
+      margin-left: 1rem;
     }
   }
   &--mini {
@@ -52,6 +63,13 @@
 
   &__h1 {
     @include h1;
+    padding: 2rem 1rem 1rem 1rem;
+    @include tablet {
+      padding: 3rem 1rem 1rem 1rem;
+    }
+    &--no-icon {
+      padding: 1rem;
+    }
   }
 
   &__h2 {
@@ -60,9 +78,48 @@
 
   &__h3 {
     @include h3;
+    justify-content: flex-start;
+    margin: 0;
+    padding: 0;
   }
 
   &__p {
     @include p;
+
+    &--quote {
+      border-left: 3px solid $primary;
+      padding-left: 1rem;
+    }
+    &--author {
+      color: $dark-grey;
+      text-transform: uppercase;
+      font-style: italic;
+      margin: 0 0 0.1rem 0;
+      font-size: 0.9rem;
+    }
+  }
+
+  &__entry-list {
+    list-style: none;
+    @include mp-zero;
+  }
+
+  &__entry-listitem {
+    border-left: 3px solid $primary;
+    padding: 0 0.25rem 0 1rem;
+    margin-top: 0.5rem;
+    display: flex;
+    width: 100%;
+    background-color: $light-bg;
+    border-radius: 0 0.25rem 0.25rem 0;
+  }
+
+  &__entry-info {
+    flex-grow: 1;
+  }
+
+  &__entry-interact {
+    @include flex-center;
+    justify-content: space-between;
   }
 }

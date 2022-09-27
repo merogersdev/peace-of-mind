@@ -11,6 +11,7 @@ module.exports = {
   client: "mysql",
   connection: {
     host: process.env.MYSQL_HOST,
+    socketPath: process.env.socketPath,
     port: process.env.MYSQL_PORT,
     user: process.env.MYSQL_USER,
     password: process.env.MYSQL_PASS,

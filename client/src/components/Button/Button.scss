@@ -18,12 +18,28 @@
   transition: 0.25s;
   border: none;
   width: 100%;
+
+  font-family: "Open Sans", sans-serif;
+
+  @include desktop {
+    max-width: 20rem;
+  }
+  &--top {
+    margin: 0 0 1rem 0;
+    @include tablet {
+      margin: 0 1rem 0 0;
+    }
+  }
   &--primary {
     background-color: $primary;
     color: $white;
     &:hover {
       background-color: $primary-hover;
     }
+  }
+  &--big-icon {
+    font-size: 1.5rem;
+    padding: 0 1rem;
   }
   &--primary-outline {
     background-color: $white;
@@ -50,5 +66,16 @@
       border: 2px solid $dark-hover;
       background-color: $background;
     }
+  }
+
+  &--delete {
+    background-color: $error;
+    color: $white;
+    &:hover {
+      background-color: $error-hover;
+    }
+  }
+  &--spacer {
+    margin-right: 0.25rem;
   }
 }
