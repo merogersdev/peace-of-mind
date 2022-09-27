@@ -21,10 +21,6 @@ const passport = require("passport");
 app.use(passport.initialize());
 require("./middleware/passport");
 
-// Middleware
-
-// const { logRequests } = require("./middleware/logRequest");
-
 app.use(express.json());
 app.use(
   cors({
@@ -33,7 +29,6 @@ app.use(
   })
 );
 
-// app.use(logRequests);
 app.use(helmet());
 
 app.use("/users", userRoutes);

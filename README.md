@@ -50,19 +50,23 @@ API_KEY=''
 
 > npm i
 
-5. Run the following command in your terminal to start the backend server.
+5. Run inital database migration script (Creates tables and necessary columns)
+
+> npm run migrate
+
+6. Run the following command in your terminal to start the backend server.
 
 > npm run dev
 
-6. In another terminal, cd into the 'client' directory and install the frontend packages.
+7. In another terminal, cd into the 'client' directory and install the frontend packages.
 
 > npm i
 
-7. Run the client development server. Note, the client connects automatically to the backend via http://localhost:5000.
+8. Run the client development server. Note, the client connects automatically to the backend via http://localhost:5000.
 
 > npm run dev
 
-8. (Optional) To create a production build of the client files, run:
+9. (Optional) To create a production build of the client files, run:
 
 > npm run build
 
