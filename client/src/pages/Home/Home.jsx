@@ -43,7 +43,6 @@ const Home = ({ icon }) => {
     setLoginError(false);
 
     if (handleValidateForm() === false) {
-      console.log("fail");
       return;
     }
 
@@ -58,12 +57,10 @@ const Home = ({ icon }) => {
       const token = response.data.token.split(" ")[1];
 
       if (response.data.success === true) {
-        console.log("alright");
         sessionStorage.setItem("token", token);
         setLoginSuccess(true);
       }
     } catch (error) {
-      console.log(error);
       setLoginError(true);
     }
   };
