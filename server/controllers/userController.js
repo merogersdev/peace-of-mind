@@ -103,7 +103,7 @@ const getUserDetails = (req, res) => {
       .where("email", "=", verifiedJwt.email)
       .first();
 
-    const entries = await db("entries").where("id", "=", user.id);
+    const entries = await db("entries").where("user_id", "=", user.id);
 
     const userDetails = {
       id: user.id,

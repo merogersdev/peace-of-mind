@@ -71,7 +71,7 @@ const Register = ({ icon }) => {
         setRegisterSuccess(true);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       setRegisterError(true);
     }
   };

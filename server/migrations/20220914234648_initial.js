@@ -14,7 +14,8 @@ exports.up = function (knex) {
     .createTable("entries", (table) => {
       table.increments("id").primary();
       table.integer("user_id").unsigned().notNullable();
-      table.string("description", 100).notNullable();
+      table.string("title", 100).notNullable();
+      table.string("gratitude", 100).notNullable();
       table.text("entry").notNullable();
       table
         .dateTime("created_at")

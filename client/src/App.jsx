@@ -22,12 +22,14 @@ import {
 import Home from "./pages/Home/Home";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import Register from "./pages/Register/Register";
+import AddEntry from "./pages/AddEntry/AddEntry";
+import EditEntry from "./pages/EditEntry/EditEntry";
 
 // Components
 import Header from "./components/Header/Header";
 import Main from "./components/Main/Main";
 
-import { MdPerson, MdPersonAdd, MdLogin, MdDashboard } from "react-icons/md";
+import { MdEditNote, MdPersonAdd, MdLogin, MdDashboard } from "react-icons/md";
 
 const App = () => {
   return (
@@ -50,6 +52,18 @@ const App = () => {
               path="/register"
               element={
                 <Register icon={<MdPersonAdd className="section__icon" />} />
+              }
+            />
+            <Route
+              path="/add-entry"
+              element={
+                <AddEntry icon={<MdEditNote className="section__icon" />} />
+              }
+            />
+            <Route
+              path="/edit-entry/:id"
+              element={
+                <EditEntry icon={<MdEditNote className="section__icon" />} />
               }
             />
           </Routes>
