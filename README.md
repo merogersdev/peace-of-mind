@@ -20,25 +20,7 @@ Once you have cloned this repository to your computer, this application has the 
 
 ---
 
-1. Create a .env file in the 'server' directory and add the following environment variables, replacing MySQL credentials with your own.
-
-/server/.env
-
-```
-# MySQL
-
-MYSQL_HOST=mysql_host
-MYSQL_PORT=3306
-MYSQL_USER=mysql_user
-MYSQL_PASS=mysql_password
-MYSQL_DATA=mysql_database
-
-# JWT
-
-JWT_SECRET=
-
-API_KEY=''
-```
+1. Copy /server/.env.example to /server/.env and populate with MySQL credentials.
 
 2. To generate a JWT token, copy/paste the following command into your terminal and add the string to the JWT_SECRET in the /server/.env file
 
@@ -62,7 +44,7 @@ API_KEY=''
 
 > npm i
 
-8. Run the client development server. Note, the client connects automatically to the backend via http://localhost:5000.
+8. Run the client development server.
 
 > npm run dev
 
@@ -72,9 +54,11 @@ API_KEY=''
 
 ## Deployment to Production (Optional)
 
+### Docker
+
 This application was built to be platform agnostic, and utilizes docker containers for both the frontend and backend.
 
-### Build Server Image
+#### Build Server Image
 
 1. The Server file can be built directly, run the following command from the parent directory:
 
@@ -82,7 +66,7 @@ This application was built to be platform agnostic, and utilizes docker containe
 
 2. Push the image and deploy to your favourite container service (AWS, Google Cloud...etc). Use the same environment variables as the /server/.env file. Make a note of the public URL.
 
-### Build Client Image
+#### Build Client Image
 
 The client image is a multi-stage image. It first creates a build copy of the client files and then deploys the static files via nginx.
 
@@ -94,6 +78,11 @@ The client image is a multi-stage image. It first creates a build copy of the cl
 
 3. Push to your container registry of choice and deploy.
 
+### Node.js
+
+1. Copy server/.env.example to server.env and populate credentials.
+2. In the /server/ directory, run `yarn run node-deploy`
+
 ## Tags
 
 ![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)
@@ -104,5 +93,4 @@ The client image is a multi-stage image. It first creates a build copy of the cl
 ![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)
 ![MySQL](https://img.shields.io/badge/mysql-%2300f.svg?style=for-the-badge&logo=mysql&logoColor=white)
 ![JWT](https://img.shields.io/badge/JWT-black?style=for-the-badge&logo=JSON%20web%20tokens)
-![Google Cloud](https://img.shields.io/badge/GoogleCloud-%234285F4.svg?style=for-the-badge&logo=google-cloud&logoColor=white)
 ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
