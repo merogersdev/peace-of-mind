@@ -1,14 +1,14 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const passport = require('passport');
+const passport = require("passport");
 
-const userRoutes = require('./userRoutes');
-const entryRoutes = require('./entryRoutes');
+const userRoutes = require("./userRoutes");
+const entryRoutes = require("./entryRoutes");
 
-router.use('/users', userRoutes);
+router.use("/users", userRoutes);
 router.use(
-  '/entries',
-  passport.authenticate('jwt', { session: false }),
+  "/entries",
+  passport.authenticate("jwt", { session: false }),
   entryRoutes
 );
 

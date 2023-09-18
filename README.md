@@ -1,6 +1,10 @@
 # Peace of Mind
 
-BrainStation Web Development Bootcamp Capstone Project
+![Peace Of Mind Screenshot](https://my-portfolio-screens.s3.ca-central-1.amazonaws.com/peaceofmind/peaceofmind-screenshot.png)
+
+## Quick Summary
+
+BrainStation Web Development Bootcamp Capstone Project. Utilizes SASS/SCSS, React, JWT Tokens, Vite, Node, Express and a MySQL Database. Demo is deployed to an AWS EC2 instance running Ubuntu Server.
 
 ## Goal
 
@@ -11,7 +15,7 @@ Peace of Mind is an application meant to assist in the day-to-day self-care and 
 - Allows users to login and make journal entries, and keep track of their daily gratitudes.
 - Retrieves a random inspirational quote when you log in.
 
-## Initial Setup (Development and Testing)
+## Initial Setup (Development)
 
 Once you have cloned this repository to your computer, this application has the following prerequisites:
 
@@ -52,45 +56,14 @@ Once you have cloned this repository to your computer, this application has the 
 
 > npm run build
 
-## Deployment to Production (Optional)
-
-### Docker
-
-This application was built to be platform agnostic, and utilizes docker containers for both the frontend and backend.
-
-#### Build Server Image
-
-1. The Server file can be built directly, run the following command from the parent directory:
-
-> docker build -t server server
-
-2. Push the image and deploy to your favourite container service (AWS, Google Cloud...etc). Use the same environment variables as the /server/.env file. Make a note of the public URL.
-
-#### Build Client Image
-
-The client image is a multi-stage image. It first creates a build copy of the client files and then deploys the static files via nginx.
-
-1. Open /client/src/App.jsx and replace the value of 'axios.defaults.baseURL' with the server image public URL.
-
-2. From the parent directory, run the following command to create an image:
-
-> docker build -t client client
-
-3. Push to your container registry of choice and deploy.
-
-### Node.js
-
-1. Copy server/.env.example to server.env and populate credentials.
-2. In the /server/ directory, run `yarn run node-deploy`
-
 ## Tags
 
 ![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)
 ![SASS](https://img.shields.io/badge/SASS-hotpink.svg?style=for-the-badge&logo=SASS&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
 ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
+![JWT](https://img.shields.io/badge/JWT-black?style=for-the-badge&logo=JSON%20web%20tokens)
 ![Express.js](https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB)
 ![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)
 ![MySQL](https://img.shields.io/badge/mysql-%2300f.svg?style=for-the-badge&logo=mysql&logoColor=white)
-![JWT](https://img.shields.io/badge/JWT-black?style=for-the-badge&logo=JSON%20web%20tokens)
-![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
+![Ubuntu](https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)
