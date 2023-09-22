@@ -1,0 +1,21 @@
+{
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es2021": true
+  },
+  "extends": ["airbnb-base", "prettier"],
+  "plugins": ["prettier"],
+  "parserOptions": {
+    "ecmaVersion": "latest"
+  },
+  "rules": {
+    // Allow descriptive console statements
+    "no-console": [
+      "warn",
+      { "allow": ["clear", "info", "error", "dir", "trace"] }
+    ],
+    // Allow No Function Names for Knex Migrations
+    "func-names": "off"
+  }
+}
