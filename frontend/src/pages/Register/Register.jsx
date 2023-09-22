@@ -4,15 +4,14 @@ import { useState, useEffect, useContext } from "react";
 
 import { Navigate, useNavigate, Link } from "react-router-dom";
 
+import axios from "axios";
 import Section from "../../components/Section/Section";
 import Form from "../../components/Form/Form";
 import Message from "../../components/Message/Message";
 
-import axios from "axios";
-
 import UserContext from "../../context/UserContext";
 
-const Register = ({ icon }) => {
+export default function Register({ icon }) {
   const { user, getUser } = useContext(UserContext);
 
   const [firstName, setFirstName] = useState("");
@@ -56,6 +55,40 @@ const Register = ({ icon }) => {
     setPasswordError(false);
     setConfirmPasswordError(false);
 
+    // Check for blanks, proper email and password match
+    const handleValidateForm = () => {
+      let ready = true;
+      setEmailError(false);
+      setPasswordError(false);
+
+      if (firstName.length < 1) {
+        setFirstNameError(true);
+        ready = false;
+      }
+
+      if (lastName.length < 1) {
+        setLastNameError(true);
+        ready = false;
+      }
+
+      if (email.length < 1 || !email.includes("@")) {
+        setEmailError(true);
+        ready = false;
+      }
+
+      if (password.length < 6) {
+        setPasswordError(true);
+        ready = false;
+      }
+
+      if (password !== confirmPassword) {
+        setConfirmPasswordError(true);
+        ready = false;
+      }
+
+      return ready;
+    };
+
     if (handleValidateForm() === false) {
       return;
     }
@@ -63,10 +96,10 @@ const Register = ({ icon }) => {
     // Register User
     try {
       const response = await axios.post("/users/register", {
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        password: password,
+        firstName,
+        lastName,
+        email,
+        password,
       });
 
       if (response.data.success === true) {
@@ -78,57 +111,23 @@ const Register = ({ icon }) => {
     }
   };
 
-  // Check for blanks, proper email and password match
-  const handleValidateForm = () => {
-    let ready = true;
-    setEmailError(false);
-    setPasswordError(false);
-
-    if (firstName.length < 1) {
-      setFirstNameError(true);
-      ready = false;
-    }
-
-    if (lastName.length < 1) {
-      setLastNameError(true);
-      ready = false;
-    }
-
-    if (email.length < 1 || !email.includes("@")) {
-      setEmailError(true);
-      ready = false;
-    }
-
-    if (password.length < 6) {
-      setPasswordError(true);
-      ready = false;
-    }
-
-    if (password !== confirmPassword) {
-      setConfirmPasswordError(true);
-      ready = false;
-    }
-
-    return ready;
-  };
-
-  //If user session exists, go straight to dashboard.
+  // If user session exists, go straight to dashboard.
   if (user) {
     return <Navigate to="/dashboard" />;
   }
 
   return (
-    <Section mini={true}>
+    <Section mini>
       <div className="section__icon-container">{icon}</div>
       <h1 className="section__h1">Register</h1>
       <Form handler={handleSubmit}>
-        <label className="form__label">
+        <label className="form__label" htmlFor="firstName">
           First Name
           <input
             className={`form__input${
               firstNameError ? " form__input--error" : ""
             }`}
-            name="email"
+            name="firstName"
             onChange={(e) => setFirstName(e.target.value)}
           />
           <div className="form__message-container">
@@ -137,13 +136,13 @@ const Register = ({ icon }) => {
             )}
           </div>
         </label>
-        <label className="form__label">
+        <label className="form__label" htmlFor="lastName">
           Last Name
           <input
             className={`form__input${
               lastNameError ? " form__input--error" : ""
             }`}
-            name="email"
+            name="lastName"
             onChange={(e) => setLastName(e.target.value)}
           />
           <div className="form__message-container">
@@ -152,7 +151,7 @@ const Register = ({ icon }) => {
             )}
           </div>
         </label>
-        <label className="form__label">
+        <label className="form__label" htmlFor="email">
           Email
           <input
             className={`form__input${emailError ? " form__input--error" : ""}`}
@@ -165,7 +164,7 @@ const Register = ({ icon }) => {
             )}
           </div>
         </label>
-        <label className="form__label">
+        <label className="form__label" htmlFor="password">
           Password
           <input
             className={`form__input${
@@ -184,13 +183,13 @@ const Register = ({ icon }) => {
             )}
           </div>
         </label>
-        <label className="form__label">
+        <label className="form__label" htmlFor="confirmPassword">
           Confirm Password
           <input
             className={`form__input${
               confirmPasswordError ? " form__input--error" : ""
             }`}
-            name="confirm-password"
+            name="confirmPassword"
             type="password"
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
@@ -208,7 +207,9 @@ const Register = ({ icon }) => {
           )}
         </div>
         <div className="form__button-container">
-          <button className="button button--primary">Register</button>
+          <button type="submit" className="button button--primary">
+            Register
+          </button>
         </div>
         <div className="form__button-container">
           <Link to="/" className="button button--dark">
@@ -218,6 +219,4 @@ const Register = ({ icon }) => {
       </Form>
     </Section>
   );
-};
-
-export default Register;
+}

@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useState, useMemo } from "react";
 
 import axios from "axios";
 
@@ -14,8 +14,14 @@ export function UserProvider({ children }) {
     setUser(response.data.userDetails);
   };
 
+  // Memoize the context
+  const userProviderValue = useMemo(
+    () => ({ user, setUser, getUser }),
+    [user, setUser, getUser]
+  );
+
   return (
-    <UserContext.Provider value={{ user, setUser, getUser }}>
+    <UserContext.Provider value={userProviderValue}>
       {children}
     </UserContext.Provider>
   );

@@ -1,19 +1,17 @@
 import "../../components/Button/Button.scss";
 
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { Navigate, useNavigate, Link } from "react-router-dom";
+import { MdInsertEmoticon, MdModeEdit, MdDelete } from "react-icons/md";
 
-import UserContext from "../../context/UserContext";
+import axios from "axios";
 
 import Section from "../../components/Section/Section";
 import Message from "../../components/Message/Message";
 
-import { useEffect } from "react";
-import axios from "axios";
+import UserContext from "../../context/UserContext";
 
-import { MdInsertEmoticon, MdModeEdit, MdDelete } from "react-icons/md";
-
-const Dashboard = ({ icon }) => {
+export default function Dashboard({ icon }) {
   const { user, setUser, getUser } = useContext(UserContext);
   const token = sessionStorage.getItem("token");
 
@@ -63,9 +61,9 @@ const Dashboard = ({ icon }) => {
 
   // Format Timestamp
   const formatDate = (date) => {
-    let splitDate = date.split(/[- :]/); //
-    let dayOfWeek = splitDate[2].split(/[T]/);
-    let formattedDate = `${splitDate[1]}/${dayOfWeek[0]}/${splitDate[0]}`;
+    const splitDate = date.split(/[- :]/); //
+    const dayOfWeek = splitDate[2].split(/[T]/);
+    const formattedDate = `${splitDate[1]}/${dayOfWeek[0]}/${splitDate[0]}`;
     return formattedDate;
   };
 
@@ -91,7 +89,11 @@ const Dashboard = ({ icon }) => {
             >
               Add Entry
             </Link>
-            <button className="button button--dark" onClick={logoutUser}>
+            <button
+              type="button"
+              className="button button--dark"
+              onClick={logoutUser}
+            >
               Logout
             </button>
           </div>
@@ -130,7 +132,10 @@ const Dashboard = ({ icon }) => {
                   >
                     <MdModeEdit />
                   </Link>
-                  <button className="button button--delete button--big-icon">
+                  <button
+                    type="button"
+                    className="button button--delete button--big-icon"
+                  >
                     <MdDelete onClick={() => handleDelete(entry.id)} />
                   </button>
                 </div>
@@ -141,6 +146,4 @@ const Dashboard = ({ icon }) => {
       </>
     )
   );
-};
-
-export default Dashboard;
+}

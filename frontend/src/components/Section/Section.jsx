@@ -1,11 +1,9 @@
 import "./Section.scss";
 
-const Section = ({ children, mini }) => {
+export default function Section({ children, mini }) {
   return (
     <section className={`section${mini ? " section--mini" : ""}`}>
       {children}
     </section>
   );
-};
-
-export default Section;
+}

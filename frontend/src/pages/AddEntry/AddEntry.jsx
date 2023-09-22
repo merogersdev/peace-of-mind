@@ -4,15 +4,14 @@ import { useState, useEffect, useContext } from "react";
 
 import { useNavigate, Link } from "react-router-dom";
 
+import axios from "axios";
 import Section from "../../components/Section/Section";
 import Form from "../../components/Form/Form";
 import Message from "../../components/Message/Message";
 
-import axios from "axios";
-
 import UserContext from "../../context/UserContext";
 
-const AddEntry = ({ icon }) => {
+export default function AddEntry({ icon }) {
   const { user, getUser } = useContext(UserContext);
 
   const [title, setTitle] = useState("");
@@ -51,6 +50,30 @@ const AddEntry = ({ icon }) => {
     setGratitudeError(false);
     setEntryError(false);
 
+    const handleValidateForm = () => {
+      let ready = true;
+      setTitleError(false);
+      setGratitudeError(false);
+      setEntryError(false);
+
+      if (title.length < 1) {
+        setTitleError(true);
+        ready = false;
+      }
+
+      if (gratitude.length < 1) {
+        setGratitudeError(true);
+        ready = false;
+      }
+
+      if (entry.length < 1) {
+        setEntryError(true);
+        ready = false;
+      }
+
+      return ready;
+    };
+
     if (handleValidateForm() === false) {
       return;
     }
@@ -61,9 +84,9 @@ const AddEntry = ({ icon }) => {
         "/entries/",
         {
           user_id: user.id,
-          title: title,
-          gratitude: gratitude,
-          entry: entry,
+          title,
+          gratitude,
+          entry,
         },
         {
           headers: {
@@ -81,37 +104,12 @@ const AddEntry = ({ icon }) => {
     }
   };
 
-  // Check for form blanks
-  const handleValidateForm = () => {
-    let ready = true;
-    setTitleError(false);
-    setGratitudeError(false);
-    setEntryError(false);
-
-    if (title.length < 1) {
-      setTitleError(true);
-      ready = false;
-    }
-
-    if (gratitude.length < 1) {
-      setGratitudeError(true);
-      ready = false;
-    }
-
-    if (entry.length < 1) {
-      setEntryError(true);
-      ready = false;
-    }
-
-    return ready;
-  };
-
   return (
-    <Section mini={true}>
+    <Section mini>
       <div className="section__icon-container">{icon}</div>
       <h1 className="section__h1">Add Entry</h1>
       <Form handler={handleSubmit}>
-        <label className="form__label">
+        <label className="form__label" htmlFor="title">
           Title
           <input
             className={`form__input${titleError ? " form__input--error" : ""}`}
@@ -124,7 +122,7 @@ const AddEntry = ({ icon }) => {
             )}
           </div>
         </label>
-        <label className="form__label">
+        <label className="form__label" htmlFor="gratitude">
           Gratitude
           <textarea
             className={`form__textarea form__textarea--mini${
@@ -132,14 +130,14 @@ const AddEntry = ({ icon }) => {
             }`}
             name="gratitude"
             onChange={(e) => setGratitude(e.target.value)}
-          ></textarea>
+          />
           <div className="form__message-container">
             {gratitudeError && (
               <Message type="error" message="Gratitude cannot be blank" />
             )}
           </div>
         </label>
-        <label className="form__label">
+        <label className="form__label" htmlFor="entry">
           Entry
           <textarea
             className={`form__textarea${
@@ -147,7 +145,7 @@ const AddEntry = ({ icon }) => {
             }`}
             name="entry"
             onChange={(e) => setEntry(e.target.value)}
-          ></textarea>
+          />
           <div className="form__message-container">
             {entryError && (
               <Message type="error" message="Entry cannot be blank" />
@@ -160,7 +158,10 @@ const AddEntry = ({ icon }) => {
           {addEntrySuccess && <Message type="success" message="Added entry" />}
         </div>
         <div className="form__button-container">
-          <button className="button button--primary button--expand">
+          <button
+            type="submit"
+            className="button button--primary button--expand"
+          >
             Add Entry
           </button>
         </div>
@@ -172,6 +173,4 @@ const AddEntry = ({ icon }) => {
       </Form>
     </Section>
   );
-};
-
-export default AddEntry;
+}

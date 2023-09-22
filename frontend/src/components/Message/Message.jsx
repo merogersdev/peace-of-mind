@@ -11,10 +11,8 @@ success
 
 */
 
-const Message = ({ type = "info", message = "Loading..." }) => {
+export default function Message({ type = "info", message = "Loading..." }) {
   return (
     <div className={`message${type ? ` message--${type}` : ""}`}>{message}</div>
   );
-};
-
-export default Message;
+}

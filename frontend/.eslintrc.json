@@ -1,0 +1,23 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": ["airbnb", "prettier"],
+  "plugins": ["prettier"],
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "rules": {
+    // Assumes react already
+    "react/react-in-jsx-scope": "off",
+    // Allow descriptive console statements
+    "no-console": [
+      "warn",
+      { "allow": ["clear", "info", "error", "dir", "trace"] }
+    ],
+    // No prop types, deprecated
+    "react/prop-types": "off"
+  }
+}

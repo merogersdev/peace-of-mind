@@ -2,7 +2,7 @@ import "./Header.scss";
 
 import Container from "../Container/Container";
 
-const Header = ({ title }) => {
+export default function Header({ title }) {
   return (
     <header className="header">
       <Container>
@@ -10,6 +10,4 @@ const Header = ({ title }) => {
       </Container>
     </header>
   );
-};
-
-export default Header;
+}

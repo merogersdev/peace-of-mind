@@ -4,15 +4,14 @@ import { useState, useEffect, useContext } from "react";
 
 import { Navigate, useNavigate, Link } from "react-router-dom";
 
+import axios from "axios";
 import Section from "../../components/Section/Section";
 import Form from "../../components/Form/Form";
 import Message from "../../components/Message/Message";
 
-import axios from "axios";
-
 import UserContext from "../../context/UserContext";
 
-const Home = ({ icon }) => {
+export default function Home({ icon }) {
   const { user, getUser } = useContext(UserContext);
 
   const [email, setEmail] = useState("");
@@ -45,6 +44,25 @@ const Home = ({ icon }) => {
 
     setLoginError(false);
 
+    // Check for blanks and proper email
+    const handleValidateForm = () => {
+      let ready = true;
+      setEmailError(false);
+      setPasswordError(false);
+
+      if (email.length < 1 || !email.includes("@")) {
+        setEmailError(true);
+        ready = false;
+      }
+
+      if (password.length < 6) {
+        setPasswordError(true);
+        ready = false;
+      }
+
+      return ready;
+    };
+
     if (handleValidateForm() === false) {
       return;
     }
@@ -52,14 +70,14 @@ const Home = ({ icon }) => {
     // Login User
     try {
       const response = await axios.post("/users/login", {
-        email: email,
-        password: password,
+        email,
+        password,
       });
 
       // If successful login, store JWT token in browser
       if (response.data.success === true) {
-        const token = response.data.token.split(" ")[1];
-        sessionStorage.setItem("token", token);
+        const currentToken = response.data.token.split(" ")[1];
+        sessionStorage.setItem("token", currentToken);
         setLoginSuccess(true);
       }
     } catch (error) {
@@ -67,36 +85,17 @@ const Home = ({ icon }) => {
     }
   };
 
-  // Check for blanks and proper email
-  const handleValidateForm = () => {
-    let ready = true;
-    setEmailError(false);
-    setPasswordError(false);
-
-    if (email.length < 1 || !email.includes("@")) {
-      setEmailError(true);
-      ready = false;
-    }
-
-    if (password.length < 6) {
-      setPasswordError(true);
-      ready = false;
-    }
-
-    return ready;
-  };
-
-  //If user session exists, go straight to dashboard.
+  // If user session exists, go straight to dashboard.
   if (user) {
     return <Navigate to="/dashboard" />;
   }
 
   return (
-    <Section mini={true}>
+    <Section mini>
       <div className="section__icon-container">{icon}</div>
       <h1 className="section__h1">Login</h1>
       <Form handler={handleSubmit}>
-        <label className="form__label">
+        <label className="form__label" htmlFor="email">
           Email
           <input
             className={`form__input${emailError ? " form__input--error" : ""}`}
@@ -109,7 +108,7 @@ const Home = ({ icon }) => {
             )}
           </div>
         </label>
-        <label className="form__label">
+        <label className="form__label" htmlFor="password">
           Password
           <input
             className={`form__input${
@@ -132,7 +131,10 @@ const Home = ({ icon }) => {
           {loginError && <Message type="error" message="Invalid credentials" />}
         </div>
         <div className="form__button-container">
-          <button className="button button--primary button--expand">
+          <button
+            type="submit"
+            className="button button--primary button--expand"
+          >
             Login
           </button>
         </div>
@@ -144,6 +146,4 @@ const Home = ({ icon }) => {
       </Form>
     </Section>
   );
-};
-
-export default Home;
+}

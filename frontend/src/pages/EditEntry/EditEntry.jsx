@@ -4,15 +4,14 @@ import { useState, useEffect, useContext } from "react";
 
 import { Navigate, useNavigate, Link, useParams } from "react-router-dom";
 
+import axios from "axios";
 import Section from "../../components/Section/Section";
 import Form from "../../components/Form/Form";
 import Message from "../../components/Message/Message";
 
-import axios from "axios";
-
 import UserContext from "../../context/UserContext";
 
-const EditEntry = ({ icon }) => {
+export default function EditEntry({ icon }) {
   const { id } = useParams();
 
   const { user, getUser } = useContext(UserContext);
@@ -40,11 +39,13 @@ const EditEntry = ({ icon }) => {
   // Get entry details and populate form
   useEffect(() => {
     if (user && user.entries) {
-      const entry = user.entries.filter((entry) => entry.id === Number(id));
+      const currentEntry = user.entries.filter(
+        (filteredEntry) => filteredEntry.id === Number(id)
+      );
       if (!editEntrySuccess) {
-        setTitle(entry[0].title);
-        setGratitude(entry[0].gratitude);
-        setEntry(entry[0].entry);
+        setTitle(currentEntry[0].title);
+        setGratitude(currentEntry[0].gratitude);
+        setEntry(currentEntry[0].entry);
       }
     }
   }, [user]);
@@ -58,16 +59,41 @@ const EditEntry = ({ icon }) => {
     setGratitudeError(false);
     setEntryError(false);
 
+    // Check fields for blanks
+    const handleValidateForm = () => {
+      let ready = true;
+      setTitleError(false);
+      setGratitudeError(false);
+      setEntryError(false);
+
+      if (title.length < 1) {
+        setTitleError(true);
+        ready = false;
+      }
+
+      if (gratitude.length < 1) {
+        setGratitudeError(true);
+        ready = false;
+      }
+
+      if (entry.length < 1) {
+        setEntryError(true);
+        ready = false;
+      }
+
+      return ready;
+    };
+
     if (handleValidateForm() === false) {
       return;
     }
 
     // Register User
     const editedEntry = {
-      id: id,
-      title: title,
-      gratitude: gratitude,
-      entry: entry,
+      id,
+      title,
+      gratitude,
+      entry,
     };
 
     try {
@@ -88,42 +114,17 @@ const EditEntry = ({ icon }) => {
     }
   };
 
-  // Check fields for blanks
-  const handleValidateForm = () => {
-    let ready = true;
-    setTitleError(false);
-    setGratitudeError(false);
-    setEntryError(false);
-
-    if (title.length < 1) {
-      setTitleError(true);
-      ready = false;
-    }
-
-    if (gratitude.length < 1) {
-      setGratitudeError(true);
-      ready = false;
-    }
-
-    if (entry.length < 1) {
-      setEntryError(true);
-      ready = false;
-    }
-
-    return ready;
-  };
-
-  //If no token or id passed, go straight to login.
+  // If no token or id passed, go straight to login.
   if (!token || !id) {
     return <Navigate to="/" />;
   }
 
   return (
-    <Section mini={true}>
+    <Section mini>
       <div className="section__icon-container">{icon}</div>
       <h1 className="section__h1">Edit Entry</h1>
       <Form handler={handleSubmit}>
-        <label className="form__label">
+        <label className="form__label" htmlFor="title">
           Title
           <input
             className={`form__input${titleError ? " form__input--error" : ""}`}
@@ -137,7 +138,7 @@ const EditEntry = ({ icon }) => {
             )}
           </div>
         </label>
-        <label className="form__label">
+        <label className="form__label" htmlFor="gratitude">
           Gratitude
           <textarea
             className={`form__textarea form__textarea--mini${
@@ -146,14 +147,14 @@ const EditEntry = ({ icon }) => {
             name="gratitude"
             onChange={(e) => setGratitude(e.target.value)}
             value={gratitude}
-          ></textarea>
+          />
           <div className="form__message-container">
             {gratitudeError && (
               <Message type="error" message="Gratitude cannot be blank" />
             )}
           </div>
         </label>
-        <label className="form__label">
+        <label className="form__label" htmlFor="entry">
           Entry
           <textarea
             className={`form__textarea${
@@ -162,7 +163,7 @@ const EditEntry = ({ icon }) => {
             name="entry"
             onChange={(e) => setEntry(e.target.value)}
             value={entry}
-          ></textarea>
+          />
           <div className="form__message-container">
             {entryError && (
               <Message type="error" message="Entry cannot be blank" />
@@ -179,7 +180,10 @@ const EditEntry = ({ icon }) => {
           )}
         </div>
         <div className="form__button-container">
-          <button className="button button--primary button--expand">
+          <button
+            type="submit"
+            className="button button--primary button--expand"
+          >
             Edit Entry
           </button>
         </div>
@@ -191,6 +195,4 @@ const EditEntry = ({ icon }) => {
       </Form>
     </Section>
   );
-};
-
-export default EditEntry;
+}

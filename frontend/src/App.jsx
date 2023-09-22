@@ -1,8 +1,9 @@
 import "./styles/App.scss";
 
-import { UserProvider } from "./context/UserContext";
-
+import { MdEditNote, MdPersonAdd, MdLogin, MdDashboard } from "react-icons/md";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+import { UserProvider } from "./context/UserContext";
 
 import Home from "./pages/Home/Home";
 import Dashboard from "./pages/Dashboard/Dashboard";
@@ -13,9 +14,7 @@ import EditEntry from "./pages/EditEntry/EditEntry";
 import Header from "./components/Header/Header";
 import Main from "./components/Main/Main";
 
-import { MdEditNote, MdPersonAdd, MdLogin, MdDashboard } from "react-icons/md";
-
-const App = () => {
+export default function App() {
   return (
     <UserProvider>
       <Router>
@@ -55,6 +54,4 @@ const App = () => {
       </Router>
     </UserProvider>
   );
-};
-
-export default App;
+}
