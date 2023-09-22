@@ -1,5 +1,3 @@
-const path = require("path");
-
 // Require ENV
 
 require("dotenv").config();
@@ -36,19 +34,6 @@ if (process.env.NODE_ENV === "development") {
 
 // API Routes
 app.use("/api", indexRoutes);
-
-// In Production, serve frontend files
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "../client/build")));
-
-  app.get("*", (_req, res) =>
-    res.sendFile(
-      path.resolve(__dirname, "../", "client", "build", "index.html")
-    )
-  );
-} else {
-  app.get("/", (_req, res) => res.send("Development Mode"));
-}
 
 //  404 Catch
 app.use("*", (_req, res) =>
