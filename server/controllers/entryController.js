@@ -1,6 +1,7 @@
 // Knex
 const knex = require("knex");
-const knexConfig = require("../knexfile.js");
+const knexConfig = require("../knexfile");
+
 const db = knex(knexConfig);
 
 // GET - Get all Entries for that user
@@ -21,7 +22,7 @@ const getEntries = async (req, res) => {
       return res.json({ success: true, entries: [] });
     }
     // If entries, return entry objects in array
-    return res.json({ success: true, entries: entries });
+    return res.json({ success: true, entries });
   } catch (error) {
     return res
       .status(400)
@@ -45,9 +46,9 @@ const postEntry = async (req, res) => {
   try {
     await db("entries").insert({
       user_id: req.user.id,
-      title: title,
-      gratitude: gratitude,
-      entry: entry,
+      title,
+      gratitude,
+      entry,
     });
     res
       .status(201)
@@ -55,6 +56,7 @@ const postEntry = async (req, res) => {
   } catch (error) {
     res.status(400).json({ success: false, message: "Error creating entry" });
   }
+  return null;
 };
 
 // PATCH - Update Entry
@@ -66,7 +68,7 @@ const patchEntry = async (req, res) => {
     return res.status(400).json({ success: false, message: "Invalid entry" });
   }
 
-  const entryExists = await db("entries").where({ id: id }).first();
+  const entryExists = await db("entries").where({ id }).first();
 
   // If no entry by that ID, return failure
   if (!entryExists)
@@ -85,17 +87,17 @@ const patchEntry = async (req, res) => {
     .where({ id })
     .select({ title, gratitude, entry })
     .update({
-      title: title,
-      gratitude: gratitude,
-      entry: entry,
+      title,
+      gratitude,
+      entry,
     })
-    .catch((error) => {
-      return res.status(400).json({
+    .catch((error) =>
+      res.status(400).json({
         success: false,
         message: "Could not update entry",
         error: error.message,
-      });
-    });
+      })
+    );
 
   // Return success status
   return res.status(200).json({
@@ -116,7 +118,7 @@ const deleteEntry = async (req, res) => {
   }
 
   try {
-    const entry = await db("entries").where({ id: id }).first();
+    const entry = await db("entries").where({ id }).first();
 
     // If no entry with that ID, error
 
@@ -133,7 +135,7 @@ const deleteEntry = async (req, res) => {
         .json({ success: false, message: "Unauthorized to delete entry" });
     }
 
-    await db("entries").where({ id: id }).del();
+    await db("entries").where({ id }).del();
 
     return res
       .status(200)

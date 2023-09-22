@@ -1,4 +1,5 @@
 const express = require("express");
+
 const router = express.Router();
 
 const {
@@ -6,7 +7,7 @@ const {
   postRegister,
   getUserDetails,
   getQuote,
-} = require("../controllers/userController.js");
+} = require("../controllers/userController");
 
 // ROUTE - /login
 router.route("/login").post(postLogin);

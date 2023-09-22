@@ -3,19 +3,19 @@ const privateKey = process.env.JWT_SECRET;
 
 // Bcrypt
 const bcrypt = require("bcrypt");
+
 const saltRounds = 10;
 const salt = bcrypt.genSaltSync(saltRounds);
 
 // JWT
 const jwt = require("jsonwebtoken");
 
-// Knex
+// Knex & Axios
 const knex = require("knex");
-const knexConfig = require("../knexfile.js");
-const db = knex(knexConfig);
-
-// Axios
 const axios = require("axios");
+const knexConfig = require("../knexfile");
+
+const db = knex(knexConfig);
 
 // POST - Log in user
 const postLogin = async (req, res) => {
@@ -38,6 +38,7 @@ const postLogin = async (req, res) => {
     expiresIn: "1d",
   });
   res.status(200).json({ success: true, token: `Bearer ${token}` });
+  return null;
 };
 
 // POST - Register user
@@ -68,7 +69,7 @@ const postRegister = async (req, res) => {
     await db("users").insert({
       first_name: firstName,
       last_name: lastName,
-      email: email,
+      email,
       password: hashedPassword,
     });
     return res
@@ -86,7 +87,7 @@ const postRegister = async (req, res) => {
 
 const getUserDetails = (req, res) => {
   // Get Bearer token from header
-  const authHeader = req.headers["authorization"];
+  const authHeader = req.headers.authorization;
   const token = authHeader && authHeader.split(" ")[1];
 
   // Return unauthorized if no token
@@ -115,10 +116,11 @@ const getUserDetails = (req, res) => {
 
     return res.status(200).json({ userDetails });
   });
+  return null;
 };
 
 const getQuote = async (req, res) => {
-  const authHeader = req.headers["authorization"];
+  const authHeader = req.headers.authorization;
   const token = authHeader && authHeader.split(" ")[1];
 
   // Return unauthorized if no token
@@ -137,8 +139,9 @@ const getQuote = async (req, res) => {
 
     return res.status(200).json({ quote: response.data[0] });
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
+  return null;
 };
 
 module.exports = { postLogin, postRegister, getUserDetails, getQuote };

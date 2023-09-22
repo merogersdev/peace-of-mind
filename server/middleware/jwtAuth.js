@@ -1,10 +1,11 @@
 // JWT
 const jwt = require("jsonwebtoken");
+
 const privateKey = process.env.JWT_SECRET;
 
 // Verify JWT Token, for protected Routes
 const jwtAuth = (req, res, next) => {
-  const authHeader = req.headers["authorization"];
+  const authHeader = req.headers.authorization;
   const token = authHeader && authHeader.split(" ")[1];
 
   // Return unauthorized if no token
@@ -17,7 +18,9 @@ const jwtAuth = (req, res, next) => {
     if (error) return res.status(403).json({ error: "403: Forbidden" });
     req.user = user;
     next();
+    return null;
   });
+  return null;
 };
 
 module.exports = { jwtAuth };

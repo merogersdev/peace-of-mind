@@ -1,27 +1,24 @@
 // Require ENV
-
 require("dotenv").config();
+
 const port = process.env.PORT || 5000;
 
-// Route Imports
-
-const indexRoutes = require("./routes");
-
 // Express
-
 const express = require("express");
+
 const app = express();
 const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
 
 // Passport
-
 const passport = require("passport");
+
+// Route Imports
+const indexRoutes = require("./routes");
+
 app.use(passport.initialize());
 require("./middleware/passport");
-
-// Middleware
 
 app.use(express.json());
 app.use(cors());
@@ -42,5 +39,5 @@ app.use("*", (_req, res) =>
 
 // Listen
 app.listen(port, () => {
-  console.log(`> Server running at http://localhost:${port} `);
+  console.info(`> Server running at http://localhost:${port} `);
 });
