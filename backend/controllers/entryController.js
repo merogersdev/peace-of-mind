@@ -22,6 +22,7 @@ const getEntries = async (req, res) => {
       return res.json({ success: true, entries: [] });
     }
     // If entries, return entry objects in array
+
     return res.json({ success: true, entries });
   } catch (error) {
     return res

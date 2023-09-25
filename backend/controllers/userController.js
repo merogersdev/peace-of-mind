@@ -1,21 +1,11 @@
-// ENV
-const privateKey = process.env.JWT_SECRET;
-
-// Bcrypt
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const axios = require("axios");
+const db = require("../knex");
 
+const privateKey = process.env.JWT_SECRET;
 const saltRounds = 10;
 const salt = bcrypt.genSaltSync(saltRounds);
-
-// JWT
-const jwt = require("jsonwebtoken");
-
-// Knex & Axios
-const knex = require("knex");
-const axios = require("axios");
-const knexConfig = require("../knexfile");
-
-const db = knex(knexConfig);
 
 // POST - Log in user
 const postLogin = async (req, res) => {
@@ -24,7 +14,7 @@ const postLogin = async (req, res) => {
 
   // Check if user exists, if not return and error
   if (user === undefined) {
-    return res.status(400).json({ success: false, message: "Invalid user" });
+    return res.status(404).json({ success: false, message: "Invalid user" });
   }
   // Check if password is correct
   const validPassword = bcrypt.compareSync(password, user.password);

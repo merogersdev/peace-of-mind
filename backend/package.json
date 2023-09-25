@@ -7,7 +7,9 @@
     "start": "node server.js",
     "dev": "nodemon server.js",
     "migrate": "npx knex migrate:latest",
-    "lint": "npx eslint . --ext .js"
+    "rollback": "npx knex migrate:rollback",
+    "lint": "npx eslint . --ext .js",
+    "test": "npm run rollback && npm run migrate && jest && npm run rollback"
   },
   "keywords": [],
   "author": "",
@@ -33,7 +35,9 @@
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-import": "^2.25.2",
     "eslint-plugin-prettier": "^5.0.0",
+    "jest": "^29.7.0",
     "nodemon": "^3.0.1",
-    "prettier": "^3.0.3"
+    "prettier": "^3.0.3",
+    "supertest": "^6.3.3"
   }
 }
