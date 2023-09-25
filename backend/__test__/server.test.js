@@ -2,7 +2,6 @@ const request = require("supertest");
 const app = require("../app");
 const db = require("../knex");
 
-// Basic End-To-End Tests
 describe("Peace of Mind API", () => {
   // Close DB connection when done
   afterAll(async () => {
@@ -161,5 +160,4 @@ describe("Peace of Mind API", () => {
       });
     });
   });
-  // --- Entry Routes --- //
 });
