@@ -7,8 +7,9 @@
     "start": "node server.js",
     "dev": "nodemon server.js",
     "migrate": "npx knex migrate:latest",
+    "rollback": "npx knex migrate:rollback",
     "lint": "npx eslint . --ext .js",
-    "test": "jest"
+    "test": "npm run rollback && npm run migrate && jest && npm run rollback"
   },
   "keywords": [],
   "author": "",

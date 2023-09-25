@@ -17,5 +17,5 @@ module.exports = {
     password: process.env.MYSQL_PASS,
     database: process.env.MYSQL_DATA,
   },
-  pool: { min: 0, max: 5 },
+  pool: { min: 0, max: 1 },
 };
