@@ -10,18 +10,18 @@
     "lint": "npx eslint --ext .js --ext .jsx"
   },
   "dependencies": {
+    "@vitejs/plugin-react": "^4.0.4",
     "axios": "^1.5.0",
+    "eslint": "^7.32.0 || ^8.2.0",
     "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-react": "^7.28.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.11.0",
     "react-router-dom": "^6.16.0",
     "sass": "^1.67.0",
-    "@vitejs/plugin-react": "^4.0.4",
-    "eslint": "^7.32.0 || ^8.2.0",
-    "eslint-plugin-react": "^7.28.0",
-    "vite-plugin-eslint": "^1.8.1",
-    "vite": "^4.4.9"
+    "vite": "^4.4.9",
+    "vite-plugin-eslint": "^1.8.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.22",

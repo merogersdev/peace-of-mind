@@ -1,6 +1,6 @@
 import "../../components/Button/Button.scss";
 
-import { useState, useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { Navigate, useNavigate, Link } from "react-router-dom";
 import { MdInsertEmoticon, MdModeEdit, MdDelete } from "react-icons/md";
 
@@ -10,13 +10,13 @@ import Section from "../../components/Section/Section";
 import Message from "../../components/Message/Message";
 
 import UserContext from "../../context/UserContext";
+import QuoteContext from "../../context/QuoteContext";
 
 export default function Dashboard({ icon }) {
   const { user, setUser, getUser } = useContext(UserContext);
-  const token = sessionStorage.getItem("token");
+  const { quote, author, getQuote } = useContext(QuoteContext);
 
-  const [quote, setQuote] = useState("");
-  const [author, setAuthor] = useState("");
+  const token = sessionStorage.getItem("token");
 
   const navigate = useNavigate();
 
@@ -26,23 +26,13 @@ export default function Dashboard({ icon }) {
     navigate("/");
   };
 
-  const getQuote = async () => {
-    try {
-      const response = await axios.get("/users/quote/", {
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-        },
-      });
-      setQuote(response.data.quote.quote);
-      setAuthor(response.data.quote.author);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   useEffect(() => {
     getUser();
-    getQuote();
+
+    // Don't fetch a new quote if you already got one
+    if (!quote) {
+      getQuote();
+    }
   }, []);
 
   const handleDelete = async (id) => {
