@@ -11,10 +11,7 @@ const options = {
 };
 
 // Knex
-const knex = require("knex");
-const knexConfig = require("../knexfile");
-
-const db = knex(knexConfig);
+const db = require("../knex");
 
 // Passport Middleware
 passport.use(

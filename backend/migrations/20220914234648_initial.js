@@ -17,13 +17,7 @@ exports.up = function (knex) {
       table.string("title", 100).notNullable();
       table.string("gratitude", 100).notNullable();
       table.text("entry").notNullable();
-      table
-        .dateTime("created_at")
-        .notNullable()
-        .defaultTo(knex.raw("CURRENT_TIMESTAMP"));
-      table
-        .dateTime("updated_at")
-        .defaultTo(knex.raw("NULL ON UPDATE CURRENT_TIMESTAMP"));
+      table.timestamps(true, true);
       table
         .foreign("user_id")
         .references("id")

@@ -1,8 +1,5 @@
 // Knex
-const knex = require("knex");
-const knexConfig = require("../knexfile");
-
-const db = knex(knexConfig);
+const db = require("../knex");
 
 // GET - Get all Entries for that user
 const getEntries = async (req, res) => {
