@@ -8,6 +8,12 @@ export default defineConfig({
   build: {
     outDir: "./build",
   },
+  test: {
+    globals: true,
+    environment: "jsdom",
+    setupFiles: "./__tests__/setup.js",
+    testMatch: "./__tests__/**/*.test.js",
+  },
   server: {
     proxy: {
       "/api": {

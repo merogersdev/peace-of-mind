@@ -22,6 +22,7 @@ export default function App() {
         <Router>
           <Header title="Peace of Mind" />
           <Main>
+            <p>It works and you found me!</p>
             <Routes>
               <Route
                 path="/"
