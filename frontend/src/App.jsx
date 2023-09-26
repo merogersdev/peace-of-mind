@@ -4,6 +4,7 @@ import { MdEditNote, MdPersonAdd, MdLogin, MdDashboard } from "react-icons/md";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import { UserProvider } from "./context/UserContext";
+import { QuoteProvider } from "./context/QuoteContext";
 
 import Home from "./pages/Home/Home";
 import Dashboard from "./pages/Dashboard/Dashboard";
@@ -17,41 +18,43 @@ import Main from "./components/Main/Main";
 export default function App() {
   return (
     <UserProvider>
-      <Router>
-        <Header title="Peace of Mind" />
-        <Main>
-          <Routes>
-            <Route
-              path="/"
-              element={<Home icon={<MdLogin className="section__icon" />} />}
-            />
-            <Route
-              path="/dashboard"
-              element={
-                <Dashboard icon={<MdDashboard className="section__icon" />} />
-              }
-            />
-            <Route
-              path="/register"
-              element={
-                <Register icon={<MdPersonAdd className="section__icon" />} />
-              }
-            />
-            <Route
-              path="/add-entry"
-              element={
-                <AddEntry icon={<MdEditNote className="section__icon" />} />
-              }
-            />
-            <Route
-              path="/edit-entry/:id"
-              element={
-                <EditEntry icon={<MdEditNote className="section__icon" />} />
-              }
-            />
-          </Routes>
-        </Main>
-      </Router>
+      <QuoteProvider>
+        <Router>
+          <Header title="Peace of Mind" />
+          <Main>
+            <Routes>
+              <Route
+                path="/"
+                element={<Home icon={<MdLogin className="section__icon" />} />}
+              />
+              <Route
+                path="/dashboard"
+                element={
+                  <Dashboard icon={<MdDashboard className="section__icon" />} />
+                }
+              />
+              <Route
+                path="/register"
+                element={
+                  <Register icon={<MdPersonAdd className="section__icon" />} />
+                }
+              />
+              <Route
+                path="/add-entry"
+                element={
+                  <AddEntry icon={<MdEditNote className="section__icon" />} />
+                }
+              />
+              <Route
+                path="/edit-entry/:id"
+                element={
+                  <EditEntry icon={<MdEditNote className="section__icon" />} />
+                }
+              />
+            </Routes>
+          </Main>
+        </Router>
+      </QuoteProvider>
     </UserProvider>
   );
 }
