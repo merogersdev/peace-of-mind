@@ -3,8 +3,9 @@ import "../../components/Button/Button.scss";
 import { useContext, useEffect } from "react";
 import { Navigate, useNavigate, Link } from "react-router-dom";
 import { MdInsertEmoticon, MdModeEdit, MdDelete } from "react-icons/md";
-
 import axios from "axios";
+
+import formatDate from "../../utils/date";
 
 import Section from "../../components/Section/Section";
 import Message from "../../components/Message/Message";
@@ -47,14 +48,6 @@ export default function Dashboard({ icon }) {
     } catch (error) {
       console.error(error);
     }
-  };
-
-  // Format Timestamp
-  const formatDate = (date) => {
-    const splitDate = date.split(/[- :]/); //
-    const dayOfWeek = splitDate[2].split(/[T]/);
-    const formattedDate = `${splitDate[1]}/${dayOfWeek[0]}/${splitDate[0]}`;
-    return formattedDate;
   };
 
   // If no token, return to home
