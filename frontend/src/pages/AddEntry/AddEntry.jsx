@@ -1,6 +1,6 @@
 import "../../components/Button/Button.scss";
 
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 
 import { useNavigate, Link } from "react-router-dom";
 
@@ -8,26 +8,33 @@ import axios from "axios";
 import Section from "../../components/Section/Section";
 import Form from "../../components/Form/Form";
 import Message from "../../components/Message/Message";
+import checkString from "../../utils/validation";
 
 import UserContext from "../../context/UserContext";
 
 export default function AddEntry({ icon }) {
   const { user, getUser } = useContext(UserContext);
 
-  const [title, setTitle] = useState("");
-  const [gratitude, setGratitude] = useState("");
-  const [entry, setEntry] = useState("");
+  const initialErrorState = {
+    title: false,
+    gratitude: false,
+    entry: false,
+    add: null,
+  };
 
-  const [titleError, setTitleError] = useState(false);
-  const [gratitudeError, setGratitudeError] = useState(false);
-  const [entryError, setEntryError] = useState(false);
-
-  const [addEntrySuccess, setAddEntrySuccess] = useState(false);
-  const [addEntryError, setAddEntryError] = useState(false);
-
+  const [formErrors, setFormErrors] = useState(initialErrorState);
+  const titleRef = useRef(null);
+  const gratitudeRef = useRef(null);
+  const entryRef = useRef(null);
+  const token = sessionStorage.getItem("token");
   const navigate = useNavigate();
 
-  const token = sessionStorage.getItem("token");
+  function setError(name) {
+    setFormErrors((prev) => ({
+      ...prev,
+      [name]: true,
+    }));
+  }
 
   // Check if token, then get use details
   useEffect(() => {
@@ -35,58 +42,31 @@ export default function AddEntry({ icon }) {
     getUser();
   }, []);
 
-  // Navigate to dashboard if entry addition successs
-  useEffect(() => {
-    if (addEntrySuccess) {
-      navigate("/dashboard");
-    }
-  }, [addEntrySuccess]);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    setAddEntryError(false);
-    setTitleError(false);
-    setGratitudeError(false);
-    setEntryError(false);
+    setFormErrors(initialErrorState);
 
-    const handleValidateForm = () => {
-      let ready = true;
-      setTitleError(false);
-      setGratitudeError(false);
-      setEntryError(false);
+    const isTitleValid = checkString(titleRef.current.value, 1);
+    const isGratitudeValid = checkString(gratitudeRef.current.value, 1);
+    const isEntryValid = checkString(entryRef.current.value, 1);
 
-      if (title.length < 1) {
-        setTitleError(true);
-        ready = false;
-      }
+    if (!isTitleValid) setError("title");
+    if (!isGratitudeValid) setError("gratitude");
+    if (!isEntryValid) setError("entry");
 
-      if (gratitude.length < 1) {
-        setGratitudeError(true);
-        ready = false;
-      }
+    // If validation fails, exit
+    if (!isTitleValid || !isGratitudeValid || !isEntryValid) return;
 
-      if (entry.length < 1) {
-        setEntryError(true);
-        ready = false;
-      }
-
-      return ready;
-    };
-
-    if (handleValidateForm() === false) {
-      return;
-    }
-
-    // Register User
+    // Add new post
     try {
       const response = await axios.post(
         "/entries/",
         {
           user_id: user.id,
-          title,
-          gratitude,
-          entry,
+          title: titleRef.current.value,
+          gratitude: gratitudeRef.current.value,
+          entry: entryRef.current.value,
         },
         {
           headers: {
@@ -96,11 +76,14 @@ export default function AddEntry({ icon }) {
       );
 
       if (response.data.success === true) {
-        setAddEntrySuccess(true);
+        navigate("/dashboard");
       }
     } catch (error) {
       console.error(error);
-      setAddEntryError(true);
+      setFormErrors((prev) => ({
+        ...prev,
+        add: false,
+      }));
     }
   };
 
@@ -112,12 +95,14 @@ export default function AddEntry({ icon }) {
         <label className="form__label" htmlFor="title">
           Title
           <input
-            className={`form__input${titleError ? " form__input--error" : ""}`}
+            className={`form__input${
+              formErrors.title ? " form__input--error" : ""
+            }`}
             name="title"
-            onChange={(e) => setTitle(e.target.value)}
+            ref={titleRef}
           />
           <div className="form__message-container">
-            {titleError && (
+            {formErrors.title && (
               <Message type="error" message="Title cannot be blank" />
             )}
           </div>
@@ -126,13 +111,13 @@ export default function AddEntry({ icon }) {
           Gratitude
           <textarea
             className={`form__textarea form__textarea--mini${
-              gratitudeError ? " form__textarea--error" : ""
+              formErrors.gratitude ? " form__textarea--error" : ""
             }`}
             name="gratitude"
-            onChange={(e) => setGratitude(e.target.value)}
+            ref={gratitudeRef}
           />
           <div className="form__message-container">
-            {gratitudeError && (
+            {formErrors.gratitude && (
               <Message type="error" message="Gratitude cannot be blank" />
             )}
           </div>
@@ -141,21 +126,23 @@ export default function AddEntry({ icon }) {
           Entry
           <textarea
             className={`form__textarea${
-              entryError ? " form__textarea--error" : ""
+              formErrors.entry ? " form__textarea--error" : ""
             }`}
             name="entry"
-            onChange={(e) => setEntry(e.target.value)}
+            ref={entryRef}
           />
           <div className="form__message-container">
-            {entryError && (
+            {formErrors.entry && (
               <Message type="error" message="Entry cannot be blank" />
             )}
           </div>
         </label>
 
         <div className="form__message-container">
-          {addEntryError && <Message type="error" message="Add entry failed" />}
-          {addEntrySuccess && <Message type="success" message="Added entry" />}
+          {formErrors.add === false && (
+            <Message type="error" message="Add entry failed" />
+          )}
+          {formErrors.add && <Message type="success" message="Added entry" />}
         </div>
         <div className="form__button-container">
           <button
@@ -164,8 +151,6 @@ export default function AddEntry({ icon }) {
           >
             Add Entry
           </button>
-        </div>
-        <div className="form__button-container">
           <Link to="/" className="button button--dark button--expand">
             Back
           </Link>

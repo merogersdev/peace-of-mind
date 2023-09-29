@@ -1,8 +1,8 @@
 import "../../components/Button/Button.scss";
 
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 
-import { Navigate, useNavigate, Link, useParams } from "react-router-dom";
+import { useNavigate, Link, useParams } from "react-router-dom";
 
 import axios from "axios";
 import Section from "../../components/Section/Section";
@@ -10,113 +10,91 @@ import Form from "../../components/Form/Form";
 import Message from "../../components/Message/Message";
 
 import UserContext from "../../context/UserContext";
+import checkString from "../../utils/validation";
 
 export default function EditEntry({ icon }) {
   const { id } = useParams();
-
   const { user, getUser } = useContext(UserContext);
+
+  const initialErrorState = {
+    title: false,
+    gratitude: false,
+    entry: false,
+    edit: null,
+  };
+
+  const [formErrors, setFormErrors] = useState(initialErrorState);
+  const titleRef = useRef(null);
+  const gratitudeRef = useRef(null);
+  const entryRef = useRef(null);
+  const token = sessionStorage.getItem("token");
   const navigate = useNavigate();
 
-  const [title, setTitle] = useState("");
-  const [gratitude, setGratitude] = useState("");
-  const [entry, setEntry] = useState("");
+  function setError(name) {
+    setFormErrors((prev) => ({
+      ...prev,
+      [name]: true,
+    }));
+  }
 
-  const [titleError, setTitleError] = useState(false);
-  const [gratitudeError, setGratitudeError] = useState(false);
-  const [entryError, setEntryError] = useState(false);
-
-  const [editEntrySuccess, setEditEntrySuccess] = useState(false);
-  const [editEntryError, setEditEntryError] = useState(false);
-
-  const token = sessionStorage.getItem("token");
-
-  // Check if token, get user details
+  // Check if token, get user and entry details
   useEffect(() => {
     if (!token) return;
     getUser();
-  }, []);
 
-  // Get entry details and populate form
-  useEffect(() => {
-    if (user && user.entries) {
-      const currentEntry = user.entries.filter(
-        (filteredEntry) => filteredEntry.id === Number(id)
-      );
-      if (!editEntrySuccess) {
-        setTitle(currentEntry[0].title);
-        setGratitude(currentEntry[0].gratitude);
-        setEntry(currentEntry[0].entry);
-      }
-    }
-  }, [user]);
+    const currentEntry = user.entries.filter(
+      (filteredEntry) => filteredEntry.id === Number(id)
+    );
+
+    titleRef.current.value = currentEntry[0].title;
+    gratitudeRef.current.value = currentEntry[0].gratitude;
+    entryRef.current.value = currentEntry[0].entry;
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Error Reset
-    setEditEntryError(false);
-    setTitleError(false);
-    setGratitudeError(false);
-    setEntryError(false);
+    setFormErrors(initialErrorState);
 
-    // Check fields for blanks
-    const handleValidateForm = () => {
-      let ready = true;
-      setTitleError(false);
-      setGratitudeError(false);
-      setEntryError(false);
+    const isTitleValid = checkString(titleRef.current.value, 1);
+    const isGratitudeValid = checkString(gratitudeRef.current.value, 1);
+    const isEntryValid = checkString(entryRef.current.value, 1);
 
-      if (title.length < 1) {
-        setTitleError(true);
-        ready = false;
-      }
+    if (!isTitleValid) setError("title");
+    if (!isGratitudeValid) setError("gratitude");
+    if (!isEntryValid) setError("entry");
 
-      if (gratitude.length < 1) {
-        setGratitudeError(true);
-        ready = false;
-      }
-
-      if (entry.length < 1) {
-        setEntryError(true);
-        ready = false;
-      }
-
-      return ready;
-    };
-
-    if (handleValidateForm() === false) {
-      return;
-    }
-
-    // Register User
-    const editedEntry = {
-      id,
-      title,
-      gratitude,
-      entry,
-    };
+    // If validation fails, exit
+    if (!isTitleValid || !isGratitudeValid || !isEntryValid) return;
 
     try {
-      const response = await axios.patch(`/entries/${id}`, editedEntry, {
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      const response = await axios.patch(
+        `/entries/${id}`,
+        {
+          id,
+          title: titleRef.current.value,
+          gratitude: gratitudeRef.current.value,
+          entry: entryRef.current.value,
         },
-      });
+        {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+        }
+      );
 
       if (response.data.success === true) {
-        setEditEntrySuccess(true);
         getUser();
         navigate("/dashboard");
       }
     } catch (error) {
       console.error(error);
-      setEditEntryError(true);
     }
   };
 
   // If no token or id passed, go straight to login.
   if (!token || !id) {
-    return <Navigate to="/" />;
+    navigate("/");
   }
 
   return (
@@ -127,13 +105,14 @@ export default function EditEntry({ icon }) {
         <label className="form__label" htmlFor="title">
           Title
           <input
-            className={`form__input${titleError ? " form__input--error" : ""}`}
+            className={`form__input${
+              formErrors.title ? " form__input--error" : ""
+            }`}
             name="title"
-            onChange={(e) => setTitle(e.target.value)}
-            value={title}
+            ref={titleRef}
           />
           <div className="form__message-container">
-            {titleError && (
+            {formErrors.title && (
               <Message type="error" message="Title cannot be blank" />
             )}
           </div>
@@ -142,14 +121,13 @@ export default function EditEntry({ icon }) {
           Gratitude
           <textarea
             className={`form__textarea form__textarea--mini${
-              gratitudeError ? " form__textarea--error" : ""
+              formErrors.gratitude ? " form__textarea--error" : ""
             }`}
             name="gratitude"
-            onChange={(e) => setGratitude(e.target.value)}
-            value={gratitude}
+            ref={gratitudeRef}
           />
           <div className="form__message-container">
-            {gratitudeError && (
+            {formErrors.gratitude && (
               <Message type="error" message="Gratitude cannot be blank" />
             )}
           </div>
@@ -158,24 +136,23 @@ export default function EditEntry({ icon }) {
           Entry
           <textarea
             className={`form__textarea${
-              entryError ? " form__textarea--error" : ""
+              formErrors.entry ? " form__textarea--error" : ""
             }`}
             name="entry"
-            onChange={(e) => setEntry(e.target.value)}
-            value={entry}
+            ref={entryRef}
           />
           <div className="form__message-container">
-            {entryError && (
+            {formErrors.entry && (
               <Message type="error" message="Entry cannot be blank" />
             )}
           </div>
         </label>
 
         <div className="form__message-container">
-          {editEntryError && (
+          {formErrors.edit === false && (
             <Message type="error" message="Edit entry failed" />
           )}
-          {editEntrySuccess && (
+          {formErrors.edit && (
             <Message type="success" message="Edit entry success" />
           )}
         </div>
@@ -186,8 +163,6 @@ export default function EditEntry({ icon }) {
           >
             Edit Entry
           </button>
-        </div>
-        <div className="form__button-container">
           <Link to="/dashboard" className="button button--dark button--expand">
             Back
           </Link>

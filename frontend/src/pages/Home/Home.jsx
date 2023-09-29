@@ -1,30 +1,36 @@
 import "../../components/Button/Button.scss";
-
-import { useState, useEffect, useContext } from "react";
-
-import { Navigate, useNavigate, Link } from "react-router-dom";
-
 import axios from "axios";
+import { useState, useEffect, useContext, useRef } from "react";
+import { Navigate, useNavigate, Link } from "react-router-dom";
+import { checkEmail, checkPassword } from "../../utils/validation";
+
 import Section from "../../components/Section/Section";
 import Form from "../../components/Form/Form";
 import Message from "../../components/Message/Message";
-
 import UserContext from "../../context/UserContext";
 
 export default function Home({ icon }) {
   const { user, getUser } = useContext(UserContext);
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const initialErrorState = {
+    email: false,
+    password: false,
+    login: false,
+  };
 
-  const [emailError, setEmailError] = useState(false);
-  const [passwordError, setPasswordError] = useState(false);
-  const [loginError, setLoginError] = useState(false);
-  const [loginSuccess, setLoginSuccess] = useState(false);
+  const [formErrors, setFormErrors] = useState(initialErrorState);
 
+  const emailRef = useRef(null);
+  const passwordRef = useRef(null);
   const token = sessionStorage.getItem("token");
-
   const navigate = useNavigate();
+
+  function setError(name) {
+    setFormErrors((prev) => ({
+      ...prev,
+      [name]: true,
+    }));
+  }
 
   // If token, get user details
   useEffect(() => {
@@ -32,56 +38,35 @@ export default function Home({ icon }) {
     getUser();
   }, []);
 
-  // If user logs in, go to dashboard
-  useEffect(() => {
-    if (loginSuccess) {
-      navigate("/dashboard");
-    }
-  }, [loginSuccess]);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    setLoginError(false);
+    // Reset Errors
+    setFormErrors(initialErrorState);
 
-    // Check for blanks and proper email
-    const handleValidateForm = () => {
-      let ready = true;
-      setEmailError(false);
-      setPasswordError(false);
+    const isEmailValid = checkEmail(emailRef.current.value);
+    const isPasswordValid = checkPassword(passwordRef.current.value);
 
-      if (email.length < 1 || !email.includes("@")) {
-        setEmailError(true);
-        ready = false;
-      }
+    if (!isEmailValid) setError("email");
+    if (!isPasswordValid) setError("password");
 
-      if (password.length < 6) {
-        setPasswordError(true);
-        ready = false;
-      }
+    // If validation fails, exit
+    if (!isEmailValid || !isPasswordValid) return;
 
-      return ready;
-    };
-
-    if (handleValidateForm() === false) {
-      return;
-    }
-
-    // Login User
     try {
       const response = await axios.post("/users/login", {
-        email,
-        password,
+        email: emailRef.current.value,
+        password: passwordRef.current.value,
       });
 
       // If successful login, store JWT token in browser
       if (response.data.success === true) {
         const currentToken = response.data.token.split(" ")[1];
         sessionStorage.setItem("token", currentToken);
-        setLoginSuccess(true);
       }
+      navigate("/dashboard");
     } catch (error) {
-      setLoginError(true);
+      console.error(error);
     }
   };
 
@@ -98,12 +83,14 @@ export default function Home({ icon }) {
         <label className="form__label" htmlFor="email">
           Email
           <input
-            className={`form__input${emailError ? " form__input--error" : ""}`}
+            className={`form__input${
+              formErrors.email ? " form__input--error" : ""
+            }`}
             name="email"
-            onChange={(e) => setEmail(e.target.value)}
+            ref={emailRef}
           />
           <div className="form__message-container">
-            {emailError && (
+            {formErrors.email && (
               <Message type="error" message="Must be a valid email address" />
             )}
           </div>
@@ -112,14 +99,14 @@ export default function Home({ icon }) {
           Password
           <input
             className={`form__input${
-              passwordError ? " form__input--error" : ""
+              formErrors.password ? " form__input--error" : ""
             }`}
             type="password"
             name="password"
-            onChange={(e) => setPassword(e.target.value)}
+            ref={passwordRef}
           />
           <div className="form__message-container">
-            {passwordError && (
+            {formErrors.password && (
               <Message
                 type="error"
                 message="Password must be more than 6 letters"
@@ -128,7 +115,9 @@ export default function Home({ icon }) {
           </div>
         </label>
         <div className="form__message-container">
-          {loginError && <Message type="error" message="Invalid credentials" />}
+          {formErrors.login && (
+            <Message type="error" message="Invalid credentials" />
+          )}
         </div>
         <div className="form__button-container">
           <button
@@ -137,8 +126,6 @@ export default function Home({ icon }) {
           >
             Login
           </button>
-        </div>
-        <div className="form__button-container">
           <Link to="/register" className="button button--dark button--expand">
             Register
           </Link>
