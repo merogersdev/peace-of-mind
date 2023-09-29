@@ -1,10 +1,10 @@
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import Button from "./Button";
 
 describe(Button, () => {
-  it("Renders button correctly", () => {
-    const { container } = render(<Button text="Button" />);
-    expect(container.textContent).toBe("Button");
+  it("Renders button correctly", async () => {
+    render(<Button text="Button" />);
+    expect(screen.getByText("Button")).toBeInTheDocument();
   });
 });
