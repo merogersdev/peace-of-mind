@@ -1,6 +1,10 @@
 import "@testing-library/jest-dom";
 import { describe, expect, it } from "vitest";
-import checkString, { checkEmail, checkPassword } from "./validation";
+import checkString, {
+  checkEmail,
+  checkPassword,
+  matchPasswords,
+} from "./validation";
 
 describe("Email Validation Check", () => {
   it("Returns true on correct email", () => {
@@ -32,5 +36,16 @@ describe("String Validation Check", () => {
   it("Returns false if string is blank", () => {
     const stringValidation = checkString("", 1);
     expect(stringValidation).toEqual(false);
+  });
+});
+
+describe("Password Match Check", () => {
+  it("Returns true if passwords match", () => {
+    const passwordMatch = matchPasswords("password", "password");
+    expect(passwordMatch).toEqual(true);
+  });
+  it("Returns false if passwords do not match", () => {
+    const passwordMatch = matchPasswords("password", "drowssap");
+    expect(passwordMatch).toEqual(false);
   });
 });

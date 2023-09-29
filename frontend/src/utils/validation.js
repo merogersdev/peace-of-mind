@@ -9,3 +9,7 @@ export function checkEmail(email) {
 export function checkPassword(password) {
   return password.length > 6;
 }
+
+export function matchPasswords(password1, password2) {
+  return password1 === password2;
+}

@@ -1,36 +1,45 @@
 import "../../components/Button/Button.scss";
-
-import { useState, useEffect, useContext } from "react";
-
-import { Navigate, useNavigate, Link } from "react-router-dom";
-
+import { useState, useEffect, useContext, useRef } from "react";
+import { Navigate, Link } from "react-router-dom";
 import axios from "axios";
+
 import Section from "../../components/Section/Section";
 import Form from "../../components/Form/Form";
 import Message from "../../components/Message/Message";
-
 import UserContext from "../../context/UserContext";
+import checkString, {
+  checkEmail,
+  checkPassword,
+  matchPasswords,
+} from "../../utils/validation";
 
 export default function Register({ icon }) {
   const { user, getUser } = useContext(UserContext);
 
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const initialErrorState = {
+    firstName: false,
+    lastName: false,
+    email: false,
+    password: false,
+    confirmPassword: false,
+    register: null,
+  };
 
-  const [firstNameError, setFirstNameError] = useState(false);
-  const [lastNameError, setLastNameError] = useState(false);
-  const [emailError, setEmailError] = useState(false);
-  const [passwordError, setPasswordError] = useState(false);
-  const [confirmPasswordError, setConfirmPasswordError] = useState(false);
-  const [registerError, setRegisterError] = useState(false);
-  const [registerSuccess, setRegisterSuccess] = useState(false);
+  const [formErrors, setFormErrors] = useState(initialErrorState);
 
+  const firstNameRef = useRef(null);
+  const lastNameRef = useRef(null);
+  const emailRef = useRef(null);
+  const passwordRef = useRef(null);
+  const confirmPasswordRef = useRef(null);
   const token = sessionStorage.getItem("token");
 
-  const navigate = useNavigate();
+  function setError(name) {
+    setFormErrors((prev) => ({
+      ...prev,
+      [name]: true,
+    }));
+  }
 
   // If token, get user details.
   useEffect(() => {
@@ -38,76 +47,54 @@ export default function Register({ icon }) {
     getUser();
   }, []);
 
-  // On register success, go to login page
-  useEffect(() => {
-    if (registerSuccess) {
-      navigate("/");
-    }
-  }, [registerSuccess]);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    setRegisterError(false);
-    setFirstNameError(false);
-    setLastNameError(false);
-    setEmailError(false);
-    setPasswordError(false);
-    setConfirmPasswordError(false);
+    setFormErrors(initialErrorState);
 
-    // Check for blanks, proper email and password match
-    const handleValidateForm = () => {
-      let ready = true;
-      setEmailError(false);
-      setPasswordError(false);
+    const isFirstNameValid = checkString(firstNameRef.current.value, 1);
+    const isLastNameValid = checkString(lastNameRef.current.value, 1);
+    const isEmailValid = checkEmail(emailRef.current.value);
+    const isPasswordValid = checkPassword(passwordRef.current.value);
+    const passwordsMatch = matchPasswords(
+      passwordRef.current.value,
+      confirmPasswordRef.current.value
+    );
 
-      if (firstName.length < 1) {
-        setFirstNameError(true);
-        ready = false;
-      }
+    if (!isFirstNameValid) setError("firstName");
+    if (!isLastNameValid) setError("lastName");
+    if (!isEmailValid) setError("email");
+    if (!isPasswordValid) setError("password");
+    if (!passwordsMatch) setError("confirmPassword");
 
-      if (lastName.length < 1) {
-        setLastNameError(true);
-        ready = false;
-      }
-
-      if (email.length < 1 || !email.includes("@")) {
-        setEmailError(true);
-        ready = false;
-      }
-
-      if (password.length < 6) {
-        setPasswordError(true);
-        ready = false;
-      }
-
-      if (password !== confirmPassword) {
-        setConfirmPasswordError(true);
-        ready = false;
-      }
-
-      return ready;
-    };
-
-    if (handleValidateForm() === false) {
+    // If validations fail, exit
+    if (
+      !isFirstNameValid ||
+      !isLastNameValid ||
+      !isEmailValid ||
+      !isPasswordValid ||
+      !passwordsMatch
+    )
       return;
-    }
 
     // Register User
     try {
       const response = await axios.post("/users/register", {
-        firstName,
-        lastName,
-        email,
-        password,
+        firstName: firstNameRef.current.value,
+        lastName: lastNameRef.current.value,
+        email: emailRef.current.value,
+        password: passwordRef.current.value,
       });
 
       if (response.data.success === true) {
-        setRegisterSuccess(true);
+        setFormErrors((prev) => ({
+          ...prev,
+          register: false,
+        }));
       }
     } catch (error) {
       console.error(error);
-      setRegisterError(true);
+      setError("register");
     }
   };
 
@@ -125,13 +112,13 @@ export default function Register({ icon }) {
           First Name
           <input
             className={`form__input${
-              firstNameError ? " form__input--error" : ""
+              formErrors.firstName ? " form__input--error" : ""
             }`}
             name="firstName"
-            onChange={(e) => setFirstName(e.target.value)}
+            ref={firstNameRef}
           />
           <div className="form__message-container">
-            {firstNameError && (
+            {formErrors.firstName && (
               <Message type="error" message="First name cannot be blank" />
             )}
           </div>
@@ -140,13 +127,13 @@ export default function Register({ icon }) {
           Last Name
           <input
             className={`form__input${
-              lastNameError ? " form__input--error" : ""
+              formErrors.lastName ? " form__input--error" : ""
             }`}
             name="lastName"
-            onChange={(e) => setLastName(e.target.value)}
+            ref={lastNameRef}
           />
           <div className="form__message-container">
-            {lastNameError && (
+            {formErrors.lastName && (
               <Message type="error" message="Last name cannot be blank" />
             )}
           </div>
@@ -154,12 +141,14 @@ export default function Register({ icon }) {
         <label className="form__label" htmlFor="email">
           Email
           <input
-            className={`form__input${emailError ? " form__input--error" : ""}`}
+            className={`form__input${
+              formErrors.email ? " form__input--error" : ""
+            }`}
             name="email"
-            onChange={(e) => setEmail(e.target.value)}
+            ref={emailRef}
           />
           <div className="form__message-container">
-            {emailError && (
+            {formErrors.email && (
               <Message type="error" message="Must be a valid email address" />
             )}
           </div>
@@ -168,14 +157,14 @@ export default function Register({ icon }) {
           Password
           <input
             className={`form__input${
-              passwordError ? " form__input--error" : ""
+              formErrors.password ? " form__input--error" : ""
             }`}
             name="password"
-            onChange={(e) => setPassword(e.target.value)}
+            ref={passwordRef}
             type="password"
           />
           <div className="form__message-container">
-            {passwordError && (
+            {formErrors.password && (
               <Message
                 type="error"
                 message="Password must be longer than 6 letters"
@@ -187,22 +176,24 @@ export default function Register({ icon }) {
           Confirm Password
           <input
             className={`form__input${
-              confirmPasswordError ? " form__input--error" : ""
+              formErrors.confirmPassword ? " form__input--error" : ""
             }`}
             name="confirmPassword"
             type="password"
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            ref={confirmPasswordRef}
           />
           <div className="form__message-container">
-            {confirmPasswordError && (
+            {formErrors.confirmPassword && (
               <Message type="error" message="Passwords must match" />
             )}
           </div>
         </label>
 
         <div className="form__message-container">
-          {registerError && <Message type="error" message="Register failed" />}
-          {registerSuccess && (
+          {formErrors.register === false && (
+            <Message type="error" message="Register failed" />
+          )}
+          {formErrors.register && (
             <Message type="success" message="Registered User" />
           )}
         </div>
