@@ -36,7 +36,15 @@ export default function Home({ icon }) {
   useEffect(() => {
     if (!token) return;
     getUser();
+    emailRef.current.focus();
   }, []);
+
+  // Set focus on first form field
+  useEffect(() => {
+    if (emailRef) {
+      emailRef.current.focus();
+    }
+  }, [emailRef]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

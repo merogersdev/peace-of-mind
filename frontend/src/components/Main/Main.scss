@@ -6,10 +6,12 @@
 /* --- Main --- */
 
 .main {
+  margin-top: 3rem;
   padding: 3rem 0;
   width: 100%;
   min-height: calc(100vh - 3rem);
   @include tablet {
+    margin-top: 5rem;
     min-height: calc(100vh - 5rem);
     padding-top: 5rem;
   }

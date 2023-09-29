@@ -47,6 +47,13 @@ export default function Register({ icon }) {
     getUser();
   }, []);
 
+  // Set focus on first form field
+  useEffect(() => {
+    if (firstNameRef) {
+      firstNameRef.current.focus();
+    }
+  }, [emailRef]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 

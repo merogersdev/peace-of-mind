@@ -16,4 +16,6 @@ body {
   margin: 0;
   font-family: "Open Sans", sans-serif;
   background-color: $light-bg;
+  position: relative;
+  z-index: 0;
 }
