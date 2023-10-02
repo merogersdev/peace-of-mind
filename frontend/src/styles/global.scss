@@ -19,3 +19,9 @@ body {
   position: relative;
   z-index: 0;
 }
+
+.root {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+}

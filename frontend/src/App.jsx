@@ -11,6 +11,7 @@ import Dashboard from "./pages/Dashboard/Dashboard";
 import Register from "./pages/Register/Register";
 import AddEntry from "./pages/AddEntry/AddEntry";
 import EditEntry from "./pages/EditEntry/EditEntry";
+import Login from "./pages/Login/Login";
 
 import Header from "./components/Header/Header";
 import Main from "./components/Main/Main";
@@ -32,6 +33,10 @@ export default function App() {
                 element={
                   <Dashboard icon={<MdDashboard className="section__icon" />} />
                 }
+              />
+              <Route
+                path="/login"
+                element={<Login icon={<MdLogin className="section__icon" />} />}
               />
               <Route
                 path="/register"
