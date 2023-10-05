@@ -1,4 +1,3 @@
-import "../../components/Button/Button.scss";
 import axios from "axios";
 import { useState, useEffect, useContext, useRef } from "react";
 import { Navigate, useNavigate, Link } from "react-router-dom";
@@ -128,13 +127,10 @@ export default function Login({ icon }) {
           )}
         </div>
         <div className="form__button-container">
-          <button
-            type="submit"
-            className="button button--primary button--expand"
-          >
+          <button type="submit" className="form__button form__button--primary">
             Login
           </button>
-          <Link to="/register" className="button button--dark button--expand">
+          <Link to="/register" className="form__button form__button--dark">
             Register
           </Link>
         </div>

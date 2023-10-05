@@ -2,7 +2,7 @@ import "./Header.scss";
 
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { MdClass, MdMenu, MdClose } from "react-icons/md";
+import { MdMenu, MdClose } from "react-icons/md";
 import Container from "../Container/Container";
 
 export default function Header({ title }) {
@@ -13,7 +13,6 @@ export default function Header({ title }) {
   }
 
   function handleKeyDown(e) {
-    console.log(e.keyCode);
     if (e.keyCode === 27) {
       handleClick();
     }
@@ -24,9 +23,6 @@ export default function Header({ title }) {
       <Container>
         <div className="header__container">
           <Link to="/" className="header__title">
-            <div className="header__icon">
-              <MdClass />
-            </div>
             {title}
           </Link>
           <nav className="header__nav">

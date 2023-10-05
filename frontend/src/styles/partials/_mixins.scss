@@ -102,6 +102,9 @@
   transition: 0.25s;
   border: none;
   width: 100%;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.1rem;
   font-family: "Open Sans", sans-serif;
 
   @include desktop {

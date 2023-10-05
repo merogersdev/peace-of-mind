@@ -16,6 +16,9 @@ body {
   margin: 0;
   font-family: "Open Sans", sans-serif;
   background-color: $light-bg;
+  background-image: url("/hero_bg.png");
+  background-position: center;
+  background-size: cover;
   position: relative;
   z-index: 0;
 }
