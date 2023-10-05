@@ -1,5 +1,3 @@
-import "../../components/Button/Button.scss";
-
 import { useContext, useEffect } from "react";
 import { Navigate, useNavigate, Link } from "react-router-dom";
 import { MdInsertEmoticon, MdModeEdit, MdDelete } from "react-icons/md";
@@ -61,20 +59,20 @@ export default function Dashboard({ icon }) {
         <Section>
           <div className="section__icon-container">{icon}</div>
           <h1 className="section__h1 ">Dashboard</h1>
-          <h2 className="section__h2">
+          <h2 className="section__h2 section__h2--custom">
             Hello, {user.firstName}
             <MdInsertEmoticon className="section__icon--space" />
           </h2>
           <div className="section__button-container">
             <Link
               to="/add-entry"
-              className="button button--primary button--top"
+              className="section__button section__button--primary section__button--top"
             >
               Add Entry
             </Link>
             <button
               type="button"
-              className="button button--dark"
+              className="section__button section__button--dark"
               onClick={logoutUser}
             >
               Logout
@@ -111,13 +109,13 @@ export default function Dashboard({ icon }) {
                 <div className="section__entry-interact">
                   <Link
                     to={`/edit-entry/${entry.id}`}
-                    className="button button--dark button--big-icon button--spacer"
+                    className="section__button section__button--dark section__button--big-icon section__button--spacer"
                   >
                     <MdModeEdit />
                   </Link>
                   <button
                     type="button"
-                    className="button button--delete button--big-icon"
+                    className="section__button section__button--delete section__button--big-icon"
                   >
                     <MdDelete onClick={() => handleDelete(entry.id)} />
                   </button>

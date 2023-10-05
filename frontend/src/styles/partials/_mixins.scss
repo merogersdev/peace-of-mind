@@ -88,3 +88,85 @@
     font-size: 1rem;
   }
 }
+
+@mixin button {
+  @include flex-center;
+  line-height: 3rem;
+  height: 3rem;
+  text-decoration: none;
+  border-radius: 0.25rem;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.25s;
+  border: none;
+  width: 100%;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.1rem;
+  font-family: "Open Sans", sans-serif;
+
+  @include desktop {
+    max-width: 20rem;
+  }
+  &--top {
+    margin: 0 0 1rem 0;
+    @include tablet {
+      margin: 0 1rem 0 0;
+    }
+  }
+  &--primary {
+    background-color: $primary;
+    color: $white;
+    &:hover {
+      background-color: $primary-hover;
+    }
+  }
+  &--big-icon {
+    font-size: 1.5rem;
+    padding: 0 1rem;
+  }
+  &--primary-outline {
+    background-color: $white;
+    color: $primary;
+    border: 2px solid $primary;
+    &:hover {
+      color: $primary-hover;
+      border: 2px solid $primary-hover;
+    }
+  }
+  &--dark {
+    background-color: $dark;
+    color: $white;
+    &:hover {
+      background-color: $dark-hover;
+    }
+  }
+  &--dark-outline {
+    background-color: $white;
+    color: $dark;
+    border: 2px solid $dark;
+    &:hover {
+      color: $dark-hover;
+      border: 2px solid $dark-hover;
+      background-color: $background;
+    }
+  }
+
+  &--delete {
+    background-color: $error;
+    color: $white;
+    &:hover {
+      background-color: $error-hover;
+    }
+  }
+  &--spacer {
+    margin-right: 0.25rem;
+  }
+  &--expand {
+    @include desktop {
+      max-width: 100%;
+    }
+  }
+}

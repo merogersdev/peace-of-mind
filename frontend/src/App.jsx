@@ -1,6 +1,12 @@
 import "./styles/App.scss";
 
-import { MdEditNote, MdPersonAdd, MdLogin, MdDashboard } from "react-icons/md";
+import {
+  MdEditNote,
+  MdPersonAdd,
+  MdLogin,
+  MdWeekend,
+  MdDashboard,
+} from "react-icons/md";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import { UserProvider } from "./context/UserContext";
@@ -11,6 +17,7 @@ import Dashboard from "./pages/Dashboard/Dashboard";
 import Register from "./pages/Register/Register";
 import AddEntry from "./pages/AddEntry/AddEntry";
 import EditEntry from "./pages/EditEntry/EditEntry";
+import Login from "./pages/Login/Login";
 
 import Header from "./components/Header/Header";
 import Main from "./components/Main/Main";
@@ -25,13 +32,19 @@ export default function App() {
             <Routes>
               <Route
                 path="/"
-                element={<Home icon={<MdLogin className="section__icon" />} />}
+                element={
+                  <Home icon={<MdWeekend className="section__icon" />} />
+                }
               />
               <Route
                 path="/dashboard"
                 element={
                   <Dashboard icon={<MdDashboard className="section__icon" />} />
                 }
+              />
+              <Route
+                path="/login"
+                element={<Login icon={<MdLogin className="section__icon" />} />}
               />
               <Route
                 path="/register"

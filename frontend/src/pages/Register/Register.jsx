@@ -1,4 +1,3 @@
-import "../../components/Button/Button.scss";
 import { useState, useEffect, useContext, useRef } from "react";
 import { Navigate, Link } from "react-router-dom";
 import axios from "axios";
@@ -46,6 +45,13 @@ export default function Register({ icon }) {
     if (!token) return;
     getUser();
   }, []);
+
+  // Set focus on first form field
+  useEffect(() => {
+    if (firstNameRef) {
+      firstNameRef.current.focus();
+    }
+  }, [emailRef]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -138,6 +144,7 @@ export default function Register({ icon }) {
             )}
           </div>
         </label>
+
         <label className="form__label" htmlFor="email">
           Email
           <input
@@ -198,12 +205,10 @@ export default function Register({ icon }) {
           )}
         </div>
         <div className="form__button-container">
-          <button type="submit" className="button button--primary">
+          <button type="submit" className="form__button form__button--primary">
             Register
           </button>
-        </div>
-        <div className="form__button-container">
-          <Link to="/" className="button button--dark">
+          <Link to="/" className="form__button form__button--dark">
             Back
           </Link>
         </div>

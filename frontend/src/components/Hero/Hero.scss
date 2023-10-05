@@ -1,0 +1,93 @@
+/* --- Partials --- */
+
+@use "../../styles/partials/colors" as *;
+@use "../../styles/partials/mixins" as *;
+@use "../../styles/partials/variables" as *;
+
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 auto;
+  padding: 0 2rem;
+  gap: 4rem;
+  background-image: url("/hero_bg.png");
+  background-position: center;
+  background-size: cover;
+  height: 30rem;
+  &__section {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    &--center {
+      align-items: center;
+      @include tablet {
+        align-items: flex-start;
+      }
+    }
+    &--end {
+      align-items: center;
+      @include tablet {
+        align-items: flex-end;
+      }
+    }
+  }
+  &__h1 {
+    font-weight: 700;
+    font-size: 2rem;
+    color: $dark;
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin: 0 0 2rem 0;
+    @include tablet {
+      justify-content: flex-start;
+      font-size: 2.5rem;
+    }
+  }
+  &__p {
+    @include p;
+  }
+  &__image-container {
+    width: 20rem;
+    height: 20rem;
+    border-radius: 50%;
+    position: relative;
+    overflow: hidden;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    @include tablet {
+      display: flex;
+    }
+  }
+  &__image {
+    height: 100%;
+    width: auto;
+
+    @include tablet {
+      display: flex;
+    }
+  }
+
+  @include tablet {
+    flex-direction: row;
+  }
+  @include desktop {
+    padding: 0;
+  }
+  &__buttons {
+    display: flex;
+    padding-top: 2rem;
+  }
+  &__button {
+    @include button;
+    width: fit-content;
+    padding: 0 2rem;
+  }
+}

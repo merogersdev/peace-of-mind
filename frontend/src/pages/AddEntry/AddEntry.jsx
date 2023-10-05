@@ -1,5 +1,3 @@
-import "../../components/Button/Button.scss";
-
 import { useState, useEffect, useContext, useRef } from "react";
 
 import { useNavigate, Link } from "react-router-dom";
@@ -147,11 +145,14 @@ export default function AddEntry({ icon }) {
         <div className="form__button-container">
           <button
             type="submit"
-            className="button button--primary button--expand"
+            className="form__button form__button--primary form__button--expand"
           >
             Add Entry
           </button>
-          <Link to="/" className="button button--dark button--expand">
+          <Link
+            to="/"
+            className="form__button form__button--dark form__button--expand"
+          >
             Back
           </Link>
         </div>
