@@ -22,6 +22,9 @@ export default function EditEntry({ icon }) {
   };
 
   const [formErrors, setFormErrors] = useState(initialErrorState);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
+
   const titleRef = useRef(null);
   const gratitudeRef = useRef(null);
   const entryRef = useRef(null);
@@ -53,6 +56,8 @@ export default function EditEntry({ icon }) {
     e.preventDefault();
 
     setFormErrors(initialErrorState);
+    setErrorMessage("");
+    setSuccessMessage("");
 
     const isTitleValid = checkString(titleRef.current.value, 1);
     const isGratitudeValid = checkString(gratitudeRef.current.value, 1);
@@ -83,10 +88,10 @@ export default function EditEntry({ icon }) {
 
       if (response.data.success === true) {
         getUser();
-        navigate("/dashboard");
+        setSuccessMessage("Entry edited successfully");
       }
     } catch (error) {
-      console.error(error);
+      setErrorMessage("Error: Entry edit unsuccessful");
     }
   };
 
@@ -147,11 +152,9 @@ export default function EditEntry({ icon }) {
         </label>
 
         <div className="form__message-container">
-          {formErrors.edit === false && (
-            <Message type="error" message="Edit entry failed" />
-          )}
-          {formErrors.edit && (
-            <Message type="success" message="Edit entry success" />
+          {errorMessage && <Message type="error" message={errorMessage} />}
+          {successMessage && (
+            <Message type="success" message={successMessage} />
           )}
         </div>
         <div className="form__button-container">

@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext, useRef } from "react";
 
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import axios from "axios";
 import Section from "../../components/Section/Section";
@@ -21,11 +21,13 @@ export default function AddEntry({ icon }) {
   };
 
   const [formErrors, setFormErrors] = useState(initialErrorState);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
+
   const titleRef = useRef(null);
   const gratitudeRef = useRef(null);
   const entryRef = useRef(null);
   const token = sessionStorage.getItem("token");
-  const navigate = useNavigate();
 
   function setError(name) {
     setFormErrors((prev) => ({
@@ -44,6 +46,8 @@ export default function AddEntry({ icon }) {
     e.preventDefault();
 
     setFormErrors(initialErrorState);
+    setErrorMessage("");
+    setSuccessMessage("");
 
     const isTitleValid = checkString(titleRef.current.value, 1);
     const isGratitudeValid = checkString(gratitudeRef.current.value, 1);
@@ -74,14 +78,14 @@ export default function AddEntry({ icon }) {
       );
 
       if (response.data.success === true) {
-        navigate("/dashboard");
+        setSuccessMessage("Entry added successfully");
       }
     } catch (error) {
-      console.error(error);
       setFormErrors((prev) => ({
         ...prev,
         add: false,
       }));
+      setErrorMessage("Error: Failed to add entry");
     }
   };
 
@@ -137,10 +141,12 @@ export default function AddEntry({ icon }) {
         </label>
 
         <div className="form__message-container">
-          {formErrors.add === false && (
-            <Message type="error" message="Add entry failed" />
+          {errorMessage && (
+            <Message type="error" message="Error: Add entry failed" />
           )}
-          {formErrors.add && <Message type="success" message="Added entry" />}
+          {successMessage && (
+            <Message type="success" message="Entry added successfully" />
+          )}
         </div>
         <div className="form__button-container">
           <button
