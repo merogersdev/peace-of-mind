@@ -14,13 +14,17 @@ const postLogin = async (req, res) => {
 
   // Check if user exists, if not return and error
   if (user === undefined) {
-    return res.status(404).json({ success: false, message: "Invalid user" });
+    return res
+      .status(404)
+      .json({ success: false, message: "Error: User not found" });
   }
   // Check if password is correct
   const validPassword = bcrypt.compareSync(password, user.password);
 
   if (!validPassword) {
-    return res.status(400).json({ success: false, message: "Wrong password" });
+    return res
+      .status(400)
+      .json({ success: false, message: "Error: Invalid credentials" });
   }
 
   // Generate Token to return to user
@@ -39,7 +43,7 @@ const postRegister = async (req, res) => {
   if (!firstName || !lastName || !email || !password) {
     return res
       .status(400)
-      .json({ success: false, message: "Invalid User Registration" });
+      .json({ success: false, message: "Error: Missing fields" });
   }
 
   try {
@@ -50,9 +54,10 @@ const postRegister = async (req, res) => {
 
     // If user exists, exit and display error
     if (user !== undefined) {
-      return res
-        .status(400)
-        .json({ success: false, message: "User already exists" });
+      return res.status(400).json({
+        success: false,
+        message: "Error: User already exists",
+      });
     }
 
     // Create New User
@@ -64,7 +69,7 @@ const postRegister = async (req, res) => {
     });
     return res
       .status(201)
-      .json({ success: true, message: "User created successfully" });
+      .json({ success: true, message: "User registered successfully" });
   } catch (error) {
     console.error(error.message);
     return res.status(400).json({

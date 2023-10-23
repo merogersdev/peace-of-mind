@@ -18,6 +18,8 @@ export default function Login({ icon }) {
   };
 
   const [formErrors, setFormErrors] = useState(initialErrorState);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
 
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
@@ -50,6 +52,8 @@ export default function Login({ icon }) {
 
     // Reset Errors
     setFormErrors(initialErrorState);
+    setErrorMessage("");
+    setSuccessMessage("");
 
     const isEmailValid = checkEmail(emailRef.current.value);
     const isPasswordValid = checkPassword(passwordRef.current.value);
@@ -65,15 +69,15 @@ export default function Login({ icon }) {
         email: emailRef.current.value,
         password: passwordRef.current.value,
       });
-
       // If successful login, store JWT token in browser
       if (response.data.success === true) {
+        setSuccessMessage("Login Successful");
         const currentToken = response.data.token.split(" ")[1];
         sessionStorage.setItem("token", currentToken);
+        navigate("/dashboard");
       }
-      navigate("/dashboard");
     } catch (error) {
-      console.error(error);
+      setErrorMessage(error.response.data.message);
     }
   };
 
@@ -122,16 +126,17 @@ export default function Login({ icon }) {
           </div>
         </label>
         <div className="form__message-container">
-          {formErrors.login && (
-            <Message type="error" message="Invalid credentials" />
+          {errorMessage && <Message type="error" message={errorMessage} />}
+          {successMessage && (
+            <Message type="success" message={successMessage} />
           )}
         </div>
         <div className="form__button-container">
           <button type="submit" className="form__button form__button--primary">
             Login
           </button>
-          <Link to="/register" className="form__button form__button--dark">
-            Register
+          <Link to="/" className="form__button form__button--dark">
+            Go Back
           </Link>
         </div>
       </Form>
