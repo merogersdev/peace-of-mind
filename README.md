@@ -1,6 +1,6 @@
 # Peace of Mind
 
-![Peace Of Mind Screenshot](https://my-portfolio-screens.s3.ca-central-1.amazonaws.com/peaceofmind/peaceofmind-screenshot.png)
+![Peace Of Mind Screenshot](https://github.com/merogersdev/peace-of-mind/assets/56097611/536c7e2d-d911-40ae-8096-664de46a80d7)
 
 ## Quick Summary
 
