@@ -1,5 +1,5 @@
 import { useContext, useEffect } from "react";
-import { Navigate, useNavigate, Link } from "react-router-dom";
+import { Navigate, Link } from "react-router-dom";
 import { MdInsertEmoticon, MdModeEdit, MdDelete } from "react-icons/md";
 import axios from "axios";
 
@@ -16,14 +16,6 @@ export default function Dashboard({ icon }) {
   const { quote, author, getQuote } = useContext(QuoteContext);
 
   const token = sessionStorage.getItem("token");
-
-  const navigate = useNavigate();
-
-  const logoutUser = () => {
-    setUser(null);
-    sessionStorage.clear();
-    navigate("/");
-  };
 
   useEffect(() => {
     getUser();
@@ -68,15 +60,8 @@ export default function Dashboard({ icon }) {
               to="/add-entry"
               className="section__button section__button--primary section__button--top"
             >
-              Add Entry
+              Add Journal Entry
             </Link>
-            <button
-              type="button"
-              className="section__button section__button--dark"
-              onClick={logoutUser}
-            >
-              Logout
-            </button>
           </div>
         </Section>
         <Section>
@@ -88,7 +73,7 @@ export default function Dashboard({ icon }) {
           <h1 className="section__h1 section__h1--no-icon">Entry Archive</h1>
           <ul className="section__entry-list">
             {user.entries.length === 0 ? (
-              <Message type="info" message="No messages to display..." />
+              <Message type="info" message="No entries to display..." />
             ) : (
               ""
             )}

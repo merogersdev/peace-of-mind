@@ -25,6 +25,8 @@ export default function Register({ icon }) {
   };
 
   const [formErrors, setFormErrors] = useState(initialErrorState);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
 
   const firstNameRef = useRef(null);
   const lastNameRef = useRef(null);
@@ -97,10 +99,10 @@ export default function Register({ icon }) {
           ...prev,
           register: false,
         }));
+        setSuccessMessage(response.data.message);
       }
     } catch (error) {
-      console.error(error);
-      setError("register");
+      setErrorMessage(error.response.data.message);
     }
   };
 
@@ -197,19 +199,26 @@ export default function Register({ icon }) {
         </label>
 
         <div className="form__message-container">
-          {formErrors.register === false && (
-            <Message type="error" message="Register failed" />
-          )}
-          {formErrors.register && (
-            <Message type="success" message="Registered User" />
+          {errorMessage && <Message type="error" message={errorMessage} />}
+          {successMessage && (
+            <Message type="success" message={successMessage} />
           )}
         </div>
         <div className="form__button-container">
-          <button type="submit" className="form__button form__button--primary">
-            Register
-          </button>
+          {successMessage ? (
+            <Link to="/login" className="form__button form__button--primary">
+              Login
+            </Link>
+          ) : (
+            <button
+              type="submit"
+              className="form__button form__button--primary"
+            >
+              Register
+            </button>
+          )}
           <Link to="/" className="form__button form__button--dark">
-            Back
+            Go Back
           </Link>
         </div>
       </Form>
