@@ -1,12 +1,17 @@
 import "./Header.scss";
 
-import { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { useState, useContext } from "react";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { MdMenu, MdClose } from "react-icons/md";
 import Container from "../Container/Container";
+import UserContext from "../../context/UserContext";
 
 export default function Header({ title }) {
+  const { user, setUser } = useContext(UserContext);
+
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const navigate = useNavigate();
 
   function handleClick() {
     setMenuOpen(false);
@@ -17,6 +22,12 @@ export default function Header({ title }) {
       handleClick();
     }
   }
+
+  const logoutUser = () => {
+    setUser(null);
+    sessionStorage.clear();
+    navigate("/");
+  };
 
   return (
     <header className="header">
@@ -35,21 +46,35 @@ export default function Header({ title }) {
               onClick={() => handleClick()}
               onKeyDown={() => handleKeyDown()}
             >
-              <li>
-                <NavLink to="/" className="header__link">
-                  Home
-                </NavLink>
-              </li>
-              <li>
-                <NavLink to="/login" className="header__link">
-                  Login
-                </NavLink>
-              </li>
-              <li>
-                <NavLink to="/register" className="header__link">
-                  Register
-                </NavLink>
-              </li>
+              {user !== null ? (
+                <li>
+                  <button
+                    type="button"
+                    className="header__button"
+                    onClick={logoutUser}
+                  >
+                    Logout
+                  </button>
+                </li>
+              ) : (
+                <>
+                  <li>
+                    <NavLink to="/" className="header__link">
+                      Home
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink to="/login" className="header__link">
+                      Login
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink to="/register" className="header__link">
+                      Register
+                    </NavLink>
+                  </li>
+                </>
+              )}
             </ul>
             <button
               type="button"
