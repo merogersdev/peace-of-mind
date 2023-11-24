@@ -1,11 +1,11 @@
 version: "3.8"
 
 services:
-  db:
-    image: db
-    container_name: db
+  peaceofmind-db:
+    image: peaceofmind-db
+    container_name: peaceofmind-db
     build:
-      context: .
+      context: ./db/
       target: db
     environment:
       - POSTGRES_USER=peaceofmind

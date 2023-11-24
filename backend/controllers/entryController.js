@@ -1,5 +1,4 @@
-// Knex
-const db = require("../knex");
+const pool = require("../config/db");
 
 // GET - Get all Entries for that user
 const getEntries = async (req, res) => {
@@ -12,15 +11,18 @@ const getEntries = async (req, res) => {
   }
 
   try {
-    const entries = await db("entries").where("user_id", "=", id);
+    const entries = await pool.query(
+      "SELECT * FROM entries WHERE user_id = $1",
+      [id]
+    );
 
     // If no entries for user, return empty array
-    if (entries === undefined) {
+    if (entries.rows[0] === undefined) {
       return res.json({ success: true, entries: [] });
     }
     // If entries, return entry objects in array
 
-    return res.json({ success: true, entries });
+    return res.json({ success: true, entries: entries.rows[0] });
   } catch (error) {
     return res
       .status(400)
@@ -31,7 +33,7 @@ const getEntries = async (req, res) => {
 // POST - Add New Entry
 const postEntry = async (req, res) => {
   const { title, gratitude, entry } = req.body;
-  const { id } = req.user;
+  const id = 1;
 
   // Check for data and user id, else return
   if (!title || !gratitude || !entry || !id) {
@@ -42,19 +44,22 @@ const postEntry = async (req, res) => {
   }
 
   try {
-    await db("entries").insert({
-      user_id: req.user.id,
-      title,
-      gratitude,
-      entry,
-    });
-    res
+    await pool.query(
+      "INSERT INTO entries(user_id, title, gratitude, entry) VALUES ($1, $2, $3, $4)",
+      [id, title, gratitude, entry]
+    );
+
+    return res
       .status(201)
       .json({ success: true, message: "Entry posted successfully" });
   } catch (error) {
-    res.status(400).json({ success: false, message: "Error creating entry" });
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Entry Creation failed",
+      error: error.message,
+    });
   }
-  return null;
 };
 
 // PATCH - Update Entry
@@ -66,42 +71,38 @@ const patchEntry = async (req, res) => {
     return res.status(400).json({ success: false, message: "Invalid entry" });
   }
 
-  const entryExists = await db("entries").where({ id }).first();
-
-  // If no entry by that ID, return failure
-  if (!entryExists)
-    return res
-      .status(401)
-      .json({ success: false, message: "Entry does not exist" });
-
-  // Make sure user is authorized to update resource
-  if (entryExists.user_id !== req.user.id)
-    return res
-      .status(401)
-      .json({ success: false, message: "Unauthorized to update resource" });
-
-  // Have to use old promise syntax, as Knex doesn't like try/catch for some reason...
-  db("entries")
-    .where({ id })
-    .select({ title, gratitude, entry })
-    .update({
-      title,
-      gratitude,
-      entry,
-    })
-    .catch((error) =>
-      res.status(400).json({
-        success: false,
-        message: "Could not update entry",
-        error: error.message,
-      })
+  try {
+    const selectedEntry = await pool.query(
+      "SELECT * FROM entries WHERE id = $1",
+      [id]
     );
 
-  // Return success status
-  return res.status(200).json({
-    success: true,
-    message: "Entry updated successfully",
-  });
+    if (selectedEntry.row[0] === null)
+      return res
+        .status(404)
+        .json({ success: false, message: "Entry does not exist" });
+
+    if (selectedEntry.rows[0].user_id !== req.user.id)
+      return res
+        .status(401)
+        .json({ success: false, message: "Unauthorized to update resource" });
+
+    await pool.query(
+      "UPDATE entries SET title = $1, gratitude = $2, entry = $3 WHERE id = $4",
+      [title, gratitude, entry, id]
+    );
+    return res.status(200).json({
+      success: true,
+      message: "Entry updated successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Entry Update failed",
+      error: error.message,
+    });
+  }
 };
 
 // DELETE - Delete Entry
@@ -109,39 +110,34 @@ const patchEntry = async (req, res) => {
 const deleteEntry = async (req, res) => {
   const { id } = req.params;
 
-  if (!id) {
-    return res
-      .status(400)
-      .json({ success: false, message: "No entry specified" });
-  }
-
   try {
-    const entry = await db("entries").where({ id }).first();
+    const selectedEntry = await pool.query(
+      "SELECT * FROM entries WHERE id = $1",
+      [id]
+    );
 
-    // If no entry with that ID, error
-
-    if (entry === undefined) {
+    if (selectedEntry.row[0] === null)
       return res
-        .status(400)
+        .status(404)
         .json({ success: false, message: "Entry does not exist" });
-    }
 
-    // Make sure user deleting is author
-    if (entry.user_id !== req.user.id) {
+    if (selectedEntry.rows[0].user_id !== req.user.id)
       return res
         .status(401)
-        .json({ success: false, message: "Unauthorized to delete entry" });
-    }
+        .json({ success: false, message: "Unauthorized to update resource" });
 
-    await db("entries").where({ id }).del();
+    await pool.query("DELETE FROM entries WHERE id = $1", [id]);
 
     return res
       .status(200)
       .json({ success: true, message: "Entry deleted successfully" });
   } catch (error) {
-    return res
-      .status(400)
-      .json({ success: false, message: "Failed to delete entry" });
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Entry Update failed",
+      error: error.message,
+    });
   }
 };
 

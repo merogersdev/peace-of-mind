@@ -11,16 +11,13 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
   );
 
   CREATE TABLE entries (
-    id SERIAL,
-    user_id INT NOT NULL,
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     title VARCHAR(100) NOT NULL,
     gratitude VARCHAR(100) NOT NULL,
     entry TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    PRIMARY KEY(id),
-    CONSTRAINT user_id
-      FOREIGN KEY(id)
-        REFERENCES users(id)
+    FOREIGN KEY(user_id) REFERENCES users (id)
   );
 EOSQL
