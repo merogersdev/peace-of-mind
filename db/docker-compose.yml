@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  db:
+    image: db
+    container_name: db
+    build:
+      context: .
+      target: db
+    environment:
+      - POSTGRES_USER=peaceofmind
+      - POSTGRES_PASSWORD=peaceofmind
+      - POSTGRES_DB=peaceofmind
+    ports:
+      - 5432:5432
