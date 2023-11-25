@@ -3,23 +3,62 @@ const passport = require("passport");
 
 const router = express.Router();
 
-const {
-  postLogin,
-  postRegister,
-  getUserDetails,
-  getQuote,
-} = require("../controllers/userController");
+const { postLogin, postRegister } = require("../controllers/userController");
 
-// ROUTE - /login
-router.route("/login").post(postLogin);
+/**
+ * @swagger
+ * /users/:
+ *   get:
+ *     summary: Gets all users
+ *     description: Retrieves all users in database and returns basic info.
+ *     tags: [users]
+ */
 
-// ROUTE - /register
-router.route("/register").post(postRegister);
+/**
+ * @swagger
+ * /users/:
+ *   post:
+ *     summary: Register User
+ *     description: Creates user in database and returns basic info.
+ *     tags: [users]
+ */
+router.post("/", postRegister);
 
-// ROUTE - /details
-router.route("/details").get(getUserDetails);
+/**
+ * @swagger
+ * /users/login:
+ *   get:
+ *     summary: User Login
+ *     description: API endpoint for logging in the user and returning their user info, along with entries.
+ *     tags: [users]
+ */
+router.post("/login", postLogin);
 
-// Route - /quote
-router.route("/quote").get(getQuote);
+/**
+ * @swagger
+ * /users/{id}:
+ *   get:
+ *     summary: User Details
+ *     description: Get user details
+ *     tags: [users]
+ */
+
+/**
+ * @swagger
+ * /users/{id}:
+ *   put:
+ *     summary: Update User
+ *     description: Update user details
+ *     tags: [users]
+ */
+
+/**
+ * @swagger
+ * /users/{id}:
+ *   delete:
+ *     summary: Delete User
+ *     description: Deletes user and their entries
+ *     tags: [users]
+ */
 
 module.exports = router;

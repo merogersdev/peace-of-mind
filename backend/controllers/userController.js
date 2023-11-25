@@ -42,6 +42,15 @@ const postLogin = async (req, res) => {
       [user.rows[0].id]
     );
 
+    const quote = await axios.get(
+      "https://api.api-ninjas.com/v1/quotes?category=inspirational",
+      {
+        headers: {
+          "X-Api-Key": process.env.API_KEY,
+        },
+      }
+    );
+
     // Generate Token to return to user
     const token = jwt.sign(
       { email: user.email, id: user.rows[0].id },
@@ -55,6 +64,7 @@ const postLogin = async (req, res) => {
       token: `Bearer ${token}`,
       user: user.rows[0],
       entries: entries.rows,
+      quote: quote.data[0],
     });
   } catch (error) {
     return res.status(500).json({
@@ -112,57 +122,4 @@ const postRegister = async (req, res) => {
   }
 };
 
-const getUserDetails = async (req, res) => {
-  const { id } = req.params;
-
-  try {
-    const user = await pool.query("SELECT * FROM users WHERE id = $1", [id]);
-
-    const entries = await pool.query(
-      "SELECT * FROM entries WHERE user_id = $1",
-      [id]
-    );
-
-    return res.status(200).json({
-      id: user.id,
-      email: user.email,
-      firstName: user.first_name,
-      lastName: user.last_name,
-      entries: entries || [],
-    });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      success: false,
-      message: "User details request failed",
-      error: error.message,
-    });
-  }
-};
-
-const getQuote = async (req, res) => {
-  const authHeader = req.headers.authorization;
-  const token = authHeader && authHeader.split(" ")[1];
-
-  // Return unauthorized if no token
-  if (token == null)
-    return res.status(401).json({ success: false, error: "401: Unauthorized" });
-
-  try {
-    const response = await axios.get(
-      "https://api.api-ninjas.com/v1/quotes?category=inspirational",
-      {
-        headers: {
-          "X-Api-Key": process.env.API_KEY,
-        },
-      }
-    );
-
-    return res.status(200).json({ quote: response.data[0] });
-  } catch (error) {
-    console.error(error);
-  }
-  return null;
-};
-
-module.exports = { postLogin, postRegister, getUserDetails, getQuote };
+module.exports = { postLogin, postRegister };
