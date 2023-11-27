@@ -50,6 +50,12 @@ const entryDetailsHandler = async (req, res) => {
         .json({ success: false, message: "Error: No entry found" });
     }
 
+    if (entryExists.rows[0].id !== id) {
+      return res
+        .status(403)
+        .json({ success: false, message: "Error: Unauthorized" });
+    }
+
     return res.status(200).json({
       success: true,
       message: "Entry Details",
@@ -107,15 +113,21 @@ const updateEntryHandler = async (req, res) => {
   }
 
   try {
-    const selectedEntry = await pool.query(
+    const entryExists = await pool.query(
       "SELECT * FROM entries WHERE id = $1",
       [id]
     );
 
-    if (selectedEntry.row[0] === undefined)
+    if (entryExists.row[0] === undefined)
       return res
         .status(404)
         .json({ success: false, message: "Error: No entry found" });
+
+    if (entryExists.rows[0].id !== id) {
+      return res
+        .status(403)
+        .json({ success: false, message: "Error: Unauthorized" });
+    }
 
     await pool.query(
       "UPDATE entries SET title = $1, gratitude = $2, entry = $3 WHERE id = $4",
@@ -139,15 +151,21 @@ const deleteEntryHandler = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const selectedEntry = await pool.query(
+    const entryExists = await pool.query(
       "SELECT * FROM entries WHERE id = $1",
       [id]
     );
 
-    if (selectedEntry.row[0] === undefined)
+    if (entryExists.row[0] === undefined)
       return res
         .status(404)
         .json({ success: false, message: "Entry does not exist" });
+
+    if (entryExists.rows[0].id !== id) {
+      return res
+        .status(403)
+        .json({ success: false, message: "Error: Unauthorized" });
+    }
 
     await pool.query("DELETE FROM entries WHERE id = $1", [id]);
 

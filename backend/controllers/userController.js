@@ -141,6 +141,12 @@ const userDetailsHandler = async (req, res) => {
         .json({ success: false, message: "Error: No user found" });
     }
 
+    if (userExists.rows[0].id !== id) {
+      return res
+        .status(403)
+        .json({ success: false, message: "Error: Unauthorized" });
+    }
+
     const entries = await pool.query(
       "SELECT DISTINCT user_id, entries.id, title, gratitude, entry FROM entries JOIN users ON entries.user_id = $1 ORDER BY entries.id",
       [userExists.rows[0].id]
@@ -211,6 +217,12 @@ const updateUserHandler = async (req, res) => {
         .json({ success: false, message: "Error: No user found" });
     }
 
+    if (userExists.rows[0].id !== id) {
+      return res
+        .status(403)
+        .json({ success: false, message: "Error: Unauthorized" });
+    }
+
     const hashedPassword = bcrypt.hashSync(password, salt);
 
     await pool.query(
@@ -243,6 +255,12 @@ const deleteUserHandler = async (req, res) => {
       return res
         .status(404)
         .json({ success: false, message: "Error: No user found" });
+    }
+
+    if (userExists.rows[0].id !== id) {
+      return res
+        .status(403)
+        .json({ success: false, message: "Error: Unauthorized" });
     }
 
     await pool.query("DELETE FROM users WHERE id = ($1)", [id]);

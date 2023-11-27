@@ -1,5 +1,4 @@
 const express = require("express");
-const passport = require("passport");
 
 const router = express.Router();
 
@@ -20,20 +19,6 @@ const {
  *     description: Retrieves all users in database and returns basic info.
  *     tags: [users]
  *     responses:
- *      '404':
- *        description: No users found
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              properties:
- *                success:
- *                  type: boolean
- *                  example: false
- *                message:
- *                  type: string
- *                  description: Message indicating no user found
- *                  example: "Error: No users found"
  *      '200':
  *        description: User Details
  *        content:
@@ -66,7 +51,20 @@ const {
  *                      email:
  *                        type: string
  *                        example: testuser@example.com
- *
+ *      '404':
+ *        description: No users found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                success:
+ *                  type: boolean
+ *                  example: false
+ *                message:
+ *                  type: string
+ *                  description: Message indicating no user found
+ *                  example: "Error: No users found"
  */
 router.get("/", allUsersHandler);
 
@@ -78,20 +76,6 @@ router.get("/", allUsersHandler);
  *     description: Creates user in database and returns basic info.
  *     tags: [users]
  *     responses:
- *      '400':
- *          description: Missing fields
- *          content:
- *            application/json:
- *             schema:
- *                type: object
- *                properties:
- *                  success:
- *                    type: boolean
- *                    example: false
- *                  message:
- *                    type: string
- *                    description: Message indicating fields missing
- *                    example: "Error: Missing Fields"
  *      '201':
  *        description: User registered successfully
  *        content:
@@ -118,17 +102,6 @@ router.get("/", allUsersHandler);
  *                    email:
  *                      type: string
  *                      example: testuser@example.com
- */
-router.post("/", registerHandler);
-
-/**
- * @swagger
- * /users/login:
- *   get:
- *     summary: User Login
- *     description: API endpoint for logging in the user and returning their user info, along with entries.
- *     tags: [users]
- *     responses:
  *      '400':
  *          description: Missing fields
  *          content:
@@ -143,20 +116,17 @@ router.post("/", registerHandler);
  *                    type: string
  *                    description: Message indicating fields missing
  *                    example: "Error: Missing Fields"
- *      '404':
- *        description: No user found
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              properties:
- *                success:
- *                  type: boolean
- *                  example: false
- *                message:
- *                  type: string
- *                  description: Message indicating no user found
- *                  example: "Error: No user found"
+ */
+router.post("/", registerHandler);
+
+/**
+ * @swagger
+ * /users/login:
+ *   get:
+ *     summary: User Login
+ *     description: API endpoint for logging in the user and returning their user info, along with entries.
+ *     tags: [users]
+ *     responses:
  *      '200':
  *        description: User Details
  *        content:
@@ -212,20 +182,8 @@ router.post("/", registerHandler);
  *                    category:
  *                      type: text
  *                      example: inspirational
- *
- */
-router.post("/login", loginHandler);
-
-/**
- * @swagger
- * /users/{id}:
- *   get:
- *     summary: User Details
- *     description: Get user details
- *     tags: [users]
- *     responses:
  *      '400':
- *          description: No user id
+ *          description: Missing fields
  *          content:
  *            application/json:
  *             schema:
@@ -237,7 +195,7 @@ router.post("/login", loginHandler);
  *                  message:
  *                    type: string
  *                    description: Message indicating fields missing
- *                    example: "Error: Missing User ID"
+ *                    example: "Error: Missing Fields"
  *      '404':
  *        description: No user found
  *        content:
@@ -252,6 +210,18 @@ router.post("/login", loginHandler);
  *                  type: string
  *                  description: Message indicating no user found
  *                  example: "Error: No user found"
+ *
+ */
+router.post("/login", loginHandler);
+
+/**
+ * @swagger
+ * /users/{id}:
+ *   get:
+ *     summary: User Details
+ *     description: Get user details
+ *     tags: [users]
+ *     responses:
  *      '200':
  *        description: User Details
  *        content:
@@ -295,21 +265,8 @@ router.post("/login", loginHandler);
  *                          entry:
  *                            type: string
  *                            example: Today was a good day. Just gonna send it.
- *
- *
- */
-router.get("/:id", userDetailsHandler);
-
-/**
- * @swagger
- * /users/{id}:
- *   patch:
- *     summary: Update User
- *     description: Update user details
- *     tags: [users]
- *     responses:
  *      '400':
- *          description: No user ID
+ *          description: No user id
  *          content:
  *            application/json:
  *             schema:
@@ -321,9 +278,22 @@ router.get("/:id", userDetailsHandler);
  *                  message:
  *                    type: string
  *                    description: Message indicating fields missing
- *                    example: "Error: Missing Fields"
+ *                    example: "Error: Missing User ID"
+ *      '403':
+ *          description: Unauthorized
+ *          content:
+ *            application/json:
+ *             schema:
+ *                type: object
+ *                properties:
+ *                  success:
+ *                    type: boolean
+ *                    example: false
+ *                  message:
+ *                    type: string
+ *                    example: "Error: Unauthorized"
  *      '404':
- *        description: No user found to update
+ *        description: No user found
  *        content:
  *          application/json:
  *            schema:
@@ -336,6 +306,17 @@ router.get("/:id", userDetailsHandler);
  *                  type: string
  *                  description: Message indicating no user found
  *                  example: "Error: No user found"
+ */
+router.get("/:id", userDetailsHandler);
+
+/**
+ * @swagger
+ * /users/{id}:
+ *   patch:
+ *     summary: Update User
+ *     description: Update user details
+ *     tags: [users]
+ *     responses:
  *      '200':
  *        description: Successfully updated user
  *        content:
@@ -351,6 +332,48 @@ router.get("/:id", userDetailsHandler);
  *                  type: string
  *                  description: Message indicating success
  *                  example: "User updated successfully"
+ *      '400':
+ *          description: No user ID
+ *          content:
+ *            application/json:
+ *             schema:
+ *                type: object
+ *                properties:
+ *                  success:
+ *                    type: boolean
+ *                    example: false
+ *                  message:
+ *                    type: string
+ *                    description: Message indicating fields missing
+ *                    example: "Error: Missing Fields"
+ *      '403':
+ *          description: Unauthorized
+ *          content:
+ *            application/json:
+ *             schema:
+ *                type: object
+ *                properties:
+ *                  success:
+ *                    type: boolean
+ *                    example: false
+ *                  message:
+ *                    type: string
+ *                    example: "Error: Unauthorized"
+ *      '404':
+ *        description: No user found to update
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                success:
+ *                  type: boolean
+ *                  example: false
+ *                message:
+ *                  type: string
+ *                  description: Message indicating no user found
+ *                  example: "Error: No user found"
+
  */
 router.patch("/:id", updateUserHandler);
 
@@ -362,21 +385,6 @@ router.patch("/:id", updateUserHandler);
  *     description: Deletes user and their entries
  *     tags: [users]
  *     responses:
- *      '404':
- *        description: No user found to delete
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              properties:
- *                success:
- *                  type: boolean
- *                  description: User delete success or fail
- *                  example: false
- *                message:
- *                  type: string
- *                  description: Message indicating no user found
- *                  example: "Error: No user found"
  *      '200':
  *        description: Successfully deleted user
  *        content:
@@ -392,6 +400,34 @@ router.patch("/:id", updateUserHandler);
  *                  type: string
  *                  description: Message indicating success
  *                  example: "User deleted successfully"
+ *      '403':
+ *          description: Unauthorized
+ *          content:
+ *            application/json:
+ *             schema:
+ *                type: object
+ *                properties:
+ *                  success:
+ *                    type: boolean
+ *                    example: false
+ *                  message:
+ *                    type: string
+ *                    example: "Error: Unauthorized"
+ *      '404':
+ *        description: No user found to delete
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                success:
+ *                  type: boolean
+ *                  description: User delete success or fail
+ *                  example: false
+ *                message:
+ *                  type: string
+ *                  description: Message indicating no user found
+ *                  example: "Error: No user found"
  */
 router.delete("/:id", deleteUserHandler);
 

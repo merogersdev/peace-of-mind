@@ -11,9 +11,6 @@ const options = {
   secretOrKey: privateKey,
 };
 
-// Knex
-// const db = require("../knex");
-
 // Passport Middleware
 passport.use(
   new Strategy(options, async (jwtPayload, done) => {
