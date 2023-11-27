@@ -30,7 +30,7 @@ app.use("/api/docs", docRoutes);
 app.use("/api/users", userRoutes);
 app.use(
   "/api/entries",
-  // passport.authenticate("jwt", { session: false }),
+  passport.authenticate("jwt", { session: false }),
   entryRoutes
 );
 
@@ -40,19 +40,3 @@ app.use("*", (_req, res) =>
 );
 
 module.exports = app;
-
-/*
-
-
-GET:      /api/users/       Gets all users
-POST:     /api/users/       Register User
-PUT:      /api/users/:id    Updates User
-DELETE:   /api/users/:id    Deletes User
-GET:      /api/users/login  User Login
-
-GET:      /api/entries/:id  Gets Entry
-POST:     /api/entries/:id  New Entry
-PUT:      /api/entries/:id  Update Entry
-DELETE:   /api/entries/:id  Delete Entry
-
-*/

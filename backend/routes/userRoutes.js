@@ -1,4 +1,5 @@
 const express = require("express");
+const passport = require("passport");
 
 const router = express.Router();
 
@@ -307,7 +308,11 @@ router.post("/login", loginHandler);
  *                  description: Message indicating no user found
  *                  example: "Error: No user found"
  */
-router.get("/:id", userDetailsHandler);
+router.get(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  userDetailsHandler
+);
 
 /**
  * @swagger
@@ -375,7 +380,11 @@ router.get("/:id", userDetailsHandler);
  *                  example: "Error: No user found"
 
  */
-router.patch("/:id", updateUserHandler);
+router.patch(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  updateUserHandler
+);
 
 /**
  * @swagger
@@ -429,6 +438,10 @@ router.patch("/:id", updateUserHandler);
  *                  description: Message indicating no user found
  *                  example: "Error: No user found"
  */
-router.delete("/:id", deleteUserHandler);
+router.delete(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  deleteUserHandler
+);
 
 module.exports = router;
