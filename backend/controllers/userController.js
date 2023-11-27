@@ -7,8 +7,7 @@ const privateKey = process.env.JWT_SECRET;
 const saltRounds = 10;
 const salt = bcrypt.genSaltSync(saltRounds);
 
-// POST - Log in user
-const postLogin = async (req, res) => {
+const loginHandler = async (req, res) => {
   const { email, password } = req.body;
 
   // Check for all necessary info before proceeding
@@ -75,8 +74,7 @@ const postLogin = async (req, res) => {
   }
 };
 
-// POST - Register user
-const postRegister = async (req, res) => {
+const registerHandler = async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
 
   // Check for all necessary info before proceeding
@@ -122,4 +120,152 @@ const postRegister = async (req, res) => {
   }
 };
 
-module.exports = { postLogin, postRegister };
+const userDetailsHandler = async (req, res) => {
+  const { id } = req.params;
+
+  if (!id) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Error: Missing user id" });
+  }
+
+  try {
+    const userExists = await pool.query(
+      "SELECT id, first_name, last_name, email FROM users WHERE id = $1",
+      [id]
+    );
+
+    if (userExists.rows[0] === undefined) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Error: No user found" });
+    }
+
+    const entries = await pool.query(
+      "SELECT DISTINCT user_id, entries.id, title, gratitude, entry FROM entries JOIN users ON entries.user_id = $1 ORDER BY entries.id",
+      [userExists.rows[0].id]
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "User Details",
+      user: userExists,
+      entries: entries || [],
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to get user details",
+      error: error.message,
+    });
+  }
+};
+
+const allUsersHandler = async (req, res) => {
+  try {
+    const users = await pool.query(
+      "SELECT id, first_name, last_name, email FROM users"
+    );
+
+    if (users.rows.length === 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Error: No users found" });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Users Details",
+      users: users.rows,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to get users",
+      error: error.message,
+    });
+  }
+};
+
+const updateUserHandler = async (req, res) => {
+  const { id } = req.params;
+  const { firstName, lastName, email, password } = req.body;
+
+  // Check for all necessary info before proceeding
+  if (!firstName || !lastName || !email || !password) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Error: Missing fields" });
+  }
+
+  try {
+    const userExists = await pool.query("SELECT * FROM users WHERE id = $1", [
+      id,
+    ]);
+
+    if (userExists.rows[0] === undefined) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Error: No user found" });
+    }
+
+    const hashedPassword = bcrypt.hashSync(password, salt);
+
+    await pool.query(
+      "UPDATE users SET email = ($1), first_name = ($2), last_name = ($3), password = ($4) WHERE id = ($5)",
+      [email, firstName, lastName, hashedPassword, id]
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "User updated successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to update user",
+      error: error.message,
+    });
+  }
+};
+
+const deleteUserHandler = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const userExists = await pool.query("SELECT * FROM users WHERE id = $1", [
+      id,
+    ]);
+
+    if (userExists.rows[0] === undefined) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Error: No user found" });
+    }
+
+    await pool.query("DELETE FROM users WHERE id = ($1)", [id]);
+
+    return res.status(200).json({
+      success: true,
+      message: "User deleted successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to delete user",
+      error: error.message,
+    });
+  }
+};
+
+module.exports = {
+  loginHandler,
+  registerHandler,
+  userDetailsHandler,
+  allUsersHandler,
+  updateUserHandler,
+  deleteUserHandler,
+};

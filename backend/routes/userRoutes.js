@@ -3,7 +3,14 @@ const passport = require("passport");
 
 const router = express.Router();
 
-const { postLogin, postRegister } = require("../controllers/userController");
+const {
+  loginHandler,
+  registerHandler,
+  userDetailsHandler,
+  allUsersHandler,
+  updateUserHandler,
+  deleteUserHandler,
+} = require("../controllers/userController");
 
 /**
  * @swagger
@@ -13,6 +20,7 @@ const { postLogin, postRegister } = require("../controllers/userController");
  *     description: Retrieves all users in database and returns basic info.
  *     tags: [users]
  */
+router.get("/", allUsersHandler);
 
 /**
  * @swagger
@@ -22,7 +30,7 @@ const { postLogin, postRegister } = require("../controllers/userController");
  *     description: Creates user in database and returns basic info.
  *     tags: [users]
  */
-router.post("/", postRegister);
+router.post("/", registerHandler);
 
 /**
  * @swagger
@@ -32,7 +40,7 @@ router.post("/", postRegister);
  *     description: API endpoint for logging in the user and returning their user info, along with entries.
  *     tags: [users]
  */
-router.post("/login", postLogin);
+router.post("/login", loginHandler);
 
 /**
  * @swagger
@@ -42,15 +50,17 @@ router.post("/login", postLogin);
  *     description: Get user details
  *     tags: [users]
  */
+router.get("/:id", userDetailsHandler);
 
 /**
  * @swagger
  * /users/{id}:
- *   put:
+ *   patch:
  *     summary: Update User
  *     description: Update user details
  *     tags: [users]
  */
+router.patch("/:id", updateUserHandler);
 
 /**
  * @swagger
@@ -60,5 +70,6 @@ router.post("/login", postLogin);
  *     description: Deletes user and their entries
  *     tags: [users]
  */
+router.delete("/:id", deleteUserHandler);
 
 module.exports = router;

@@ -5,6 +5,7 @@ const passport = require("passport");
 
 const userRoutes = require("./userRoutes");
 const entryRoutes = require("./entryRoutes");
+const docRoutes = require("./docRoutes");
 
 router.use("/users", userRoutes);
 router.use(
@@ -12,6 +13,7 @@ router.use(
   // passport.authenticate("jwt", { session: false }),
   entryRoutes
 );
+router.use("/docs", docRoutes);
 
 module.exports = router;
 
