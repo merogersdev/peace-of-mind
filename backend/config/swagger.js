@@ -12,7 +12,7 @@ const swaggerDefinition = {
     },
     contact: {
       name: "Michelle Rogers",
-      url: "http://merogers.dewv",
+      url: "http://merogers.dev",
     },
     servers: [
       {
@@ -25,7 +25,7 @@ const swaggerDefinition = {
 
 const options = {
   swaggerDefinition,
-  apis: ["../routes/*.js"],
+  apis: ["./routes/*.js"],
 };
 
 module.exports = options;

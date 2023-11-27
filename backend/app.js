@@ -5,41 +5,10 @@ const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const passport = require("passport");
-const swaggerJSDoc = require("swagger-jsdoc");
-const swaggerUi = require("swagger-ui-express");
-const { version } = require("./package.json");
 
-const indexRoutes = require("./routes");
-
-const swaggerDefinition = {
-  openapi: "3.0.0",
-  info: {
-    title: "Peace Of Mind Express API",
-    version,
-    description: "This is a REST API for the Peace Of Mind Application",
-    license: {
-      name: "Licensed Under MIT",
-      url: "https://spdx.org/licenses/MIT.html",
-    },
-    contact: {
-      name: "Michelle Rogers",
-      url: "http://merogers.dewv",
-    },
-    servers: [
-      {
-        url: "http://localhost:5000",
-        description: "Development server",
-      },
-    ],
-  },
-};
-
-const options = {
-  swaggerDefinition,
-  apis: ["./routes/*.js"],
-};
-
-const swaggerSpec = swaggerJSDoc(options);
+const userRoutes = require("./routes/userRoutes");
+const entryRoutes = require("./routes/entryRoutes");
+const docRoutes = require("./routes/docRoutes");
 
 require("./middleware/passport");
 
@@ -56,8 +25,14 @@ if (process.env.NODE_ENV === "development") {
 }
 
 // API Routes
-app.use("/api", indexRoutes);
-app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+app.use("/api/docs", docRoutes);
+app.use("/api/users", userRoutes);
+app.use(
+  "/api/entries",
+  // passport.authenticate("jwt", { session: false }),
+  entryRoutes
+);
 
 //  404 Catch
 app.use("*", (_req, res) =>
@@ -65,3 +40,19 @@ app.use("*", (_req, res) =>
 );
 
 module.exports = app;
+
+/*
+
+
+GET:      /api/users/       Gets all users
+POST:     /api/users/       Register User
+PUT:      /api/users/:id    Updates User
+DELETE:   /api/users/:id    Deletes User
+GET:      /api/users/login  User Login
+
+GET:      /api/entries/:id  Gets Entry
+POST:     /api/entries/:id  New Entry
+PUT:      /api/entries/:id  Update Entry
+DELETE:   /api/entries/:id  Delete Entry
+
+*/

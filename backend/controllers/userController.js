@@ -126,7 +126,7 @@ const userDetailsHandler = async (req, res) => {
   if (!id) {
     return res
       .status(400)
-      .json({ success: false, message: "Error: Missing user id" });
+      .json({ success: false, message: "Error: Missing User ID" });
   }
 
   try {

@@ -1,13 +1,13 @@
 const pool = require("../config/db");
 
 // GET - Get all Entries for that user
-const getEntries = async (req, res) => {
+const allEntryHandler = async (req, res) => {
   const { id } = req.user;
 
   if (!id) {
     return res
       .status(400)
-      .json({ success: false, message: "No user specified" });
+      .json({ success: false, message: "Error: No User ID" });
   }
 
   try {
@@ -18,11 +18,11 @@ const getEntries = async (req, res) => {
 
     // If no entries for user, return empty array
     if (entries.rows[0] === undefined) {
-      return res.json({ success: true, entries: [] });
+      return res.status(200).json({ success: true, entries: [] });
     }
     // If entries, return entry objects in array
 
-    return res.json({ success: true, entries: entries.rows[0] });
+    return res.status(200).json({ success: true, entries: entries.rows[0] });
   } catch (error) {
     return res
       .status(400)
@@ -30,8 +30,42 @@ const getEntries = async (req, res) => {
   }
 };
 
-// POST - Add New Entry
-const postEntry = async (req, res) => {
+const entryDetailsHandler = async (req, res) => {
+  const { id } = req.params;
+
+  if (!id) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Error: Missing Entry ID" });
+  }
+
+  try {
+    const entryExists = await pool.query("SELECT * entries WHERE id = $1", [
+      id,
+    ]);
+
+    if (entryExists.rows[0] === undefined) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Error: No entry found" });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Entry Details",
+      entry: entryExists,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to get entry details",
+      error: error.message,
+    });
+  }
+};
+
+const newEntryHandler = async (req, res) => {
   const { title, gratitude, entry } = req.body;
   const id = 1;
 
@@ -62,13 +96,14 @@ const postEntry = async (req, res) => {
   }
 };
 
-// PATCH - Update Entry
-const patchEntry = async (req, res) => {
+const updateEntryHandler = async (req, res) => {
   const { id } = req.params;
   const { title, gratitude, entry } = req.body;
 
   if (!id || !title || !gratitude || !entry) {
-    return res.status(400).json({ success: false, message: "Invalid entry" });
+    return res
+      .status(400)
+      .json({ success: false, message: "Error: Missing fields" });
   }
 
   try {
@@ -77,15 +112,10 @@ const patchEntry = async (req, res) => {
       [id]
     );
 
-    if (selectedEntry.row[0] === null)
+    if (selectedEntry.row[0] === undefined)
       return res
         .status(404)
-        .json({ success: false, message: "Entry does not exist" });
-
-    if (selectedEntry.rows[0].user_id !== req.user.id)
-      return res
-        .status(401)
-        .json({ success: false, message: "Unauthorized to update resource" });
+        .json({ success: false, message: "Error: No entry found" });
 
     await pool.query(
       "UPDATE entries SET title = $1, gratitude = $2, entry = $3 WHERE id = $4",
@@ -105,9 +135,7 @@ const patchEntry = async (req, res) => {
   }
 };
 
-// DELETE - Delete Entry
-
-const deleteEntry = async (req, res) => {
+const deleteEntryHandler = async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -116,15 +144,10 @@ const deleteEntry = async (req, res) => {
       [id]
     );
 
-    if (selectedEntry.row[0] === null)
+    if (selectedEntry.row[0] === undefined)
       return res
         .status(404)
         .json({ success: false, message: "Entry does not exist" });
-
-    if (selectedEntry.rows[0].user_id !== req.user.id)
-      return res
-        .status(401)
-        .json({ success: false, message: "Unauthorized to update resource" });
 
     await pool.query("DELETE FROM entries WHERE id = $1", [id]);
 
@@ -141,4 +164,10 @@ const deleteEntry = async (req, res) => {
   }
 };
 
-module.exports = { getEntries, postEntry, patchEntry, deleteEntry };
+module.exports = {
+  allEntryHandler,
+  entryDetailsHandler,
+  newEntryHandler,
+  updateEntryHandler,
+  deleteEntryHandler,
+};
