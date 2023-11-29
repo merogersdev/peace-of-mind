@@ -5,7 +5,11 @@ const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const passport = require("passport");
-const indexRoutes = require("./routes");
+
+const userRoutes = require("./routes/userRoutes");
+const entryRoutes = require("./routes/entryRoutes");
+const docRoutes = require("./routes/docRoutes");
+
 require("./middleware/passport");
 
 // Express & Middleware
@@ -21,7 +25,14 @@ if (process.env.NODE_ENV === "development") {
 }
 
 // API Routes
-app.use("/api", indexRoutes);
+
+app.use("/api/docs", docRoutes);
+app.use("/api/users", userRoutes);
+app.use(
+  "/api/entries",
+  passport.authenticate("jwt", { session: false }),
+  entryRoutes
+);
 
 //  404 Catch
 app.use("*", (_req, res) =>

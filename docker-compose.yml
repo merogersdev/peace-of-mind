@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  peaceofmind-db:
+    image: peaceofmind-db
+    container_name: peaceofmind-db
+    build:
+      context: ./db/
+      target: db
+    environment:
+      - POSTGRES_USER=peaceofmind
+      - POSTGRES_PASSWORD=peaceofmind
+      - POSTGRES_DB=peaceofmind
+      - POSTGRES_DB_TEST=peaceofmind_test
+    ports:
+      - 5432:5432
