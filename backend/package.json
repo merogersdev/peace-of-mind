@@ -7,7 +7,7 @@
     "start": "node server.js",
     "dev": "nodemon server.js",
     "lint": "npx eslint . --ext .js",
-    "test": "npm run rollback && npm run migrate && jest && npm run rollback"
+    "test": "jest --verbose --no-cache --detectOpenHandles"
   },
   "keywords": [],
   "author": "",

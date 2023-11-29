@@ -1,23 +1,15 @@
 #!/bin/bash
 set -e
 
-psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL
-  CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
-    first_name VARCHAR(100) NOT NULL,
-    last_name VARCHAR(100) NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
-    password VARCHAR(100) NOT NULL
-  );
+# Create User and Entry Tables in Primary DB
+psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" -f /docker-entrypoint-initdb.d/init.sql
 
-  CREATE TABLE entries (
-    id SERIAL PRIMARY KEY,
-    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    title VARCHAR(100) NOT NULL,
-    gratitude VARCHAR(100) NOT NULL,
-    entry TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    FOREIGN KEY(user_id) REFERENCES users (id)
-  );
-EOSQL
+# Create Test DB
+psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" -c "CREATE DATABASE $POSTGRES_DB_TEST;"
+
+# Ensure user permissions are on Test DB
+psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" -c "GRANT ALL PRIVILEGES ON DATABASE $POSTGRES_DB_TEST TO $POSTGRES_USER;"
+
+# Create User and Entry tables in Test DB
+psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB_TEST" -f /docker-entrypoint-initdb.d/init.sql
+
