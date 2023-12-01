@@ -37,7 +37,6 @@ export default function Login({ icon }) {
   useEffect(() => {
     if (!token) return;
     getUser();
-    emailRef.current.focus();
   }, []);
 
   // Set focus on first form field
