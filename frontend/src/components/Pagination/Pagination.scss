@@ -1,0 +1,17 @@
+@use "../../styles/partials/colors" as *;
+@use "../../styles/partials/mixins" as *;
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-top: 2rem;
+  &__button-container {
+    display: flex;
+  }
+  &__button {
+    @include button;
+    border-radius: 50%;
+  }
+}

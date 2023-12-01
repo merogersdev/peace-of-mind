@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useState, useContext, useEffect } from "react";
 import { Navigate, Link } from "react-router-dom";
 import { MdModeEdit, MdDelete } from "react-icons/md";
 import axios from "axios";
@@ -10,6 +10,7 @@ import Message from "../../components/Message/Message";
 
 import AuthContext from "../../context/AuthContext";
 import Card from "../../components/Card/Card";
+import Pagination from "../../components/Pagination/Pagination";
 
 export default function Dashboard({ icon }) {
   const { user, quote, entries, setEntries, refreshAuth } =
@@ -17,20 +18,25 @@ export default function Dashboard({ icon }) {
 
   const token = sessionStorage.getItem("token");
 
-  // useEffect(() => {
-  //   refreshAuth();
+  const entriesPerPage = 5;
 
-  //   // Don't fetch a new quote if you already got one
-  //   if (!quote) {
-  //     getQuote();
-  //   }
-  // }, []);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [currentEntries, setCurrentEntries] = useState([]);
 
   // If token, get user details.
   useEffect(() => {
     if (!token) return;
     refreshAuth();
   }, []);
+
+  useEffect(() => {
+    const lastEntryIndex = currentPage * entriesPerPage;
+    const firstEntryIndex = lastEntryIndex - entriesPerPage;
+
+    if (entries) {
+      setCurrentEntries(entries.slice(firstEntryIndex, lastEntryIndex));
+    }
+  }, [entries, currentPage]);
 
   const handleDelete = async (id) => {
     try {
@@ -96,13 +102,14 @@ export default function Dashboard({ icon }) {
         </Section>
         <Section>
           <h1 className="section__h1 section__h1--no-icon">Entry Archive</h1>
+
           <ul className="section__entry-list">
-            {entries.length === 0 ? (
+            {currentEntries.length === 0 ? (
               <Message type="info" message="No entries to display..." />
             ) : (
               ""
             )}
-            {entries.map((entry) => (
+            {currentEntries.map((entry) => (
               <li key={entry.id} className="section__entry-listitem">
                 <div className="section__entry-info">
                   <h3 className="section__h3">{entry.title}</h3>
@@ -133,6 +140,12 @@ export default function Dashboard({ icon }) {
               </li>
             ))}
           </ul>
+          <Pagination
+            totalEntries={entries.length}
+            entriesPerPage={entriesPerPage}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+          />
         </Section>
       </>
     )

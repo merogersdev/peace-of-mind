@@ -14,6 +14,9 @@ export default defineConfig({
     setupFiles: "./src/test/setup.js",
   },
   server: {
+    hmr: {
+      overlay: false,
+    },
     proxy: {
       "/api": {
         target: "http://localhost:5000",
