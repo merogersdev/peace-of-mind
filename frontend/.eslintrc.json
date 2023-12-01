@@ -19,6 +19,7 @@
     ],
     // No prop types, deprecated
     "react/prop-types": "off",
+    "no-promise-executor-return": "off",
     "import/no-extraneous-dependencies": [
       "error",
       {

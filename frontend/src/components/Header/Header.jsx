@@ -4,10 +4,10 @@ import { useState, useContext } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { MdMenu, MdClose } from "react-icons/md";
 import Container from "../Container/Container";
-import UserContext from "../../context/UserContext";
+import AuthContext from "../../context/AuthContext";
 
 export default function Header({ title }) {
-  const { user, setUser } = useContext(UserContext);
+  const { user, setUser, setQuote, setEntries } = useContext(AuthContext);
 
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -25,6 +25,8 @@ export default function Header({ title }) {
 
   const logoutUser = () => {
     setUser(null);
+    setQuote(null);
+    setEntries(null);
     sessionStorage.clear();
     navigate("/");
   };

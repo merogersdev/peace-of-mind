@@ -7,12 +7,12 @@ import Section from "../../components/Section/Section";
 import Form from "../../components/Form/Form";
 import Message from "../../components/Message/Message";
 
-import UserContext from "../../context/UserContext";
+import AuthContext from "../../context/AuthContext";
 import checkString from "../../utils/validation";
 
 export default function EditEntry({ icon }) {
   const { id } = useParams();
-  const { user, getUser } = useContext(UserContext);
+  const { entries, setEntries, refreshAuth } = useContext(AuthContext);
 
   const initialErrorState = {
     title: false,
@@ -41,16 +41,20 @@ export default function EditEntry({ icon }) {
   // Check if token, get user and entry details
   useEffect(() => {
     if (!token) return;
-    getUser();
+    refreshAuth();
+  }, []);
 
-    const currentEntry = user.entries.filter(
+  // Check if token, get user and entry details
+  useEffect(() => {
+    if (!entries) navigate("/dashboard");
+    const currentEntry = entries.filter(
       (filteredEntry) => filteredEntry.id === Number(id)
     );
 
     titleRef.current.value = currentEntry[0].title;
     gratitudeRef.current.value = currentEntry[0].gratitude;
     entryRef.current.value = currentEntry[0].entry;
-  }, []);
+  }, [entries]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -87,8 +91,12 @@ export default function EditEntry({ icon }) {
       );
 
       if (response.data.success === true) {
-        getUser();
         setSuccessMessage("Entry edited successfully");
+        const updatedEntries = entries.filter(
+          (entry) => entry.id !== Number(id)
+        );
+
+        setEntries([response.data.entry.rows[0], ...updatedEntries]);
       }
     } catch (error) {
       setErrorMessage("Error: Entry edit unsuccessful");

@@ -6,10 +6,11 @@ import { checkEmail, checkPassword } from "../../utils/validation";
 import Section from "../../components/Section/Section";
 import Form from "../../components/Form/Form";
 import Message from "../../components/Message/Message";
-import UserContext from "../../context/UserContext";
+import AuthContext from "../../context/AuthContext";
 
 export default function Login({ icon }) {
-  const { user, getUser } = useContext(UserContext);
+  const { user, setQuote, setUser, setEntries, refreshAuth } =
+    useContext(AuthContext);
 
   const initialErrorState = {
     email: false,
@@ -20,6 +21,7 @@ export default function Login({ icon }) {
   const [formErrors, setFormErrors] = useState(initialErrorState);
   const [errorMessage, setErrorMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
@@ -33,10 +35,15 @@ export default function Login({ icon }) {
     }));
   }
 
-  // If token, get user details
+  function resetForm() {
+    emailRef.current.value = "";
+    passwordRef.current.value = "";
+  }
+
+  // If token, refresh Auth State
   useEffect(() => {
     if (!token) return;
-    getUser();
+    refreshAuth();
   }, []);
 
   // Set focus on first form field
@@ -54,6 +61,9 @@ export default function Login({ icon }) {
     setErrorMessage("");
     setSuccessMessage("");
 
+    // Enter loading state
+    setLoading(true);
+
     const isEmailValid = checkEmail(emailRef.current.value);
     const isPasswordValid = checkPassword(passwordRef.current.value);
 
@@ -64,19 +74,26 @@ export default function Login({ icon }) {
     if (!isEmailValid || !isPasswordValid) return;
 
     try {
-      const response = await axios.post("/users/login", {
+      const response = await axios.post("/auth", {
         email: emailRef.current.value,
         password: passwordRef.current.value,
       });
+
       // If successful login, store JWT token in browser
       if (response.data.success === true) {
         setSuccessMessage("Login Successful");
         const currentToken = response.data.token.split(" ")[1];
         sessionStorage.setItem("token", currentToken);
+        setUser(response.data.user);
+        setQuote(response.data.quote);
+        setEntries(response.data.entries);
+        setLoading(false);
+        resetForm();
         navigate("/dashboard");
       }
     } catch (error) {
       setErrorMessage(error.response.data.message);
+      setLoading(false);
     }
   };
 
@@ -98,6 +115,7 @@ export default function Login({ icon }) {
             }`}
             name="email"
             ref={emailRef}
+            disabled={loading}
           />
           <div className="form__message-container">
             {formErrors.email && (
@@ -114,6 +132,7 @@ export default function Login({ icon }) {
             type="password"
             name="password"
             ref={passwordRef}
+            disabled={loading}
           />
           <div className="form__message-container">
             {formErrors.password && (
@@ -131,7 +150,13 @@ export default function Login({ icon }) {
           )}
         </div>
         <div className="form__button-container">
-          <button type="submit" className="form__button form__button--primary">
+          <button
+            type="submit"
+            className={`form__button form__button${
+              loading ? "--disabled" : "--primary"
+            }`}
+            disabled={loading}
+          >
             Login
           </button>
           <Link to="/" className="form__button form__button--dark">

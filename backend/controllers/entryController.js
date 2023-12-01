@@ -84,14 +84,16 @@ const newEntryHandler = async (req, res) => {
   }
 
   try {
-    await pool.query(
-      "INSERT INTO entries(user_id, title, gratitude, entry) VALUES ($1, $2, $3, $4)",
+    const newEntry = await pool.query(
+      "INSERT INTO entries(user_id, title, gratitude, entry) VALUES ($1, $2, $3, $4) RETURNING *",
       [id, title, gratitude, entry]
     );
 
-    return res
-      .status(201)
-      .json({ success: true, message: "Entry posted successfully" });
+    return res.status(201).json({
+      success: true,
+      message: "Entry posted successfully",
+      entry: newEntry,
+    });
   } catch (error) {
     console.error(error);
     return res.status(500).json({
@@ -118,24 +120,25 @@ const updateEntryHandler = async (req, res) => {
       [id]
     );
 
-    if (entryExists.row[0] === undefined)
+    if (entryExists.rows[0] === undefined)
       return res
         .status(404)
         .json({ success: false, message: "Error: No entry found" });
 
-    if (entryExists.rows[0].id !== id) {
+    if (entryExists.rows[0].user_id !== req.user.id) {
       return res
         .status(403)
         .json({ success: false, message: "Error: Unauthorized" });
     }
 
-    await pool.query(
-      "UPDATE entries SET title = $1, gratitude = $2, entry = $3 WHERE id = $4",
+    const updatedEntry = await pool.query(
+      "UPDATE entries SET title = $1, gratitude = $2, entry = $3 WHERE id = $4 RETURNING *",
       [title, gratitude, entry, id]
     );
     return res.status(200).json({
       success: true,
       message: "Entry updated successfully",
+      entry: updatedEntry,
     });
   } catch (error) {
     console.error(error);
@@ -149,19 +152,18 @@ const updateEntryHandler = async (req, res) => {
 
 const deleteEntryHandler = async (req, res) => {
   const { id } = req.params;
-
   try {
     const entryExists = await pool.query(
       "SELECT * FROM entries WHERE id = $1",
       [id]
     );
 
-    if (entryExists.row[0] === undefined)
+    if (entryExists.rows[0] === undefined)
       return res
         .status(404)
         .json({ success: false, message: "Entry does not exist" });
 
-    if (entryExists.rows[0].id !== id) {
+    if (entryExists.rows[0].user_id !== req.user.id) {
       return res
         .status(403)
         .json({ success: false, message: "Error: Unauthorized" });

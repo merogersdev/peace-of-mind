@@ -5,7 +5,7 @@ import axios from "axios";
 import Section from "../../components/Section/Section";
 import Form from "../../components/Form/Form";
 import Message from "../../components/Message/Message";
-import UserContext from "../../context/UserContext";
+import AuthContext from "../../context/AuthContext";
 import checkString, {
   checkEmail,
   checkPassword,
@@ -13,7 +13,7 @@ import checkString, {
 } from "../../utils/validation";
 
 export default function Register({ icon }) {
-  const { user, getUser } = useContext(UserContext);
+  const { user, refreshAuth } = useContext(AuthContext);
 
   const initialErrorState = {
     firstName: false,
@@ -27,6 +27,7 @@ export default function Register({ icon }) {
   const [formErrors, setFormErrors] = useState(initialErrorState);
   const [errorMessage, setErrorMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const firstNameRef = useRef(null);
   const lastNameRef = useRef(null);
@@ -42,10 +43,18 @@ export default function Register({ icon }) {
     }));
   }
 
+  function resetForm() {
+    firstNameRef.current.value = "";
+    lastNameRef.current.value = "";
+    emailRef.current.value = "";
+    passwordRef.current.value = "";
+    confirmPasswordRef.current.value = "";
+  }
+
   // If token, get user details.
   useEffect(() => {
     if (!token) return;
-    getUser();
+    refreshAuth();
   }, []);
 
   // Set focus on first form field
@@ -59,6 +68,7 @@ export default function Register({ icon }) {
     e.preventDefault();
 
     setFormErrors(initialErrorState);
+    setLoading(true);
 
     const isFirstNameValid = checkString(firstNameRef.current.value, 1);
     const isLastNameValid = checkString(lastNameRef.current.value, 1);
@@ -87,7 +97,7 @@ export default function Register({ icon }) {
 
     // Register User
     try {
-      const response = await axios.post("/users/register", {
+      const response = await axios.post("/users", {
         firstName: firstNameRef.current.value,
         lastName: lastNameRef.current.value,
         email: emailRef.current.value,
@@ -100,9 +110,12 @@ export default function Register({ icon }) {
           register: false,
         }));
         setSuccessMessage(response.data.message);
+        resetForm();
+        setLoading(false);
       }
     } catch (error) {
       setErrorMessage(error.response.data.message);
+      setLoading(false);
     }
   };
 
@@ -212,7 +225,9 @@ export default function Register({ icon }) {
           ) : (
             <button
               type="submit"
-              className="form__button form__button--primary"
+              className={`form__button form__button${
+                loading ? "--disabled" : "--primary"
+              }`}
             >
               Register
             </button>

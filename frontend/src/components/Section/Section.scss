@@ -7,13 +7,9 @@
 /* --- Section --- */
 
 .section {
-  background-color: $white;
-  position: relative;
-  padding: 1rem;
+  @include card;
   margin: 0 auto 2rem auto;
-  box-shadow:
-    0 10px 20px rgba(0, 0, 0, 0.19),
-    0 6px 6px rgba(0, 0, 0, 0.23);
+  width: 100%;
 
   @include tablet {
     width: 80%;
@@ -113,6 +109,7 @@
     }
     &--custom {
       justify-content: center;
+      margin-bottom: 1rem;
     }
   }
 

@@ -1,11 +1,11 @@
 import { useContext } from "react";
 import { Navigate, NavLink } from "react-router-dom";
 
-import UserContext from "../../context/UserContext";
+import AuthContext from "../../context/AuthContext";
 import Section from "../../components/Section/Section";
 
 export default function Home({ icon }) {
-  const { user } = useContext(UserContext);
+  const { user } = useContext(AuthContext);
 
   // If user session exists, go straight to dashboard.
   if (user) {

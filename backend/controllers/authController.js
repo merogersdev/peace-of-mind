@@ -106,7 +106,7 @@ const refreshHandler = async (req, res) => {
     }
 
     const entries = await pool.query(
-      "SELECT DISTINCT user_id, entries.id, title, gratitude, entry FROM entries JOIN users ON entries.user_id = $1 ORDER BY entries.id",
+      "SELECT DISTINCT user_id, entries.id, title, gratitude, entry, created_at, updated_at FROM entries JOIN users ON entries.user_id = $1 ORDER BY entries.id",
       [user.rows[0].id]
     );
 

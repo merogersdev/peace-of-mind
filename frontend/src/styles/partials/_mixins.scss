@@ -89,6 +89,15 @@
   }
 }
 
+@mixin card {
+  background-color: $white;
+  position: relative;
+  padding: 1rem;
+  box-shadow:
+    0 10px 20px rgba(0, 0, 0, 0.19),
+    0 6px 6px rgba(0, 0, 0, 0.23);
+}
+
 @mixin button {
   @include flex-center;
   line-height: 3rem;
@@ -160,6 +169,11 @@
     &:hover {
       background-color: $error-hover;
     }
+  }
+  &--disabled {
+    background-color: $grey;
+    color: $white;
+    cursor: default;
   }
   &--spacer {
     margin-right: 0.25rem;
