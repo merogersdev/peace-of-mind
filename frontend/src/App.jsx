@@ -17,6 +17,7 @@ import Register from "./pages/Register/Register";
 import AddEntry from "./pages/AddEntry/AddEntry";
 import EditEntry from "./pages/EditEntry/EditEntry";
 import Login from "./pages/Login/Login";
+import EditUser from "./pages/EditUser/EditUser";
 
 import Header from "./components/Header/Header";
 import Main from "./components/Main/Main";
@@ -58,6 +59,12 @@ export default function App() {
               path="/edit-entry/:id"
               element={
                 <EditEntry icon={<MdEditNote className="section__icon" />} />
+              }
+            />
+            <Route
+              path="/edit-user"
+              element={
+                <EditUser icon={<MdEditNote className="section__icon" />} />
               }
             />
           </Routes>

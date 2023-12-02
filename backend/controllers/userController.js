@@ -146,8 +146,8 @@ const updateUserHandler = async (req, res) => {
         .status(404)
         .json({ success: false, message: "Error: No user found" });
     }
-
-    if (userExists.rows[0].id !== id) {
+    console.log(userExists.rows[0].id, id);
+    if (userExists.rows[0].id !== Number(id)) {
       return res
         .status(403)
         .json({ success: false, message: "Error: Unauthorized" });

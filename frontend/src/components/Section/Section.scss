@@ -162,7 +162,7 @@
 
   &__button {
     @include button;
-    padding: 0 2rem;
+
     @include tablet {
       width: fit-content;
     }

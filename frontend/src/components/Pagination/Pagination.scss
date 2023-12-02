@@ -4,14 +4,31 @@
 .pagination {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   width: 100%;
-  margin-top: 2rem;
+  margin-top: 3rem;
+  flex-direction: row;
+  position: relative;
+  &::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -1rem;
+    height: 1px;
+    margin: 0 auto;
+    width: 50%; /* or 100px */
+    border-bottom: 2px solid $primary;
+  }
+  &__h4 {
+    @include h4;
+    margin: 1rem 0;
+    padding: 0;
+  }
   &__button-container {
     display: flex;
   }
   &__button {
     @include button;
-    border-radius: 50%;
   }
 }

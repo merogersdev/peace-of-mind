@@ -14,6 +14,7 @@ export default function Pagination({
 
   return (
     <div className="pagination">
+      <h4 className="pagination__h4">Pages:</h4>
       <div className="pagination__button-container">
         {pages.map((page) => (
           <button

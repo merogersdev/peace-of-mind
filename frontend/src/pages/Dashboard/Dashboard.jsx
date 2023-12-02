@@ -67,7 +67,13 @@ export default function Dashboard({ icon }) {
         <div className="card__container">
           <Card>
             <h3 className="card__h3">Journal Entries</h3>
-            <div className="card__entry-length">{entries.length}</div>
+            <div
+              className={`card__entry-length ${
+                entries > 100 ? "card__entry-length--hundred" : ""
+              }`}
+            >
+              {entries.length}
+            </div>
 
             <Link
               to="/add-entry"
@@ -80,17 +86,19 @@ export default function Dashboard({ icon }) {
             <h3 className="card__h3">My Info</h3>
             <div className="card__user">
               <div className="card__user-info">
-                <span>Name:</span>
-                <span>
-                  {user.first_name} {user.last_name}
-                </span>
+                <span>First Name:</span>
+                <span>{user.first_name}</span>
+              </div>
+              <div className="card__user-info">
+                <span>Last Name:</span>
+                <span>{user.last_name}</span>
               </div>
               <div className="card__user-info">
                 <span>Email:</span>
                 <span>{user.email}</span>
               </div>
             </div>
-            <Link to="/add-entry" className="card__button card__button--dark">
+            <Link to="/edit-user" className="card__button card__button--dark">
               Edit
             </Link>
           </Card>
