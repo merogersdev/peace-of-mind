@@ -58,11 +58,9 @@ export default function Login({ icon }) {
 
     // Reset Errors
     setFormErrors(initialErrorState);
+
     setErrorMessage("");
     setSuccessMessage("");
-
-    // Enter loading state
-    setLoading(true);
 
     const isEmailValid = checkEmail(emailRef.current.value);
     const isPasswordValid = checkPassword(passwordRef.current.value);
@@ -74,6 +72,7 @@ export default function Login({ icon }) {
     if (!isEmailValid || !isPasswordValid) return;
 
     try {
+      setLoading(true);
       const response = await axios.post("/auth", {
         email: emailRef.current.value,
         password: passwordRef.current.value,

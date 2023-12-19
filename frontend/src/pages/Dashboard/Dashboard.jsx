@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from "react";
-import { Navigate, Link } from "react-router-dom";
+import { Navigate, Link, useNavigate } from "react-router-dom";
 import { MdModeEdit, MdDelete } from "react-icons/md";
 import axios from "axios";
 
@@ -13,7 +13,7 @@ import Card from "../../components/Card/Card";
 import Pagination from "../../components/Pagination/Pagination";
 
 export default function Dashboard({ icon }) {
-  const { user, quote, entries, setEntries, refreshAuth } =
+  const { user, quote, entries, setEntries, setUser, setQuote, refreshAuth } =
     useContext(AuthContext);
 
   const token = sessionStorage.getItem("token");
@@ -22,6 +22,8 @@ export default function Dashboard({ icon }) {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [currentEntries, setCurrentEntries] = useState([]);
+
+  const navigate = useNavigate();
 
   // If token, get user details.
   useEffect(() => {
@@ -47,6 +49,23 @@ export default function Dashboard({ icon }) {
       });
       const updatedEntries = entries.filter((entry) => entry.id !== id);
       setEntries(updatedEntries);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleDeleteUser = async (id) => {
+    try {
+      await axios.delete(`/users/${id}`, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      });
+      setUser(null);
+      setQuote(null);
+      setEntries(null);
+      sessionStorage.clear();
+      navigate("/login");
     } catch (error) {
       console.error(error);
     }
@@ -98,9 +117,19 @@ export default function Dashboard({ icon }) {
                 <span>{user.email}</span>
               </div>
             </div>
-            <Link to="/edit-user" className="card__button card__button--dark">
+            <Link
+              to="/edit-user"
+              className="card__button card__button--primary"
+            >
               Edit
             </Link>
+            <button
+              type="submit"
+              className="card__button card__button--dark"
+              onClick={() => handleDeleteUser(user.id)}
+            >
+              Delete User
+            </button>
           </Card>
         </div>
         <Section>
@@ -148,12 +177,14 @@ export default function Dashboard({ icon }) {
               </li>
             ))}
           </ul>
-          <Pagination
-            totalEntries={entries.length}
-            entriesPerPage={entriesPerPage}
-            currentPage={currentPage}
-            setCurrentPage={setCurrentPage}
-          />
+          {entries.length > 0 && (
+            <Pagination
+              totalEntries={entries.length}
+              entriesPerPage={entriesPerPage}
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+            />
+          )}
         </Section>
       </>
     )

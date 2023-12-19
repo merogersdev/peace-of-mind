@@ -98,7 +98,7 @@ const userDetailsHandler = async (req, res) => {
   }
 };
 
-const allUsersHandler = async (req, res) => {
+const allUsersHandler = async (_req, res) => {
   try {
     const users = await pool.query(
       "SELECT id, first_name, last_name, email FROM users"
@@ -130,7 +130,7 @@ const updateUserHandler = async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
 
   // Check for all necessary info before proceeding
-  if (!firstName || !lastName || !email || !password) {
+  if (!firstName || !lastName || !email) {
     return res
       .status(400)
       .json({ success: false, message: "Error: Missing fields" });
@@ -146,23 +146,29 @@ const updateUserHandler = async (req, res) => {
         .status(404)
         .json({ success: false, message: "Error: No user found" });
     }
-    console.log(userExists.rows[0].id, id);
     if (userExists.rows[0].id !== Number(id)) {
       return res
         .status(403)
         .json({ success: false, message: "Error: Unauthorized" });
     }
 
-    const hashedPassword = bcrypt.hashSync(password, salt);
-
-    await pool.query(
-      "UPDATE users SET email = ($1), first_name = ($2), last_name = ($3), password = ($4) WHERE id = ($5)",
-      [email, firstName, lastName, hashedPassword, id]
-    );
+    // Update user depending on whether password is changed or not
+    if (password === null) {
+      await pool.query(
+        "UPDATE users SET email = ($1), first_name = ($2), last_name = ($3) WHERE id = ($4)",
+        [email, firstName, lastName, id]
+      );
+    } else {
+      const hashedPassword = bcrypt.hashSync(password, salt);
+      await pool.query(
+        "UPDATE users SET email = ($1), first_name = ($2), last_name = ($3), password = ($4) WHERE id = ($5)",
+        [email, firstName, lastName, hashedPassword, id]
+      );
+    }
 
     return res.status(200).json({
       success: true,
-      message: "User updated successfully",
+      message: "User updated. Please logout and log back in.",
     });
   } catch (error) {
     console.error(error);
@@ -187,7 +193,7 @@ const deleteUserHandler = async (req, res) => {
         .json({ success: false, message: "Error: No user found" });
     }
 
-    if (userExists.rows[0].id !== id) {
+    if (userExists.rows[0].id !== Number(id)) {
       return res
         .status(403)
         .json({ success: false, message: "Error: Unauthorized" });

@@ -68,7 +68,9 @@ export default function Register({ icon }) {
     e.preventDefault();
 
     setFormErrors(initialErrorState);
-    setLoading(true);
+
+    setErrorMessage("");
+    setSuccessMessage("");
 
     const isFirstNameValid = checkString(firstNameRef.current.value, 1);
     const isLastNameValid = checkString(lastNameRef.current.value, 1);
@@ -97,6 +99,7 @@ export default function Register({ icon }) {
 
     // Register User
     try {
+      setLoading(true);
       const response = await axios.post("/users", {
         firstName: firstNameRef.current.value,
         lastName: lastNameRef.current.value,
