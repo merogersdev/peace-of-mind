@@ -24,6 +24,7 @@ export default function EditEntry({ icon }) {
   const [formErrors, setFormErrors] = useState(initialErrorState);
   const [errorMessage, setErrorMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const titleRef = useRef(null);
   const gratitudeRef = useRef(null);
@@ -75,6 +76,7 @@ export default function EditEntry({ icon }) {
     if (!isTitleValid || !isGratitudeValid || !isEntryValid) return;
 
     try {
+      setLoading(true);
       const response = await axios.patch(
         `/entries/${id}`,
         {
@@ -97,9 +99,12 @@ export default function EditEntry({ icon }) {
         );
 
         setEntries([response.data.entry.rows[0], ...updatedEntries]);
+        setLoading(false);
       }
     } catch (error) {
+      console.error(error);
       setErrorMessage("Error: Entry edit unsuccessful");
+      setLoading(false);
     }
   };
 
@@ -121,6 +126,7 @@ export default function EditEntry({ icon }) {
             }`}
             name="title"
             ref={titleRef}
+            disabled={loading}
           />
           <div className="form__message-container">
             {formErrors.title && (
@@ -136,6 +142,7 @@ export default function EditEntry({ icon }) {
             }`}
             name="gratitude"
             ref={gratitudeRef}
+            disabled={loading}
           />
           <div className="form__message-container">
             {formErrors.gratitude && (
@@ -151,6 +158,7 @@ export default function EditEntry({ icon }) {
             }`}
             name="entry"
             ref={entryRef}
+            disabled={loading}
           />
           <div className="form__message-container">
             {formErrors.entry && (
@@ -168,7 +176,10 @@ export default function EditEntry({ icon }) {
         <div className="form__button-container">
           <button
             type="submit"
-            className="form__button form__button--primary form__button--expand"
+            className={`form__button form__button${
+              loading ? "--disabled" : "--primary"
+            }`}
+            disabled={loading}
           >
             Edit Entry
           </button>

@@ -1,5 +1,6 @@
 @use "../../styles/partials/colors" as *;
 @use "../../styles/partials/mixins" as *;
+@use "../../styles/partials/variables" as *;
 
 .card {
   @include card;
@@ -15,6 +16,10 @@
     flex-direction: column;
     @include tablet {
       width: 80%;
+      flex-direction: row;
+    }
+    @include desktop {
+      width: $breakpoint-desktop;
       flex-direction: row;
     }
   }

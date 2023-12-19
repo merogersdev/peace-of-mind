@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext, useRef } from "react";
 
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 
 import axios from "axios";
 import Section from "../../components/Section/Section";
@@ -51,7 +51,6 @@ export default function AddEntry({ icon }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
 
     setFormErrors(initialErrorState);
     setErrorMessage("");
@@ -70,6 +69,7 @@ export default function AddEntry({ icon }) {
 
     // Add new post
     try {
+      setLoading(true);
       const response = await axios.post(
         "/entries/",
         {
@@ -100,6 +100,11 @@ export default function AddEntry({ icon }) {
       setLoading(false);
     }
   };
+
+  // If no user, go home
+  if (!user) {
+    return <Navigate to="/" />;
+  }
 
   return (
     <Section mini>

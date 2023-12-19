@@ -6,6 +6,7 @@ import Section from "../../components/Section/Section";
 import Form from "../../components/Form/Form";
 import Message from "../../components/Message/Message";
 import AuthContext from "../../context/AuthContext";
+
 import checkString, {
   checkEmail,
   checkPassword,

@@ -59,6 +59,16 @@
       margin-left: 1rem;
     }
   }
+
+  &__icon-feat {
+    font-size: 2rem;
+    color: $dark;
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+  }
   &--mini {
     width: 100%;
     @include tablet {
@@ -111,6 +121,13 @@
       justify-content: center;
       margin-bottom: 1rem;
     }
+    &--bottom {
+      margin-bottom: 2rem;
+    }
+    &--center {
+      text-align: center;
+      justify-content: center;
+    }
   }
 
   &__h3 {
@@ -133,6 +150,9 @@
       font-style: italic;
       margin: 0 0 0.1rem 0;
       font-size: 0.9rem;
+    }
+    &--center {
+      text-align: center;
     }
   }
 
