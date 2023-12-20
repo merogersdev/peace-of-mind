@@ -160,8 +160,13 @@ export default function Dashboard({ icon }) {
             <li key={entry.id} className="section__entry-listitem">
               <div className="section__entry-info">
                 <h3 className="section__h3">{entry.title}</h3>
-                <p className="section__p--author">
-                  {formatDate(entry.updated_at)}
+                <p className="section__p--date">
+                  <span>Created:</span>
+                  <span>{formatDate(entry.created_at)}</span>
+                </p>
+                <p className="section__p--date">
+                  <span>Updated:</span>
+                  <span>{formatDate(entry.updated_at)}</span>
                 </p>
               </div>
               <div className="section__entry-interact">

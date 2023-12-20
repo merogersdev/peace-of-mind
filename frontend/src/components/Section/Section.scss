@@ -144,12 +144,16 @@
       border-left: 3px solid $primary;
       padding-left: 1rem;
     }
-    &--author {
+    &--date {
       color: $dark-grey;
       text-transform: uppercase;
       font-style: italic;
       margin: 0 0 0.1rem 0;
       font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 9rem;
     }
     &--center {
       text-align: center;
@@ -163,7 +167,7 @@
 
   &__entry-listitem {
     border-left: 3px solid $primary;
-    padding: 0.25rem 0.25rem 0.25rem 1rem;
+    padding: 0.25rem 1rem 0.25rem 1rem;
     margin-top: 0.5rem;
     display: flex;
     width: 100%;

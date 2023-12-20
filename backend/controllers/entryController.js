@@ -132,7 +132,7 @@ const updateEntryHandler = async (req, res) => {
     }
 
     const updatedEntry = await pool.query(
-      "UPDATE entries SET title = $1, gratitude = $2, entry = $3, WHERE id = $4 RETURNING *",
+      "UPDATE entries SET title = $1, gratitude = $2, entry = $3 WHERE id = $4 RETURNING *",
       [title, gratitude, entry, id]
     );
     return res.status(200).json({
