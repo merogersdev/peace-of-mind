@@ -16,3 +16,22 @@ CREATE TABLE IF NOT EXISTS entries (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
   FOREIGN KEY(user_id) REFERENCES users (id)
 );
+
+CREATE OR REPLACE FUNCTION update_updated_at() RETURNS TRIGGER 
+LANGUAGE plpgsql
+AS
+$$
+BEGIN
+    IF (NEW != OLD) THEN
+        NEW.updated_at = CURRENT_TIMESTAMP;
+        RETURN NEW;
+    END IF;
+    RETURN OLD;
+END;
+$$;
+
+CREATE TRIGGER update_timestamp
+  BEFORE UPDATE
+  ON entries
+  FOR EACH ROW
+  EXECUTE PROCEDURE update_updated_at();

@@ -1,0 +1,76 @@
+@use "../../styles/partials/colors" as *;
+@use "../../styles/partials/mixins" as *;
+@use "../../styles/partials/variables" as *;
+
+.card {
+  @include card;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  &__container {
+    display: flex;
+    width: 100%;
+    margin-bottom: 2rem;
+    flex-direction: column;
+    @include tablet {
+      width: 80%;
+      flex-direction: row;
+    }
+    @include desktop {
+      width: $breakpoint-desktop;
+      flex-direction: row;
+    }
+  }
+  &__entry-length {
+    font-weight: 500;
+    font-size: 3rem;
+    line-height: 6rem;
+    color: $dark;
+    position: relative;
+    width: 6rem;
+    @include flex-center;
+    color: $white;
+    background-color: $dark;
+    margin: 1rem 0;
+    border-radius: 50%;
+    &--hundred {
+      font-size: 2.5rem;
+    }
+  }
+  &__h3 {
+    @include h3;
+    margin: 0 0 1rem 0;
+    padding: 0;
+  }
+  &--right {
+    margin: 2rem 0 0 0;
+
+    @include tablet {
+      margin: 0 0 0 2rem;
+    }
+  }
+  &__button {
+    @include button;
+    margin-top: 1rem;
+  }
+
+  &__user {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  &__user-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    border-left: 2px solid $primary;
+    padding: 0.25rem 0.5rem 0.25rem 0.5rem;
+    margin: 0.25rem 0;
+    background-color: $light-bg;
+    border-radius: 0 0.25rem 0.25rem 0;
+  }
+}

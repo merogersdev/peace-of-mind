@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext, useRef } from "react";
 
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 
 import axios from "axios";
 import Section from "../../components/Section/Section";
@@ -8,10 +8,10 @@ import Form from "../../components/Form/Form";
 import Message from "../../components/Message/Message";
 import checkString from "../../utils/validation";
 
-import UserContext from "../../context/UserContext";
+import AuthContext from "../../context/AuthContext";
 
 export default function AddEntry({ icon }) {
-  const { user, getUser } = useContext(UserContext);
+  const { user, refreshAuth, entries, setEntries } = useContext(AuthContext);
 
   const initialErrorState = {
     title: false,
@@ -23,6 +23,7 @@ export default function AddEntry({ icon }) {
   const [formErrors, setFormErrors] = useState(initialErrorState);
   const [errorMessage, setErrorMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const titleRef = useRef(null);
   const gratitudeRef = useRef(null);
@@ -36,10 +37,16 @@ export default function AddEntry({ icon }) {
     }));
   }
 
+  function resetForm() {
+    titleRef.current.value = "";
+    gratitudeRef.current.value = "";
+    entryRef.current.value = "";
+  }
+
   // Check if token, then get use details
   useEffect(() => {
     if (!token) return;
-    getUser();
+    refreshAuth();
   }, []);
 
   const handleSubmit = async (e) => {
@@ -62,6 +69,7 @@ export default function AddEntry({ icon }) {
 
     // Add new post
     try {
+      setLoading(true);
       const response = await axios.post(
         "/entries/",
         {
@@ -79,6 +87,9 @@ export default function AddEntry({ icon }) {
 
       if (response.data.success === true) {
         setSuccessMessage("Entry added successfully");
+        setEntries([response.data.entry.rows[0], ...entries]);
+        resetForm();
+        setLoading(false);
       }
     } catch (error) {
       setFormErrors((prev) => ({
@@ -86,8 +97,14 @@ export default function AddEntry({ icon }) {
         add: false,
       }));
       setErrorMessage("Error: Failed to add entry");
+      setLoading(false);
     }
   };
+
+  // If no user, go home
+  if (!user) {
+    return <Navigate to="/" />;
+  }
 
   return (
     <Section mini>
@@ -151,7 +168,10 @@ export default function AddEntry({ icon }) {
         <div className="form__button-container">
           <button
             type="submit"
-            className="form__button form__button--primary form__button--expand"
+            className={`form__button form__button${
+              loading ? "--disabled" : "--primary"
+            } form__button--expand`}
+            disabled={loading}
           >
             Add Entry
           </button>

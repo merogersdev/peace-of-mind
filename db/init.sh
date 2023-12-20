@@ -1,9 +1,6 @@
 #!/bin/bash
 set -e
 
-# Create User and Entry Tables in Primary DB
-psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" -f /docker-entrypoint-initdb.d/init.sql
-
 # Create Test DB
 psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" -c "CREATE DATABASE $POSTGRES_DB_TEST;"
 

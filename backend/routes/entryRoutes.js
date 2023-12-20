@@ -87,7 +87,7 @@ router.get("/", allEntryHandler);
  *                  type: string
  *                  description: Message indicating success
  *                  example: Entry registered successfully
- *                user:
+ *                entry:
  *                  type: object
  *                  properties:
  *                    id:

@@ -7,12 +7,12 @@ import Section from "../../components/Section/Section";
 import Form from "../../components/Form/Form";
 import Message from "../../components/Message/Message";
 
-import UserContext from "../../context/UserContext";
+import AuthContext from "../../context/AuthContext";
 import checkString from "../../utils/validation";
 
 export default function EditEntry({ icon }) {
   const { id } = useParams();
-  const { user, getUser } = useContext(UserContext);
+  const { entries, setEntries, refreshAuth } = useContext(AuthContext);
 
   const initialErrorState = {
     title: false,
@@ -24,6 +24,7 @@ export default function EditEntry({ icon }) {
   const [formErrors, setFormErrors] = useState(initialErrorState);
   const [errorMessage, setErrorMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const titleRef = useRef(null);
   const gratitudeRef = useRef(null);
@@ -41,16 +42,20 @@ export default function EditEntry({ icon }) {
   // Check if token, get user and entry details
   useEffect(() => {
     if (!token) return;
-    getUser();
+    refreshAuth();
+  }, []);
 
-    const currentEntry = user.entries.filter(
+  // Check if token, get user and entry details
+  useEffect(() => {
+    if (!entries) navigate("/dashboard");
+    const currentEntry = entries.filter(
       (filteredEntry) => filteredEntry.id === Number(id)
     );
 
     titleRef.current.value = currentEntry[0].title;
     gratitudeRef.current.value = currentEntry[0].gratitude;
     entryRef.current.value = currentEntry[0].entry;
-  }, []);
+  }, [entries]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -71,6 +76,7 @@ export default function EditEntry({ icon }) {
     if (!isTitleValid || !isGratitudeValid || !isEntryValid) return;
 
     try {
+      setLoading(true);
       const response = await axios.patch(
         `/entries/${id}`,
         {
@@ -87,11 +93,18 @@ export default function EditEntry({ icon }) {
       );
 
       if (response.data.success === true) {
-        getUser();
         setSuccessMessage("Entry edited successfully");
+        const updatedEntries = entries.filter(
+          (entry) => entry.id !== Number(id)
+        );
+
+        setEntries([response.data.entry.rows[0], ...updatedEntries]);
+        setLoading(false);
       }
     } catch (error) {
+      console.error(error);
       setErrorMessage("Error: Entry edit unsuccessful");
+      setLoading(false);
     }
   };
 
@@ -113,6 +126,7 @@ export default function EditEntry({ icon }) {
             }`}
             name="title"
             ref={titleRef}
+            disabled={loading}
           />
           <div className="form__message-container">
             {formErrors.title && (
@@ -128,6 +142,7 @@ export default function EditEntry({ icon }) {
             }`}
             name="gratitude"
             ref={gratitudeRef}
+            disabled={loading}
           />
           <div className="form__message-container">
             {formErrors.gratitude && (
@@ -143,6 +158,7 @@ export default function EditEntry({ icon }) {
             }`}
             name="entry"
             ref={entryRef}
+            disabled={loading}
           />
           <div className="form__message-container">
             {formErrors.entry && (
@@ -160,7 +176,10 @@ export default function EditEntry({ icon }) {
         <div className="form__button-container">
           <button
             type="submit"
-            className="form__button form__button--primary form__button--expand"
+            className={`form__button form__button${
+              loading ? "--disabled" : "--primary"
+            }`}
+            disabled={loading}
           >
             Edit Entry
           </button>

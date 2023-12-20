@@ -1,0 +1,27 @@
+@use "../../styles/partials/colors" as *;
+
+.spinner {
+  border: 0.5rem solid $primary;
+  border-top: 0.5rem solid $dark;
+  border-radius: 50%;
+  width: 4rem;
+  height: 4rem;
+  animation: spin 1s linear infinite;
+  margin: 1rem auto;
+  &__container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

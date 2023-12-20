@@ -78,6 +78,16 @@
   }
 }
 
+@mixin h4 {
+  font-weight: 500;
+  font-size: 1rem;
+  color: $dark;
+  @include flex-center;
+  @include tablet {
+    font-size: 1.5rem;
+  }
+}
+
 @mixin p {
   font-weight: 400;
   line-height: 1.5rem;
@@ -87,6 +97,15 @@
     line-height: 1.5rem;
     font-size: 1rem;
   }
+}
+
+@mixin card {
+  background-color: $white;
+  position: relative;
+  padding: 1rem;
+  box-shadow:
+    0 10px 20px rgba(0, 0, 0, 0.19),
+    0 6px 6px rgba(0, 0, 0, 0.23);
 }
 
 @mixin button {
@@ -125,7 +144,8 @@
   }
   &--big-icon {
     font-size: 1.5rem;
-    padding: 0 1rem;
+    min-width: 3rem;
+    border-radius: 50%;
   }
   &--primary-outline {
     background-color: $white;
@@ -160,6 +180,11 @@
     &:hover {
       background-color: $error-hover;
     }
+  }
+  &--disabled {
+    background-color: $grey;
+    color: $white;
+    cursor: default;
   }
   &--spacer {
     margin-right: 0.25rem;
