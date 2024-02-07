@@ -42,7 +42,7 @@ steps:
         "./backend/",
       ]
   # Push Backend
-    - name: "gcr.io/cloud-builders/docker"
+  - name: "gcr.io/cloud-builders/docker"
     args:
       [
         "push",
@@ -50,7 +50,7 @@ steps:
       ]
 
   # Build Frontend
-    - name: "gcr.io/cloud-builders/docker"
+  - name: "gcr.io/cloud-builders/docker"
     args:
       [
         "build",
@@ -60,7 +60,7 @@ steps:
       ]
 
   # Push Frontend
-    - name: "gcr.io/cloud-builders/docker"
+  - name: "gcr.io/cloud-builders/docker"
     args:
       [
         "push",
