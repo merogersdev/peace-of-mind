@@ -2,10 +2,10 @@
 
 # $PROJECT_ID
 
-# $IMAGE_NAME
-# $SSH_STRING
-# $ZONE
-# $HOME
+# $_IMAGE_NAME
+# $_SSH_STRING
+# $_ZONE
+# $_HOME
 
 steps:
   # 1. Build Docker Images
@@ -22,3 +22,6 @@ steps:
          ./db/ && docker push gcr.io/$PROJECT_ID/$IMAGE_NAME
 
   # 3. Deploy via SSH to VM
+
+options:
+  logging: CLOUD_LOGGING_ONLY
