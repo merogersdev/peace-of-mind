@@ -3,6 +3,7 @@
 # $PROJECT_ID
 
 # $_LOCATION
+# $_ZONE
 # $_REPOSITORY
 # $_DATABASE_IMAGE
 # $_FRONTEND_IMAGE
@@ -77,7 +78,7 @@ steps:
         "--project",
         $PROJECT_ID,
         "--zone",
-        $_LOCATION,
+        $_ZONE,
         "--command='touch ${_HOME}/file.txt'",
       ]
 
