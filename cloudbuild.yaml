@@ -79,7 +79,7 @@ steps:
         $PROJECT_ID,
         "--zone",
         $_ZONE,
-        "--command='touch ${_HOME}/file.txt'",
+        "--command=touch ${_HOME}/file.txt",
       ]
 
 options:
