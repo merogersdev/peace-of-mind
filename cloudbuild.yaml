@@ -72,7 +72,7 @@ steps:
     entrypoint: /bin/sh
     args:
       - "-c"
-      - "touch file.txt"
+      - "touch ${_HOME}/file.txt"
 
 options:
   logging:
