@@ -23,7 +23,7 @@ steps:
     args:
       [
         "push",
-        "${_location}-docker.pkg.dev/$PROJECT_ID${_REPOSITORY}/${_IMAGE}",
+        "${_location}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE}",
       ]
 
     # args:
