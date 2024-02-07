@@ -12,74 +12,72 @@
 # $_SSH_STRING
 
 steps:
-#   # 1. Build Docker Images
+  #   # 1. Build Docker Images
 
-#   # Build DB
-#   - name: "gcr.io/cloud-builders/docker"
-#     args:
-#       [
-#         "build",
-#         "-t",
-#         "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_DATABASE_IMAGE}",
-#         "./db/",
-#       ]
+  #   # Build DB
+  #   - name: "gcr.io/cloud-builders/docker"
+  #     args:
+  #       [
+  #         "build",
+  #         "-t",
+  #         "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_DATABASE_IMAGE}",
+  #         "./db/",
+  #       ]
 
-#   # Push DB
-#   - name: "gcr.io/cloud-builders/docker"
-#     args:
-#       [
-#         "push",
-#         "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_DATABASE_IMAGE}",
-#       ]
+  #   # Push DB
+  #   - name: "gcr.io/cloud-builders/docker"
+  #     args:
+  #       [
+  #         "push",
+  #         "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_DATABASE_IMAGE}",
+  #       ]
 
-#   # Build Backend
-#   - name: "gcr.io/cloud-builders/docker"
-#     args:
-#       [
-#         "build",
-#         "-t",
-#         "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_BACKEND_IMAGE}",
-#         "./backend/",
-#       ]
-#   # Push Backend
-#   - name: "gcr.io/cloud-builders/docker"
-#     args:
-#       [
-#         "push",
-#         "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_BACKEND_IMAGE}",
-#       ]
+  #   # Build Backend
+  #   - name: "gcr.io/cloud-builders/docker"
+  #     args:
+  #       [
+  #         "build",
+  #         "-t",
+  #         "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_BACKEND_IMAGE}",
+  #         "./backend/",
+  #       ]
+  #   # Push Backend
+  #   - name: "gcr.io/cloud-builders/docker"
+  #     args:
+  #       [
+  #         "push",
+  #         "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_BACKEND_IMAGE}",
+  #       ]
 
-#   # Build Frontend
-#   - name: "gcr.io/cloud-builders/docker"
-#     args:
-#       [
-#         "build",
-#         "-t",
-#         "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_FRONTEND_IMAGE}",
-#         "./frontend/",
-#       ]
+  #   # Build Frontend
+  #   - name: "gcr.io/cloud-builders/docker"
+  #     args:
+  #       [
+  #         "build",
+  #         "-t",
+  #         "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_FRONTEND_IMAGE}",
+  #         "./frontend/",
+  #       ]
 
-#   # Push Frontend
-#   - name: "gcr.io/cloud-builders/docker"
-#     args:
-#       [
-#         "push",
-#         "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_FRONTEND_IMAGE}",
-#       ]
+  #   # Push Frontend
+  #   - name: "gcr.io/cloud-builders/docker"
+  #     args:
+  #       [
+  #         "push",
+  #         "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_FRONTEND_IMAGE}",
+  #       ]
 
   # 3. Deploy via SSH to VM
-  - name: 'gcr.io/cloud-builders/gcloud'
+  - name: "gcr.io/cloud-builders/gcloud"
     entrypoint: /bin/sh
     args:
-    - '-c'
-    - |
-    touch file.txt
+      - "-c"
+      - "touch file.txt"
 
 options:
-  logging: CLOUD_LOGGING_ONLY
+  logging:
+    CLOUD_LOGGING_ONLY
 
-
-    
     # [
     #     "compute", "ssh", $_SSH_STRING, "--project", $PROJECT_ID, "--zone", $_LOCATION, "--command='touch file.txt'"
     # ]
