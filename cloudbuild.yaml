@@ -4,33 +4,68 @@
 
 # $_LOCATION
 # $_REPOSITORY
-# $_IMAGE
+# $_DATABASE_IMAGE
+# $_FRONTEND_IMAGE
+# $_BACKEND_IMAGE
 
 # $_HOME
 # $_SSH_STRING
 
 steps:
   # 1. Build Docker Images
+
+  # Build DB
   - name: "gcr.io/cloud-builders/docker"
     args:
       [
         "build",
         "-t",
-        "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE}",
+        "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_DATABASE_IMAGE}",
         "./db/",
       ]
+
+  # Push DB
   - name: "gcr.io/cloud-builders/docker"
     args:
       [
         "push",
-        "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE}",
+        "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_DATABASE_IMAGE}",
       ]
 
-    # args:
-    #   - -c
-    #   - |
-    #     docker build -t $_ZONE-docker.pkg.dev/$_REPO_NAME/$PROJECT_ID/$_IMAGE_NAME \
-    #      ./db/ && docker push gcr.io/$PROJECT_ID/$_IMAGE_NAME
+  # Build Backend
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_BACKEND_IMAGE}",
+        "./backend/",
+      ]
+  # Push Backend
+    - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "push",
+        "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_BACKEND_IMAGE}",
+      ]
+
+  # Build Frontend
+    - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_FRONTEND_IMAGE}",
+        "./frontend/",
+      ]
+
+  # Push Frontend
+    - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "push",
+        "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_FRONTEND_IMAGE}",
+      ]
 
   # 3. Deploy via SSH to VM
 
