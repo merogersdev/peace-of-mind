@@ -69,10 +69,17 @@ steps:
 
   # 3. Deploy via SSH to VM
   - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: /bin/sh
     args:
-    [
-        "compute", "ssh", $_SSH_STRING, "--project", $PROJECT_ID, "--zone", $_LOCATION, "--command='touch file.txt'"
-    ]
+    - '-c'
+    - |
+    touch file.txt
 
 options:
   logging: CLOUD_LOGGING_ONLY
+
+
+    
+    # [
+    #     "compute", "ssh", $_SSH_STRING, "--project", $PROJECT_ID, "--zone", $_LOCATION, "--command='touch file.txt'"
+    # ]
