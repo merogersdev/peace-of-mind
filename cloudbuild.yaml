@@ -6,16 +6,25 @@
 # $_REPOSITORY
 # $_IMAGE
 
-
 # $_HOME
 # $_SSH_STRING
 
 steps:
   # 1. Build Docker Images
   - name: "gcr.io/cloud-builders/docker"
-    args: [ 'build', '-t', '${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE}', './db/' ]
+    args:
+      [
+        "build",
+        "-t",
+        "${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE}",
+        "./db/",
+      ]
   - name: "gcr.io/cloud-builders/docker"
-    args: ['push', '${_location}-docker.pkg.dev/$PROJECT_ID${_REPOSITORY}/${_IMAGE}']
+    args:
+      [
+        "push",
+        "${_location}-docker.pkg.dev/$PROJECT_ID${_REPOSITORY}/${_IMAGE}",
+      ]
 
     # args:
     #   - -c
@@ -27,5 +36,3 @@ steps:
 
 options:
   logging: CLOUD_LOGGING_ONLY
-
-us-central1-docker.pkg.dev/peace-of-mind-402223/peace-of-mind
