@@ -80,8 +80,9 @@ steps:
         "--zone",
         $_ZONE,
         "--",
-        "touch ${_HOME}/newfile.txt",
-        "touch ${_HOME}/newfile2.txt",
+        "docker container stop $$(docker container ls -aq)",
+        "docker container rm $$(docker container ls -aq)",
+        "docker run -d --restart=unless-stopped -p 5432:5432 -e POSTGRES_USER=${_POSTGRES_USER} -e POSTGRES_PASSWORD=${_POSTGRES_PASSWORD} -e POSTGRES_DB=${_POSTGRES_DB} -e POSTGRES_DB_TEST=${_POSTGRES_DB_TEST} ${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_DATABASE_IMAGE}",
       ]
 
 options:
