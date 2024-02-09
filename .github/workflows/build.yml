@@ -59,11 +59,12 @@ jobs:
           DATABASE_IMAGE_NAME: peace-of-mind-db
           FRONTEND_IMAGE_NAME: peace-of-mind-frontend
           BACKEND_IMAGE_NAME: peace-of-mind-backend
+          PROJECT_ID: ${{ secrets.PROJECT_ID }}
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_KEY }}
-          envs: GCP_REGION,POSTGRES_USER,POSTGRES_PASSWORD,POSTGRES_DB,POSTGRES_DB_TEST,DATABASE_IMAGE_NAME,FRONTEND_IMAGE_NAME,BACKEND_IMAGE_NAME
+          envs: GCP_REGION,POSTGRES_USER,POSTGRES_PASSWORD,POSTGRES_DB,POSTGRES_DB_TEST,DATABASE_IMAGE_NAME,FRONTEND_IMAGE_NAME,BACKEND_IMAGE_NAME,PROJECT_ID
           script: |
             cd /home/michelle/
             touch githubtest.txt
