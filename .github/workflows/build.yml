@@ -45,12 +45,13 @@ jobs:
 
       - name: "Deploy App to GCP VM"
         uses: appleboy/ssh-action@v1.0.3
+        env:
+          GCP_REGION: ${{ secrets.GCP_REGION }}
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_KEY }}
-          env:
-            GCP_REGION: ${{ secrets.GCP_REGION }}
+          envs: GCP_REGION
           script: |
             cd /home/michelle/
             touch githubtest.txt
