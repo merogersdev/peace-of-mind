@@ -56,15 +56,18 @@ jobs:
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
           POSTGRES_DB: peaceofmind
           POSTGRES_DB_TEST: peaceofmind_test
+          POSTGRES_PORT: 5432
           DATABASE_IMAGE_NAME: peace-of-mind-db
           FRONTEND_IMAGE_NAME: peace-of-mind-frontend
           BACKEND_IMAGE_NAME: peace-of-mind-backend
           PROJECT_ID: ${{ secrets.PROJECT_ID }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          API_KEY: ${{ secrets.API_KEY }}
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_KEY }}
-          envs: GCP_REGION,POSTGRES_USER,POSTGRES_PASSWORD,POSTGRES_DB,POSTGRES_DB_TEST,DATABASE_IMAGE_NAME,FRONTEND_IMAGE_NAME,BACKEND_IMAGE_NAME,PROJECT_ID
+          envs: GCP_REGION,POSTGRES_USER,POSTGRES_PASSWORD,POSTGRES_DB,POSTGRES_DB_TEST,POSTGRES_PORT,DATABASE_IMAGE_NAME,FRONTEND_IMAGE_NAME,BACKEND_IMAGE_NAME,PROJECT_ID, JWT_SECRET, API_KEY
           script: |
             cd /home/michelle/
             touch githubtest.txt
@@ -72,4 +75,6 @@ jobs:
             gcloud auth configure-docker $GCP_REGION-docker.pkg.dev --quiet
             docker stop $(docker ps -aq)
             docker rm $(docker ps -aq)
-            docker run -d --restart=unless-stopped -p 5432:5432 -e POSTGRES_USER='$POSTGRES_USER' -e POSTGRES_PASSWORD='$POSTGRES_PASSWORD' -e POSTGRES_DB='$POSTGRES_DB' -e POSTGRES_DB_TEST='$POSTGRES_DB_TEST' $GCP_REGION-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$DATABASE_IMAGE_NAME
+            docker run -d --restart=unless-stopped -p 5432:5432 -e POSTGRES_USER='$POSTGRES_USER' -e POSTGRES_PASSWORD='$POSTGRES_PASSWORD' -e POSTGRES_DB='$POSTGRES_DB' -e POSTGRES_DB_TEST='$POSTGRES_DB_TEST' --name $DATABASE_IMAGE_NAME $GCP_REGION-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$DATABASE_IMAGE_NAME
+            docker run -d --restart=unless-stopped -p 5000:5000 -e NODE_ENV='production' -e DB_HOST='$DATABASE_IMAGE_NAME' -e DB_PORT='$POSTGRES_PORT' -e DB_USER='$POSTGRES_USER' -e DB_PASS='$POSTGRES_PASSWORD' -e DB_DATA='$POSTGRES_DB' -e DB_DATA_TEST='$POSTGRES_DB_TEST' -e JWT_SECRET='$JWT_SECRET' -e API_KEY='$API_KEY' --name $BACKEND_IMAGE_NAME $GCP_REGION-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$BACKEND_IMAGE_NAME
+            docker run -d --restart=unless-stopped -p 80:80 $FRONTEND_IMAGE_NAME $GCP_REGION-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$FRONTEND_IMAGE_NAME
