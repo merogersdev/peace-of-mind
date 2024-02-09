@@ -1,0 +1,40 @@
+---
+name: Build and push Image to GCP
+on:
+  push:
+    branches: [feat/59-add-cicd-pipeline]
+jobs:
+  build-push-gcr:
+    name: Build and push to GCP
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_IMAGE_NAME: peace-of-mind-db
+      FRONTEND_IMAGE_NAME: peace-of-mind-frontend
+      BACKEND_IMAGE_NAME: peace-of-mind-backend
+      PROJECT_ID: peace-of-mind-402223
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - uses: google-github-actions/setup-gcloud@master
+        with:
+          service_account_key: ${{ secrets.SERVICE_ACCOUNT_KEY }}
+          project_ID: ${{ env.PROJECT_ID }}
+          export_default_credentials: true
+
+      - name: Build Docker Images
+        run: |-
+          docker build -t $DATABASE_IMAGE_NAME:latest ./db/
+          docker build -t $FRONTEND_IMAGE_NAME:latest ./frontend/
+          docker build -t $BACKEND_IMAGE_NAME:latest ./backend/
+
+      - name: Configure Docker Client
+        run: |-
+          gcloud auth configure-docker --quiet
+          gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
+
+      - name: Push Images to GCP Artifact Registry
+        run: |-
+          docker tag $DATABASE_IMAGE_NAME:latest us-central1-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$DATABASE_IMAGE_NAME:latest
+          docker tag $BACKEND_IMAGE_NAME:latest us-central1-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$BACKEND_IMAGE_NAME:latest
+          docker tag $FRONTEND_IMAGE_NAME:latest us-central1-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$FRONTEND_IMAGE_NAME:latest
