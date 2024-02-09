@@ -1,17 +1,18 @@
 ---
-name: Build and push Image to GCP
+name: Build and Push Images to GCP
 on:
   push:
     branches: [feat/59-add-cicd-pipeline]
 jobs:
   build-push-gcr:
-    name: Build and push to GCP
+    name: Build and Push to GCP
     runs-on: ubuntu-latest
     env:
       DATABASE_IMAGE_NAME: peace-of-mind-db
       FRONTEND_IMAGE_NAME: peace-of-mind-frontend
       BACKEND_IMAGE_NAME: peace-of-mind-backend
-      PROJECT_ID: peace-of-mind-402223
+      PROJECT_ID: ${{ secrets.PROJECT_ID }}
+      GCP_ZONE: ${{ secrets.GCP_ZONE }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -29,13 +30,13 @@ jobs:
       - name: Configure Docker Client
         run: |-
           gcloud auth configure-docker --quiet
-          gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
+          gcloud auth configure-docker $GCP_ZONE-docker.pkg.dev --quiet
 
-      - name: Push Images to GCP Artifact Registry
+      - name: Tag and Push Images to GCP
         run: |-
-          docker tag $DATABASE_IMAGE_NAME:latest us-central1-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$DATABASE_IMAGE_NAME:latest
-          docker tag $BACKEND_IMAGE_NAME:latest us-central1-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$BACKEND_IMAGE_NAME:latest
-          docker tag $FRONTEND_IMAGE_NAME:latest us-central1-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$FRONTEND_IMAGE_NAME:latest
-          docker push us-central1-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$DATABASE_IMAGE_NAME:latest
-          docker push us-central1-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$BACKEND_IMAGE_NAME:latest
-          docker push us-central1-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$FRONTEND_IMAGE_NAME:latest
+          docker tag $DATABASE_IMAGE_NAME:latest $GCP_ZONE-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$DATABASE_IMAGE_NAME:latest
+          docker tag $BACKEND_IMAGE_NAME:latest $GCP_ZONE-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$BACKEND_IMAGE_NAME:latest
+          docker tag $FRONTEND_IMAGE_NAME:latest $GCP_ZONE-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$FRONTEND_IMAGE_NAME:latest
+          docker push $GCP_ZONE-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$DATABASE_IMAGE_NAME:latest
+          docker push $GCP_ZONE-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$BACKEND_IMAGE_NAME:latest
+          docker push $GCP_ZONE-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$FRONTEND_IMAGE_NAME:latest
