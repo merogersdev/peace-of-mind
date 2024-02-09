@@ -72,10 +72,4 @@ jobs:
             gcloud auth configure-docker $GCP_REGION-docker.pkg.dev --quiet
             docker stop $(docker ps -aq)
             docker rm $(docker ps -aq)
-            docker run -d --restart=unless-stopped \
-            -p 5432:5432 \ 
-            -e POSTGRES_USER='$POSTGRES_USER' \
-            -e POSTGRES_PASSWORD='$POSTGRES_PASSWORD' \
-            -e POSTGRES_DB='$POSTGRES_DB' \
-            -e POSTGRES_DB_TEST='$POSTGRES_DB_TEST' \ 
-            $GCP_REGION-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$DATABASE_IMAGE_NAME
+            docker run -d --restart=unless-stopped -p 5432:5432 -e POSTGRES_USER='$POSTGRES_USER' -e POSTGRES_PASSWORD='$POSTGRES_PASSWORD' -e POSTGRES_DB='$POSTGRES_DB' -e POSTGRES_DB_TEST='$POSTGRES_DB_TEST' $GCP_REGION-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$DATABASE_IMAGE_NAME
