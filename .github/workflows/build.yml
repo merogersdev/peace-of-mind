@@ -36,3 +36,6 @@ jobs:
           docker tag $DATABASE_IMAGE_NAME:latest us-central1-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$DATABASE_IMAGE_NAME:latest
           docker tag $BACKEND_IMAGE_NAME:latest us-central1-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$BACKEND_IMAGE_NAME:latest
           docker tag $FRONTEND_IMAGE_NAME:latest us-central1-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$FRONTEND_IMAGE_NAME:latest
+          docker push us-central1-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$DATABASE_IMAGE_NAME:latest
+          docker pushus-central1-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$BACKEND_IMAGE_NAME:latest
+          docker push us-central1-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$FRONTEND_IMAGE_NAME:latest
