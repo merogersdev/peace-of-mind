@@ -49,6 +49,8 @@ jobs:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_KEY }}
+          env:
+            GCP_REGION: ${{ secrets.GCP_REGION }}
           script: |
             cd /home/michelle/
             touch githubtest.txt
