@@ -12,7 +12,9 @@ jobs:
       FRONTEND_IMAGE_NAME: peace-of-mind-frontend
       BACKEND_IMAGE_NAME: peace-of-mind-backend
       PROJECT_ID: ${{ secrets.PROJECT_ID }}
+      GCP_REGION: ${{ secrets.GCP_REGION }}
       GCP_ZONE: ${{ secrets.GCP_ZONE }}
+      GCP_INSTANCE_NAME: ${{ secrets.GCP_INSTANCE_NAME }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -30,19 +32,25 @@ jobs:
       - name: Configure Docker Client
         run: |-
           gcloud auth configure-docker --quiet
-          gcloud auth configure-docker $GCP_ZONE-docker.pkg.dev --quiet
+          gcloud auth configure-docker $GCP_REGION-docker.pkg.dev --quiet
 
       - name: Tag and Push Images to GCP
         run: |-
-          docker tag $DATABASE_IMAGE_NAME:latest $GCP_ZONE-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$DATABASE_IMAGE_NAME:latest
-          docker tag $BACKEND_IMAGE_NAME:latest $GCP_ZONE-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$BACKEND_IMAGE_NAME:latest
-          docker tag $FRONTEND_IMAGE_NAME:latest $GCP_ZONE-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$FRONTEND_IMAGE_NAME:latest
-          docker push $GCP_ZONE-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$DATABASE_IMAGE_NAME:latest
-          docker push $GCP_ZONE-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$BACKEND_IMAGE_NAME:latest
-          docker push $GCP_ZONE-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$FRONTEND_IMAGE_NAME:latest
+          docker tag $DATABASE_IMAGE_NAME:latest $GCP_REGION-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$DATABASE_IMAGE_NAME:latest
+          docker tag $BACKEND_IMAGE_NAME:latest $GCP_REGION-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$BACKEND_IMAGE_NAME:latest
+          docker tag $FRONTEND_IMAGE_NAME:latest $GCP_REGION-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$FRONTEND_IMAGE_NAME:latest
+          docker push $GCP_REGION-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$DATABASE_IMAGE_NAME:latest
+          docker push $GCP_REGION-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$BACKEND_IMAGE_NAME:latest
+          docker push $GCP_REGION-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$FRONTEND_IMAGE_NAME:latest
 
-      - name: "Set up Cloud SDK"
-        uses: "google-github-actions/setup-gcloud@v2"
-
-      - name: "Use gcloud CLI"
-        run: "gcloud info"
+      - name: "Deploy App to GCP VM"
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_KEY }}
+          script: |
+            cd /home/michelle/
+            touch githubtest.txt
+            gcloud auth configure-docker --quiet
+            gcloud auth configure-docker $GCP_REGION-docker.pkg.dev --quiet
