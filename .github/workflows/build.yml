@@ -40,3 +40,9 @@ jobs:
           docker push $GCP_ZONE-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$DATABASE_IMAGE_NAME:latest
           docker push $GCP_ZONE-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$BACKEND_IMAGE_NAME:latest
           docker push $GCP_ZONE-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$FRONTEND_IMAGE_NAME:latest
+
+      - name: "Set up Cloud SDK"
+        uses: "google-github-actions/setup-gcloud@v2"
+
+      - name: "Use gcloud CLI"
+        run: "gcloud info"
