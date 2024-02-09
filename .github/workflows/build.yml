@@ -77,4 +77,4 @@ jobs:
             docker rm $(docker ps -aq)
             docker run -d --restart=unless-stopped -p 5432:5432 -e POSTGRES_USER=$POSTGRES_USER -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD -e POSTGRES_DB=$POSTGRES_DB -e POSTGRES_DB_TEST=$POSTGRES_DB_TEST --name $DATABASE_IMAGE_NAME $GCP_REGION-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$DATABASE_IMAGE_NAME
             docker run -d --restart=unless-stopped -p 5000:5000 -e NODE_ENV='production' -e DB_HOST=$DATABASE_IMAGE_NAME -e DB_PORT=$POSTGRES_PORT -e DB_USER=$POSTGRES_USER -e DB_PASS=$POSTGRES_PASSWORD -e DB_DATA=$POSTGRES_DB -e DB_DATA_TEST=$POSTGRES_DB_TEST -e JWT_SECRET=$JWT_SECRET -e API_KEY=$API_KEY --name $BACKEND_IMAGE_NAME $GCP_REGION-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$BACKEND_IMAGE_NAME
-            docker run -d --restart=unless-stopped -p 80:80 --name $FRONTEND_IMAGE_NAME $GCP_REGION-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$FRONTEND_IMAGE_NAME
+            docker run -d --restart=unless-stopped -p 3000:80 --name $FRONTEND_IMAGE_NAME $GCP_REGION-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$FRONTEND_IMAGE_NAME
