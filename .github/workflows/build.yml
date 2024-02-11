@@ -44,76 +44,33 @@ jobs:
           docker push $ECR_REGISTRY/$DB_REPO:$IMAGE_TAG
           docker push $ECR_REGISTRY/$BACKEND_REPO:$IMAGE_TAG
           docker push $ECR_REGISTRY/$FRONTEND_REPO:$IMAGE_TAG
+      #SSH to AWS EC2 Instance and deploy
+      - name: "SSH"
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          PG_USER: "peaceofmind"
+          PG_PASSWORD: "${{ secrets.POSTGRES_PASSWORD }}"
+          PG_DB: "peaceofmind"
+          PG_DB_TEST: "peaceofmind_test"
+          PG_PORT: 5432
+          DB_IMAGE: ${{ secrets.DB_REPO }}
+          FRONTEND_IMAGE: ${{ secrets.FRONTEND_REPO }}
+          BACKEND_IMAGE: ${{ secrets.BACKEND_REPO }}
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          JWT_SECRET: "${{ secrets.JWT_SECRET }}"
+          API_KEY: "${{ secrets.API_KEY }}"
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_KEY }}
+          envs: PG_USER,PG_PASSWORD,PG_DB,PG_DB_TEST,PG_PORT,DB_IMAGE,FRONTEND_IMAGE,BACKEND_IMAGE,JWT_SECRET,API_KEY
+          script: |
 
-    # docker build -t $ECR_REGISTRY/$ECR_REPOSITORY/$BACKEND_NAME/$BACKEND_NAME:$IMAGE_TAG
-    # docker build -t $ECR_REGISTRY/$ECR_REPOSITORY/$BACKEND_NAME/$BACKEND_NAME:$IMAGE_TAG
-    # SSH to AWS EC2 Instance and deploy
-    # - name: "SSH"
-    #   uses: appleboy/ssh-action@v1.0.3
-    #   env:
-    #     PG_USER: "peaceofmind"
-    #     PG_PASSWORD: "${{ secrets.POSTGRES_PASSWORD }}"
-    #     PG_DB: "peaceofmind"
-    #     PG_DB_TEST: "peaceofmind_test"
-    #     PG_PORT: 5432
-    #     DB_IMAGE: peace-of-mind-db
-    #     FRONTEND_IMAGE: peace-of-mind-frontend
-    #     BACKEND_IMAGE: peace-of-mind-backend
-    #     ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-    #     ECR_REPOSITORY: ${{ secrets.REPO_NAME }}
-    #     JWT_SECRET: "${{ secrets.JWT_SECRET }}"
-    #     API_KEY: "${{ secrets.API_KEY }}"
-    #   with:
-    #     host: ${{ secrets.SERVER_IP }}
-    #     username: ${{ secrets.SERVER_USER }}
-    #     key: ${{ secrets.SERVER_KEY }}
-    #     envs: PG_USER,PG_PASSWORD,PG_DB,PG_DB_TEST,PG_PORT,DB_IMAGE,FRONTEND_IMAGE,BACKEND_IMAGE,JWT_SECRET,API_KEY
-    #     script: |
+            docker stop $(docker ps -aq)
+            docker rm $(docker ps -aq)
 
-    #       docker stop $(docker ps -aq)
-    #       docker rm $(docker ps -aq)
+            docker run -d --restart=unless-stopped -p 5432:5432 -e POSTGRES_USER=$PG_USER -e POSTGRES_PASSWORD=$PG_PASSWORD -e POSTGRES_DB=$PG_DB -e POSTGRES_DB_TEST=$PG_DB_TEST --name $DB_IMAGE $ECR_REGISTRY/$DB_IMAGE:$IMAGE_TAG
 
-    #       docker run -d --restart=unless-stopped -p 5432:5432 -e POSTGRES_USER=$PG_USER -e POSTGRES_PASSWORD=$PG_PASSWORD -e POSTGRES_DB=$PG_DB -e POSTGRES_DB_TEST=$PG_DB_TEST --name $DATABASE_IMAGE $ECR_REGISTRY/$ECR_REPOSITORY/$DB_IMAGE:$IMAGE_TAG
+            docker run -d --restart=unless-stopped -p 5000:5000 -e NODE_ENV='production' -e DB_HOST=$DATABASE_IMAGE -e DB_PORT=$PG_PORT -e DB_USER=$PG_USER -e DB_PASS=$PG_PASSWORD -e DB_DATA=$PG_DB -e DB_DATA_TEST=$PG_DB_TEST -e JWT_SECRET=$JWT_SECRET -e API_KEY=$API_KEY --name $BACKEND_IMAGE $ECR_REGISTRY/$BACKEND_IMAGE:$IMAGE_TAG
 
-    #       docker run -d --restart=unless-stopped -p 5000:5000 -e NODE_ENV='production' -e DB_HOST=$DATABASE_IMAGE -e DB_PORT=$PG_PORT -e DB_USER=$PG_USER -e DB_PASS=$PG_PASSWORD -e DB_DATA=$PG_DB -e DB_DATA_TEST=$PG_DB_TEST -e JWT_SECRET=$JWT_SECRET -e API_KEY=$API_KEY --name $BACKEND_IMAGE $ECR_REGISTRY/$ECR_REPOSITORY/$BACKEND_IMAGE:$IMAGE_TAG
-
-    #       docker run -d --restart=unless-stopped -p 3000:80 --name $FRONTEND_IMAGE $ECR_REGISTRY/$ECR_REPOSITORY/$FRONTEND_IMAGE:$IMAGE_TAG
-
-  # build-push-gcr:
-  #   name: Build and Push to GCP
-  #   runs-on: ubuntu-latest
-  #   env:
-  #     DATABASE_IMAGE_NAME: peace-of-mind-db
-  #     FRONTEND_IMAGE_NAME: peace-of-mind-frontend
-  #     BACKEND_IMAGE_NAME: peace-of-mind-backend
-  #     PROJECT_ID: ${{ secrets.PROJECT_ID }}
-  #     GCP_REGION: ${{ secrets.GCP_REGION }}
-  #     GCP_ZONE: ${{ secrets.GCP_ZONE }}
-  #     GCP_INSTANCE_NAME: ${{ secrets.GCP_INSTANCE_NAME }}
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v4
-
-  #     - uses: google-github-actions/auth@v2
-  #       with:
-  #         credentials_json: ${{ secrets.SERVICE_ACCOUNT_KEY }}
-
-  #     - name: Build Docker Images
-  #       run: |-
-  #         docker build -t $DATABASE_IMAGE_NAME:latest ./db/
-  #         docker build -t $FRONTEND_IMAGE_NAME:latest ./frontend/
-  #         docker build -t $BACKEND_IMAGE_NAME:latest ./backend/
-
-  #     - name: Configure Docker Client
-  #       run: |-
-  #         gcloud auth configure-docker --quiet
-  #         gcloud auth configure-docker $GCP_REGION-docker.pkg.dev --quiet
-
-  #     - name: Tag and Push Images to GCP
-  #       run: |-
-  #         docker tag $DATABASE_IMAGE_NAME:latest $GCP_REGION-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$DATABASE_IMAGE_NAME:latest
-  #         docker tag $BACKEND_IMAGE_NAME:latest $GCP_REGION-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$BACKEND_IMAGE_NAME:latest
-  #         docker tag $FRONTEND_IMAGE_NAME:latest $GCP_REGION-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$FRONTEND_IMAGE_NAME:latest
-  #         docker push $GCP_REGION-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$DATABASE_IMAGE_NAME:latest
-  #         docker push $GCP_REGION-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$BACKEND_IMAGE_NAME:latest
-  #         docker push $GCP_REGION-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$FRONTEND_IMAGE_NAME:latest
+            docker run -d --restart=unless-stopped -p 3000:80 --name $FRONTEND_IMAGE $ECR_REGISTRY/$FRONTEND_IMAGE:$IMAGE_TAG
