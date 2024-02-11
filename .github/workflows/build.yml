@@ -39,12 +39,9 @@ jobs:
           BACKEND_NAME: ${{ env.BACKEND_NAME }}
           FRONTEND_NAME: ${{ env.FRONTEND_NAME }}
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY/$DB_NAME:$IMAGE_TAG ./db/
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY/$BACKEND_NAME:$IMAGE_TAG ./backend/
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY/$FRONTEND_NAME:$IMAGE_TAG ./frontend/
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY/$DB_NAME:$IMAGE_TAG
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY/$BACKEND_NAME:$IMAGE_TAG
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY/$FRONTEND_NAME:$IMAGE_TAG
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY/$DB_NAME/$DB_NAME:$IMAGE_TAG ./db/
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY/$BACKEND_NAME/$BACKEND_NAME:$IMAGE_TAG
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY/$BACKEND_NAME/$BACKEND_NAME:$IMAGE_TAG
     # SSH to AWS EC2 Instance and deploy
     # - name: "SSH"
     #   uses: appleboy/ssh-action@v1.0.3
