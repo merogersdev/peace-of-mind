@@ -65,9 +65,9 @@ jobs:
           key: ${{ secrets.SERVER_KEY }}
           envs: PG_USER,PG_PASSWORD,PG_DB,PG_DB_TEST,PG_PORT,DB_IMAGE,FRONTEND_IMAGE,BACKEND_IMAGE,JWT_SECRET,API_KEY,ECR_REGISTRY
           script: |
-            aws ecr get-login-password --region ca-central-1 | docker login --username AWS --password-stdin 791886172857.dkr.ecr.ca-central-1.amazonaws.com
+            aws ecr get-login-password --region ca-central-1 | docker login --username AWS --password-stdin $ECR_REGISTRY
             docker stop $(docker ps -aq)
             docker rm $(docker ps -aq)
-            docker run -d --restart=unless-stopped -p 5432:5432 -e POSTGRES_USER=$PG_USER -e POSTGRES_PASSWORD=$PG_PASSWORD -e POSTGRES_DB=$PG_DB -e POSTGRES_DB_TEST=$PG_DB_TEST --name $DB_IMAGE $ECR_REGISTRY/$DB_IMAGE:$IMAGE_TAG
-            docker run -d --restart=unless-stopped -p 5000:5000 -e NODE_ENV='production' -e DB_HOST=$DATABASE_IMAGE -e DB_PORT=$PG_PORT -e DB_USER=$PG_USER -e DB_PASS=$PG_PASSWORD -e DB_DATA=$PG_DB -e DB_DATA_TEST=$PG_DB_TEST -e JWT_SECRET=$JWT_SECRET -e API_KEY=$API_KEY --name $BACKEND_IMAGE $ECR_REGISTRY/$BACKEND_IMAGE:$IMAGE_TAG
-            docker run -d --restart=unless-stopped -p 3000:80 --name $FRONTEND_IMAGE $ECR_REGISTRY/$FRONTEND_IMAGE:$IMAGE_TAG
+            docker run -d --restart=unless-stopped -p 5432:5432 -e POSTGRES_USER=$PG_USER -e POSTGRES_PASSWORD=$PG_PASSWORD -e POSTGRES_DB=$PG_DB -e POSTGRES_DB_TEST=$PG_DB_TEST --name $DB_IMAGE $ECR_REGISTRY/$DB_IMAGE:latest
+            docker run -d --restart=unless-stopped -p 5000:5000 -e NODE_ENV='production' -e DB_HOST=$DATABASE_IMAGE -e DB_PORT=$PG_PORT -e DB_USER=$PG_USER -e DB_PASS=$PG_PASSWORD -e DB_DATA=$PG_DB -e DB_DATA_TEST=$PG_DB_TEST -e JWT_SECRET=$JWT_SECRET -e API_KEY=$API_KEY --name $BACKEND_IMAGE $ECR_REGISTRY/$BACKEND_IMAGE:latest
+            docker run -d --restart=unless-stopped -p 3000:80 --name $FRONTEND_IMAGE $ECR_REGISTRY/$FRONTEND_IMAGE:latest
