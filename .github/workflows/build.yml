@@ -63,7 +63,7 @@ jobs:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_KEY }}
-          envs: PG_USER,PG_PASSWORD,PG_DB,PG_DB_TEST,PG_PORT,DB_IMAGE,FRONTEND_IMAGE,BACKEND_IMAGE,JWT_SECRET,API_KEY
+          envs: PG_USER,PG_PASSWORD,PG_DB,PG_DB_TEST,PG_PORT,DB_IMAGE,FRONTEND_IMAGE,BACKEND_IMAGE,JWT_SECRET,API_KEY,ECR_REGISTRY
           script: |
 
             docker stop $(docker ps -aq)
