@@ -2,7 +2,7 @@
 name: Build and Deploy to AWS
 on:
   push:
-    branches: [feat/59-add-cicd-pipeline]
+    branches: [main]
 jobs:
   deploy:
     name: Build and Deploy
