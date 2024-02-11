@@ -16,10 +16,10 @@ jobs:
     steps:
       # Checkout Repo
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       # Configure AWS Creds
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -27,7 +27,7 @@ jobs:
       # Login to AWS ECR
       - name: Login to AWS ECR
         id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
+        uses: aws-actions/amazon-ecr-login@v2
       # Build, Tag, Push to AWS ECR
       - name: Build, Tag, Push to AWS ECR
         id: build-image
