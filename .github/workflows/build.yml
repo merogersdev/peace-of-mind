@@ -34,20 +34,17 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ secrets.REPO_NAME }}
-          IMAGE_NAME: ${{ env.IMAGE_TAG }}
-          DB_NAME: ${{ env.DB_IMAGE }}
-          BACKEND_NAME: ${{ env.BACKEND_IMAGE }}
-          FRONTEND_NAME: ${{ env.FRONTEND_IMAGE }}
-          DB_STRING: $ECR_REGISTRY/$ECR_REPOSITORY/$DB_IMAGE:$IMAGE_TAG
-          BACKEND_STRING: $ECR_REGISTRY/$ECR_REPOSITORY/$BACKEND_IMAGE:$IMAGE_TAG
-          FRONTEND_STRING: $ECR_REGISTRY/$ECR_REPOSITORY/$FRONTEND_IMAGE:$IMAGE_TAG
+          IMAGE_TAG: ${{ env.IMAGE_TAG }}
+          DB_NAME: ${{ env.DB_NAME }}
+          BACKEND_NAME: ${{ env.BACKEND_NAME }}
+          FRONTEND_NAME: ${{ env.FRONTEND_NAME }}
         run: |
-          docker build -t $DB_STRING ./db/
-          docker build -t $BACKEND_STRING ./backend/
-          docker build -t $FRONTEND_STRING ./frontend/
-          docker push $DB_STRING
-          docker push $BACKEND_STRING
-          docker push $FRONTEND_STRING
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY/$DB_NAME:$IMAGE_TAG ./db/
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY/$BACKEND_NAME:$IMAGE_TAG ./backend/
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY/$FRONTEND_NAME:$IMAGE_TAG ./frontend/
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY/$DB_NAME:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY/$BACKEND_NAME:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY/$FRONTEND_NAME:$IMAGE_TAG
     # SSH to AWS EC2 Instance and deploy
     # - name: "SSH"
     #   uses: appleboy/ssh-action@v1.0.3
