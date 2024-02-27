@@ -6,6 +6,7 @@ import {
   MdLogin,
   MdWeekend,
   MdDashboard,
+  MdOutlineDoNotDisturb,
 } from "react-icons/md";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
@@ -18,6 +19,7 @@ import AddEntry from "./pages/AddEntry/AddEntry";
 import EditEntry from "./pages/EditEntry/EditEntry";
 import Login from "./pages/Login/Login";
 import EditUser from "./pages/EditUser/EditUser";
+import NotFound from "./pages/NotFound/NotFound";
 
 import Header from "./components/Header/Header";
 import Main from "./components/Main/Main";
@@ -65,6 +67,14 @@ export default function App() {
               path="/edit-user"
               element={
                 <EditUser icon={<MdEditNote className="section__icon" />} />
+              }
+            />
+            <Route
+              path="*"
+              element={
+                <NotFound
+                  icon={<MdOutlineDoNotDisturb className="section__icon" />}
+                />
               }
             />
           </Routes>

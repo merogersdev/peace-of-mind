@@ -232,12 +232,16 @@
     justify-content: center;
   }
 
-  &__cta {
+  &__cta-container {
     margin-top: 2rem;
     display: flex;
     justify-content: center;
     @include desktop {
       justify-content: flex-start;
     }
+  }
+
+  &__cta-button {
+    padding: 0 2rem;
   }
 }
