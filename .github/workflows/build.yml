@@ -60,7 +60,7 @@ jobs:
           DATABASE_IMAGE_NAME: peace-of-mind-db
           FRONTEND_IMAGE_NAME: peace-of-mind-frontend
           BACKEND_IMAGE_NAME: peace-of-mind-backend
-          PROJECT_ID: ${{ secrets.PROJECT_ID }}
+          PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
           JWT_SECRET: "${{ secrets.JWT_SECRET }}"
           API_KEY: "${{ secrets.API_KEY }}"
         with:
