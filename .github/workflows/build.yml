@@ -2,7 +2,7 @@
 name: Build and Push Images to GCP
 on:
   push:
-    branches: [feature/67-cicd-to-gcp]
+    branches: [main]
 jobs:
   build-push-gcr:
     name: Build and Push to GCP
