@@ -25,9 +25,9 @@ jobs:
 
       - name: Build Docker Images
         run: |-
-          docker build -t $DATABASE_IMAGE_NAME:latest ./db/
-          docker build -t $FRONTEND_IMAGE_NAME:latest ./frontend/
-          docker build -t $BACKEND_IMAGE_NAME:latest ./backend/
+          docker build --no-cache -t $DATABASE_IMAGE_NAME:latest ./db/
+          docker build --no-cache -t $FRONTEND_IMAGE_NAME:latest ./frontend/
+          docker build --no-cache -t $BACKEND_IMAGE_NAME:latest ./backend/
 
       - name: Configure Docker Client
         run: |-
