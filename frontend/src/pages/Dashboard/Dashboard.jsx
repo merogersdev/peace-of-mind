@@ -176,6 +176,7 @@ export default function Dashboard({ icon }) {
                 <button
                   type="button"
                   className="section__button section__button--delete section__button--big-icon"
+                  aria-label="Delete"
                 >
                   <MdDelete onClick={() => handleDelete(entry.id)} />
                 </button>
