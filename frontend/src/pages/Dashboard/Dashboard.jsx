@@ -1,6 +1,6 @@
 import { useState, useContext, useEffect } from "react";
 import { Navigate, Link, useNavigate } from "react-router-dom";
-import { MdModeEdit, MdDelete, MdEmojiEmotions } from "react-icons/md";
+import { MdModeEdit, MdDelete } from "react-icons/md";
 import axios from "axios";
 
 import formatDate from "../../utils/date";
@@ -82,9 +82,6 @@ export default function Dashboard({ icon }) {
       <Section>
         <div className="section__icon-container">{icon}</div>
         <h1 className="section__h1">Dashboard</h1>
-        <div className="section__icon-feat">
-          <MdEmojiEmotions />
-        </div>
         <h2 className="section__h2 section__h2--center section__h2--bottom">
           Welcome, {user.first_name}!
         </h2>

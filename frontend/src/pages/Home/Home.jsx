@@ -23,10 +23,10 @@ export default function Home({ icon }) {
             the individual by providing a safe space to journal, keep track of
             daily gratitudes and truly have peace of mind.
           </p>
-          <div className="section__cta">
+          <div className="section__cta-container">
             <NavLink
               to="/register"
-              className="section__button section__button--primary"
+              className="section__button section__button--primary section__cta-button"
             >
               Get Started
             </NavLink>
