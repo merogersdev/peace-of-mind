@@ -4,7 +4,7 @@
 
 ## Quick Summary
 
-BrainStation Web Development Bootcamp Capstone Project. Utilizes SASS/SCSS, React, JWT Tokens, Vite, Node, Express and a PostgreSQL Database. Demo is deployed to an AWS EC2 instance running Ubuntu Server.
+BrainStation Web Development Bootcamp Capstone Project. Utilizes SASS/SCSS, React, JWT Tokens, Vite, Node, Express and a PostgreSQL Database. Demo is deployed to a Google Cloud VM running Ubuntu Server.
 
 ## Goal
 
@@ -69,5 +69,6 @@ Once you have cloned this repository to your computer, this application has the 
 ![Testing-Library](https://img.shields.io/badge/-TestingLibrary-%23E33332?style=for-the-badge&logo=testing-library&logoColor=white)
 ![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)
 ![Ubuntu](https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)
-![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white)
+![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
+![Google Cloud](https://img.shields.io/badge/GoogleCloud-%234285F4.svg?style=for-the-badge&logo=google-cloud&logoColor=white)
 ![GitHub Actions](https://img.shields.io/badge/github%20actions-%232671E5.svg?style=for-the-badge&logo=githubactions&logoColor=white)
