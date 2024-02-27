@@ -73,6 +73,7 @@ jobs:
             gcloud auth configure-docker $GCP_REGION-docker.pkg.dev --quiet
             docker stop $(docker ps -aq)
             docker rm $(docker ps -aq)
+            docker image prune -af
             docker network rm peace-of-mind-network -f
             docker network create peace-of-mind-network
             docker run -d --restart=unless-stopped --network=peace-of-mind-network -p 5432:5432 -v pgdata:/var/lib/postgresql/data -e POSTGRES_USER=$POSTGRES_USER -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD -e POSTGRES_DB=$POSTGRES_DB -e POSTGRES_DB_TEST=$POSTGRES_DB_TEST --name $DATABASE_IMAGE_NAME $GCP_REGION-docker.pkg.dev/$PROJECT_ID/peace-of-mind/$DATABASE_IMAGE_NAME
