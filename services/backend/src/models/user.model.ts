@@ -8,8 +8,8 @@ export const UserSchema = z.object({
   email: z.email(),
   givenName: z.string().min(1).max(30),
   familyName: z.string().min(1).max(30),
-  createdAt: z.date(),
-  updatedAt: z.date(),
+  createdAt: z.date().optional(),
+  updatedAt: z.date().optional(),
   entries: z.array(EntrySchema),
   habits: z.array(HabitSchema),
 });

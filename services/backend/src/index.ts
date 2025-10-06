@@ -1,15 +1,30 @@
 import log from './utils/logger.util';
-
-import { ENV } from './env';
-
 import app from './app';
+import { ENV } from './env';
+import { prisma } from './utils/db.util';
 
-async function main() {
-  const { BACKEND_PORT } = ENV;
+const { BACKEND_PORT } = ENV;
 
-  app.listen(BACKEND_PORT, () => {
-    log.info(`Server is running on Port: ${BACKEND_PORT}`);
+//-------------------------------------------//
+// --- --- --- API Server Listen --- --- --- //
+//-------------------------------------------//
+
+const server = app.listen(BACKEND_PORT, () => {
+  log.info(`Server is running on Port: ${BACKEND_PORT}`);
+});
+
+// Run on Termination
+process.on('SIGTERM', () => {
+  server.close(() => {
+    log.error('Server Closed');
+    prisma.$disconnect();
   });
-}
+});
 
-main();
+// Run on Interrupt
+process.on('SIGINT', () => {
+  server.close(() => {
+    log.error('Server Interrupted');
+    prisma.$disconnect();
+  });
+});

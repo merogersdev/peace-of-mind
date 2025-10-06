@@ -8,6 +8,8 @@ import entryRoutes from './routes/health.routes';
 import userRoutes from './routes/user.routes';
 import habitRoutes from './routes/habit.routes';
 
+import { ENV } from './env';
+
 const app = express();
 const router = Router();
 
@@ -22,7 +24,8 @@ app.use(express.urlencoded({ extended: false }));
 // --- --- --- Custom Middleware --- --- --- //
 //-------------------------------------------//
 
-app.use(loggerHandler);
+// Log requests in development mode
+if (ENV.BACKEND_ENV === 'DEV') app.use(loggerHandler);
 
 //------------------------------------//
 // --- --- --- App Routes --- --- --- //
